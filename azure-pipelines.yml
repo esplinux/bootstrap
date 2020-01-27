@@ -68,26 +68,25 @@ steps:
 #  displayName: 'Build llvm bootstrap'
 #  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
+  #- script: |
+  #    buildah unshare ./scripts/buildimage.sh
+  #  displayName: 'Building Container using buildah'
+  #  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
 - script: |
-    buildah unshare ./scripts/buildimage.sh
+    buildah from --name esplinux/bootstrap from scratch
+    mnt=$(buildah unshare buildah mount esplinux/bootstrap)
+    echo mnt=$mnt
+    tar xf musl-*.tgz -C $mnt
+    tar xf toybox-*.tgz -C $mnt
+    tar xf dash-*.tgz -C $mnt
+    buildah unshare buildah unmount esplinux/bootstrap
+    buildah commit esplinux/bootstrap esplinux/bootstrap
+    buildah containers
+    buildah images
+
   displayName: 'Building Container using buildah'
   env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
-
-#- script: |
-#    TOP=$(pwd)
-#    mkdir rootfs
-#    cd rootfs
-#    tar xf ../musl-*.tgz
-#    tar xf ../toybox-*.tgz
-#    tar xf ../dash-*.tgz
-#    cd bin
-#    ln -s dash sh
-#    cd $TOP
-#    find rootfs -printf "%P\n" -type f -o -type l -o -type d | sed -r '/^\s*$$/d' | tar -czf rootfs.tgz --no-recursion -C rootfs -T -
-#    podman import rootfs.tgz esplinux/bootstrap
-#    podman images
-#  displayName: 'Building Container'
-#  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
 # GitHub Release
 # Create, edit, or delete a GitHub release
