@@ -87,7 +87,7 @@ steps:
     podman images
     podman login -u $(docker-user) -p $(docker-pass) docker.io
     podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
-    podman logout
+    podman logout docker.io
 
   displayName: 'Building Container using buildah'
   env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
