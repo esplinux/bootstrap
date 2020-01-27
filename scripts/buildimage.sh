@@ -1,10 +1,12 @@
 #!/bin/sh -e
 cnt=$(buildah from --name esplinux/bootstrap scratch)
-buildah containers
 mnt=$(buildah mount esplinux/bootstrap)
 echo cnt=$cnt
 echo mnt=$mnt
-buildah mount
+tar xf musl-*.tgz -C $mnt
+tar xf toybox-*.tgz -C $mnt
+tar xf dash-*.tgz -C $mnt
 buildah unmount $cnt
-buildah mount
+buildah commit esplinux/bootstrap esplinux/bootstrap
 buildah containers
+buildah images

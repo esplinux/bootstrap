@@ -48,17 +48,17 @@ steps:
   displayName: 'Debug build tool information'
   env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
-#- script: ninja -v musl
-#  displayName: 'Build musl bootstrap'
-#  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+- script: ninja -v musl
+  displayName: 'Build musl bootstrap'
+  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
-#- script: ninja -v toybox
-#  displayName: 'Build toybox bootstrap'
-#  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+- script: ninja -v toybox
+  displayName: 'Build toybox bootstrap'
+  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
-#- script: ninja -v dash
-#  displayName: 'Build dash bootstrap'
-#  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+- script: ninja -v dash
+  displayName: 'Build dash bootstrap'
+  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
 #- script: ninja -v libcxx
 #  displayName: 'Build libcxx bootstrap'
