@@ -81,13 +81,31 @@ build build-$llvm/build.ninja: cmake $llvm/llvm | out-sysroot-$llvm
     -DCLANG_DEFAULT_RTLIB=compiler-rt $
     -DCLANG_DEFAULT_CXX_STDLIB=libc++
 
-build out-$llvm/bin/clang: ninja build-$llvm/build.ninja
+build out-lld-$llvm/bin/lld: ninja build-$llvm/build.ninja
+  prefix = DESTDIR=$$PWD/out-lld-$llvm
+  target = install-lld
+  pool = console
+
+build lld-$llvm.tgz: package | out-lld-$llvm/bin/lld
+  builddir = out-lld-$llvm
+
+build out-clang-$llvm/bin/clang: ninja build-$llvm/build.ninja | out-lld-$llvm/bin/lld
+  prefix = DESTDIR=$$PWD/out-clang-$llvm
+  target = install-clang install-compiler-rt
+  pool = console
+
+build clang-$llvm.tgz: package | out-clang-$llvm/bin/clang
+  builddir = out-clang-$llvm
+
+build out-$llvm/bin/llvm-config: ninja build-$llvm/build.ninja | out-lld-$llvm/bin/lld out-clang-$llvm/bin/clang
   prefix = DESTDIR=$$PWD/out-$llvm
   target = install
   pool = console
 
-build $llvm.tgz: package | out-$llvm/bin/clang
+build $llvm.tgz: package | out-$llvm/bin/llvm-config
   builddir = out-$llvm
 
 build libcxx: phony libcxx-$llvm.tgz
+build lld: phony lld-$llvm.tgz
+build clang: phony clang-$llvm.tgz
 build llvm: phony $llvm.tgz

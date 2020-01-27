@@ -1,0 +1,49 @@
+##############################################################################
+# You should only have to change items below here if you are developing a new
+# new version of esp/bootstrap or porting to a new architecture
+##############################################################################
+
+# Defaults inherited by included build files
+##############################################################################
+tarflags = xz
+
+
+# Default build rules
+##############################################################################
+rule download
+  description = Downloading $url
+  command = curl --connect-timeout 3 --retry 3 --retry-delay 1 -s -S $url | tar $tarflags
+
+rule git
+  description = Cloning $destination
+  command = git clone -q --depth=1 $url $destination
+
+rule package
+  description = Packaging $out
+  command = find $builddir -printf "%P\n" -type f -o -type l -o -type d | sed -r '/^\s*$$/d' | tar -czf $out --no-recursion -C $builddir -T -
+
+rule patch
+  command = cd $in;patch -i ../patches/$in.patch
+
+rule configure
+  command = cd $$(dirname $in); $prefix ./configure $opts >> ../configure-$$(dirname $in).log
+
+rule make
+  description = Building $out
+  command = $prefix make -j$nproc -C $$(dirname $in) $target >> make-$$(dirname $in).log
+
+rule cmake
+  description = CMAKE $in
+  command = cmake -B$$(dirname $out) -S$in $opts >> cmake-$$(dirname $out).log
+
+rule ninja
+  command = $prefix ninja -C$$(dirname $in) -f $$(basename $in) $target
+
+rule cp
+  command = cp $in $out
+
+rule mkdir
+  command = mkdir $out
+
+rule rm
+  command = rm -rf $rm

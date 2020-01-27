@@ -9,7 +9,6 @@ nproc = 12
 
 # Defaults inherited by included build files
 ##############################################################################
-tarflags = xz
 cflags = -target x86_64-unknown-linux-musl -Os
 cxxflags = -target x86_64-unknown-linux-musl -Os
 ldflags = -w -s
@@ -17,44 +16,7 @@ ldflags = -w -s
 
 # Default build rules
 ##############################################################################
-rule download
-  description = Downloading $url
-  command = curl --connect-timeout 3 --retry 3 --retry-delay 1 -s -S $url | tar $tarflags
-
-rule git
-  description = Cloning $destination
-  command = git clone -q --depth=1 $url $destination
-
-rule package
-  description = Packaging $out
-  command = find $builddir -printf "%P\n" -type f -o -type l -o -type d | sed -r '/^\s*$$/d' | tar -czf $out --no-recursion -C $builddir -T -
-
-rule patch
-  command = cd $in;patch -i ../patches/$in.patch
-
-rule configure
-  command = cd $$(dirname $in); $prefix ./configure $opts >> ../configure-$$(dirname $in).log
-
-rule make
-  description = Building $out
-  command = $prefix make -j$nproc -C $$(dirname $in) $target >> make-$$(dirname $in).log
-
-rule cmake
-  description = CMAKE $in
-  command = cmake -B$$(dirname $out) -S$in $opts >> cmake-$$(dirname $out).log
-
-rule ninja
-  command = $prefix ninja -C$$(dirname $in) -f $$(basename $in) $target
-
-rule cp
-  command = cp $in $out
-
-rule mkdir
-  command = mkdir $out
-
-rule rm
-  command = rm -rf $rm
-
+include rules.ninja
 
 # Packages to build
 ##############################################################################
@@ -76,4 +38,4 @@ build distclean: rm
 
 # Default builds
 ##############################################################################
-default $musl.tgz $toybox.tgz $dash.tgz libcxx-$llvm.tgz $llvm.tgz
+default musl toybox dash libcxx lld clang

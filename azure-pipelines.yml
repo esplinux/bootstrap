@@ -27,8 +27,28 @@ jobs:
       sudo mkdir -p /etc/containers
     displayName: 'Install Prerequisites'
 
-  - script: TERM=dumb ninja
-    displayName: 'Build'
+  - script: TERM=dumb ninja musl
+    displayName: 'Build Musl'
+    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
+  - script: TERM=dumb ninja libcxx
+    displayName: 'Build LibCXX'
+    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
+  - script: TERM=dumb ninja lld
+    displayName: 'Build LLD'
+    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
+  - script: TERM=dumb ninja clang
+    displayName: 'Build Clang'
+    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
+  - script: TERM=dumb ninja toybox
+    displayName: 'Build Toybox'
+    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
+  - script: TERM=dumb ninja dash
+    displayName: 'Build Dash'
     env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
   # Docker Release
@@ -38,10 +58,11 @@ jobs:
       echo cnt=$cnt
       echo mnt=$mnt
       tar xf musl-*.tgz -C $mnt
+      tar xf libcxx-*.tgz -C $mnt
+      tar xf lld-*.tgz -C $mnt
+      tar xf clang-*.tgz -C $mnt
       tar xf toybox-*.tgz -C $mnt
       tar xf dash-*.tgz -C $mnt
-      tar xf libcxx-*.tgz -C $mnt
-      tar xf llvm-*.tgz -C $mnt
       buildah unshare buildah unmount $cnt
       buildah config --cmd sh $cnt
       buildah commit --squash $cnt esplinux/bootstrap
