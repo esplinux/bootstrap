@@ -29,7 +29,7 @@ steps:
 
 # Docker Release
 - script: |
-    cnt=$(buildah from --name bootstrap scratch)
+    cnt=$(buildah from scratch)
     mnt=$(buildah unshare buildah mount $cnt)
     echo cnt=$cnt
     echo mnt=$mnt
@@ -40,8 +40,7 @@ steps:
     tar xf llvm-*.tgz -C $mnt
     buildah unshare buildah unmount $cnt
     buildah config --cmd sh $cnt
-    buildah config --label Commit=$BUILD_REPOSITORY_URI/commit/$BUILD_SOURCEVERSION $cnt
-    buildah commit $cnt esplinux/bootstrap
+    buildah commit --squash $cnt esplinux/bootstrap
     podman login -u $(docker-user) -p $(docker-pass) docker.io
     podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
     podman logout docker.io
