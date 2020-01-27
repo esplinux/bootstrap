@@ -44,7 +44,7 @@ rule cmake
   command = cmake -B$$(dirname $out) -S$in $opts >> cmake-$$(dirname $out).log
 
 rule ninja
-  command = $prefix ninja -C$$(dirname $in) -f $$(basename $in) -v $target
+  command = $prefix ninja -C$$(dirname $in) -f $$(basename $in) $target
 
 rule cp
   command = cp $in $out

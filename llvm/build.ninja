@@ -41,6 +41,7 @@ build build-libcxx-$llvm/build.ninja: cmake $llvm/llvm | out-$linux/include/linu
 build out-libcxx-$llvm/lib/libc++abi.so out-libcxx-$llvm/lib/libc++.so: ninja build-libcxx-$llvm/build.ninja
   prefix = DESTDIR=$$PWD/out-libcxx-$llvm
   target = install-libcxxabi install-libcxx
+  pool = console
 
 build libcxx-$llvm.tgz: package | out-libcxx-$llvm/lib/libc++abi.so out-libcxx-$llvm/lib/libc++.so
   builddir = out-libcxx-$llvm
@@ -83,6 +84,7 @@ build build-$llvm/build.ninja: cmake $llvm/llvm | out-sysroot-$llvm
 build out-$llvm/bin/clang: ninja build-$llvm/build.ninja
   prefix = DESTDIR=$$PWD/out-$llvm
   target = install
+  pool = console
 
 build $llvm.tgz: package | out-$llvm/bin/clang
   builddir = out-$llvm

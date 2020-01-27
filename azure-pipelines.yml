@@ -9,53 +9,57 @@ trigger:
 pool:
   vmImage: 'ubuntu-18.04'
 
-# Add updated version of CMake, Podman and Buildah to Ubuntu Image
-steps:
-- script: |
-    sudo apt-get update
-    sudo apt-get install apt-transport-https ca-certificates gnupg software-properties-common curl
-    curl -L https://apt.kitware.com/keys/kitware-archive-latest.asc 2> /dev/null | sudo apt-key add
-    sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
-    curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/Release.key 2> /dev/null | sudo apt-key add
-    sudo apt-add-repository 'deb https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/ /'
-    sudo apt-get update
-    sudo apt-get install git clang lld cmake make ninja-build podman buildah
-    sudo mkdir -p /etc/containers
-  displayName: 'Install Prerequisites'
+jobs:
+- job: Bootstrap
+  timeoutInMinutes: 0
 
-- script: ninja
-  displayName: 'Build'
-  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+  # Add updated version of CMake, Podman and Buildah to Ubuntu Image
+  steps:
+  - script: |
+      sudo apt-get update
+      sudo apt-get install apt-transport-https ca-certificates gnupg software-properties-common curl
+      curl -L https://apt.kitware.com/keys/kitware-archive-latest.asc 2> /dev/null | sudo apt-key add
+      sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
+      curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/Release.key 2> /dev/null | sudo apt-key add
+      sudo apt-add-repository 'deb https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/ /'
+      sudo apt-get update
+      sudo apt-get install git clang lld cmake make ninja-build podman buildah
+      sudo mkdir -p /etc/containers
+    displayName: 'Install Prerequisites'
 
-# Docker Release
-- script: |
-    cnt=$(buildah from scratch)
-    mnt=$(buildah unshare buildah mount $cnt)
-    echo cnt=$cnt
-    echo mnt=$mnt
-    tar xf musl-*.tgz -C $mnt
-    tar xf toybox-*.tgz -C $mnt
-    tar xf dash-*.tgz -C $mnt
-    tar xf libcxx-*.tgz -C $mnt
-    tar xf llvm-*.tgz -C $mnt
-    buildah unshare buildah unmount $cnt
-    buildah config --cmd sh $cnt
-    buildah commit --squash $cnt esplinux/bootstrap
-    podman login -u $(docker-user) -p $(docker-pass) docker.io
-    podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
-    podman logout docker.io
-  displayName: 'Buildah/Podman Release'
-  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+  - script: TERM=dumb ninja
+    displayName: 'Build'
+    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
-# GitHub Release
-- task: GitHubRelease@0
-  inputs:
-    gitHubConnection: 'github.com_emolitor'
-    repositoryName: '$(Build.Repository.Name)'
-    action: 'edit'
-    tagSource: 'manual' # Required when action == Create# Options: auto, manual
-    tag: 'Bootstrap' # Required when action == Edit || Action == Delete || TagSource == Manual
-    assets: '*.tgz' #assets: '$(Build.ArtifactStagingDirectory)/*' # Optional
-    assetUploadMode: 'delete' # Optional. Options: delete, replace
-    isPreRelease: true # Optional
-  displayName: 'Github Release'
+  # Docker Release
+  - script: |
+      cnt=$(buildah from scratch)
+      mnt=$(buildah unshare buildah mount $cnt)
+      echo cnt=$cnt
+      echo mnt=$mnt
+      tar xf musl-*.tgz -C $mnt
+      tar xf toybox-*.tgz -C $mnt
+      tar xf dash-*.tgz -C $mnt
+      tar xf libcxx-*.tgz -C $mnt
+      tar xf llvm-*.tgz -C $mnt
+      buildah unshare buildah unmount $cnt
+      buildah config --cmd sh $cnt
+      buildah commit --squash $cnt esplinux/bootstrap
+      podman login -u $(docker-user) -p $(docker-pass) docker.io
+      podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
+      podman logout docker.io
+    displayName: 'Buildah/Podman Release'
+    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
+  # GitHub Release
+  - task: GitHubRelease@0
+    inputs:
+      gitHubConnection: 'github.com_emolitor'
+      repositoryName: '$(Build.Repository.Name)'
+      action: 'edit'
+      tagSource: 'manual' # Required when action == Create# Options: auto, manual
+      tag: 'Bootstrap' # Required when action == Edit || Action == Delete || TagSource == Manual
+      assets: '*.tgz' #assets: '$(Build.ArtifactStagingDirectory)/*' # Optional
+      assetUploadMode: 'delete' # Optional. Options: delete, replace
+      isPreRelease: true # Optional
+    displayName: 'Github Release'
