@@ -74,14 +74,14 @@ steps:
   #  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
 - script: |
-    buildah from --name esplinux/bootstrap from scratch
-    mnt=$(buildah unshare buildah mount esplinux/bootstrap)
+    buildah from --name bootstrap scratch
+    mnt=$(buildah unshare buildah mount bootstrap)
     echo mnt=$mnt
     tar xf musl-*.tgz -C $mnt
     tar xf toybox-*.tgz -C $mnt
     tar xf dash-*.tgz -C $mnt
-    buildah unshare buildah unmount esplinux/bootstrap
-    buildah commit esplinux/bootstrap esplinux/bootstrap
+    buildah unshare buildah unmount bootstrap
+    buildah commit bootstrap esplinux/bootstrap
     buildah containers
     buildah images
 
