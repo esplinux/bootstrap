@@ -75,7 +75,7 @@ steps:
   #  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
 - script: |
-    cmt=$(buildah from --name bootstrap scratch)
+    cnt=$(buildah from --name bootstrap scratch)
     mnt=$(buildah unshare buildah mount $cnt)
     echo cnt=$cnt
     echo mnt=$mnt
