@@ -45,6 +45,7 @@ steps:
     podman --version
     which buildah
     buildah --version
+    export
   displayName: 'Debug build tool information'
   env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
@@ -81,6 +82,7 @@ steps:
     tar xf toybox-*.tgz -C $mnt
     tar xf dash-*.tgz -C $mnt
     buildah unshare buildah unmount bootstrap
+    buildah config --cmd sh bootstrap
     buildah commit bootstrap esplinux/bootstrap
     buildah containers
     buildah images
