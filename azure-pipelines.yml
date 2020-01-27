@@ -9,6 +9,7 @@ trigger:
 pool:
   vmImage: 'ubuntu-18.04'
 
+# Add updated version of CMake, Podman and Buildah to Ubuntu Image
 steps:
 - script: |
     sudo apt-get update
@@ -18,62 +19,31 @@ steps:
     curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/Release.key 2> /dev/null | sudo apt-key add
     sudo apt-add-repository 'deb https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/ /'
     sudo apt-get update
-    sudo apt-get install curl git clang lld cmake make ninja-build podman buildah
+    sudo apt-get install git clang lld cmake make ninja-build podman buildah
     sudo mkdir -p /etc/containers
-  displayName: 'Install bootstrap dependencies'
-
-- script: |
-    whoami
-    echo PATH=$PATH
-    which curl
-    curl --version
-    which git
-    git --version
-    which as
-    as --version
-    which clang
-    clang --version
-    which ld.lld
-    ld.lld --version
-    which cmake
-    cmake --version
-    which make
-    make --version
-    which ninja
-    ninja --version
-    which podman
-    podman --version
-    which buildah
-    buildah --version
-    export
-  displayName: 'Debug build tool information'
-  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+  displayName: 'Install Prerequisites'
 
 - script: ninja -v musl
-  displayName: 'Build musl bootstrap'
+  displayName: 'Build Musl'
   env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
 - script: ninja -v toybox
-  displayName: 'Build toybox bootstrap'
+  displayName: 'Build Toybox'
   env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
 - script: ninja -v dash
-  displayName: 'Build dash bootstrap'
+  displayName: 'Build Dash'
   env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
-#- script: ninja -v libcxx
-#  displayName: 'Build libcxx bootstrap'
-#  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+- script: ninja -v libcxx
+  displayName: 'Build LibCXX'
+  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
 #- script: ninja -v llvm
-#  displayName: 'Build llvm bootstrap'
+#  displayName: 'Build LLVM'
 #  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
-  #- script: |
-  #    buildah unshare ./scripts/buildimage.sh
-  #  displayName: 'Building Container using buildah'
-  #  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
-
+# Docker Release
 - script: |
     cnt=$(buildah from --name bootstrap scratch)
     mnt=$(buildah unshare buildah mount $cnt)
@@ -82,33 +52,26 @@ steps:
     tar xf musl-*.tgz -C $mnt
     tar xf toybox-*.tgz -C $mnt
     tar xf dash-*.tgz -C $mnt
+    tar xf libcxx-*.tgz -C $mnt
     buildah unshare buildah unmount $cnt
     buildah config --cmd sh $cnt
-    buildah config --label Uri=$BUILD_REPOSITORY_URI $cnt
-    buildah config --label Branch=$BUILD_SOURCEBRANCHNAME $cnt
-    buildah config --label Commit=$BUILD_SOURCEVERSION $cnt
+    buildah config --label Commit=$BUILD_REPOSITORY_URI/commit/$BUILD_SOURCEVERSION $cnt
     buildah commit $cnt esplinux/bootstrap
     podman login -u $(docker-user) -p $(docker-pass) docker.io
     podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
     podman logout docker.io
-
-  displayName: 'Building Container using buildah'
+  displayName: 'Buildah/Podman Release'
   env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
 # GitHub Release
-# Create, edit, or delete a GitHub release
-#- task: GitHubRelease@0
-#  inputs:
-#    gitHubConnection: 'github.com_emolitor'
-#    repositoryName: '$(Build.Repository.Name)'
-#    action: 'edit'
-#    tagSource: 'manual' # Required when action == Create# Options: auto, manual
-#    tag: 'Bootstrap' # Required when action == Edit || Action == Delete || TagSource == Manual
-#    assets: '*.tgz' #assets: '$(Build.ArtifactStagingDirectory)/*' # Optional
-#    assetUploadMode: 'delete' # Optional. Options: delete, replace
-#    isPreRelease: true # Optional
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: GitHubRelease@0
+  inputs:
+    gitHubConnection: 'github.com_emolitor'
+    repositoryName: '$(Build.Repository.Name)'
+    action: 'edit'
+    tagSource: 'manual' # Required when action == Create# Options: auto, manual
+    tag: 'Bootstrap' # Required when action == Edit || Action == Delete || TagSource == Manual
+    assets: '*.tgz' #assets: '$(Build.ArtifactStagingDirectory)/*' # Optional
+    assetUploadMode: 'delete' # Optional. Options: delete, replace
+    isPreRelease: true # Optional
+  displayName: 'Github Release'
