@@ -69,11 +69,7 @@ steps:
 #  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
 - script: |
-    buildah from --name esplinux/bootstrap scratch
-    mnt=$(buildah mount esplinux/bootstrap)
-    echo mnt=$mnt
-    buildah unmount $mnt
-    buildah containers
+    buildah unshare ./scripts/buildimage.sh
   displayName: 'Building Container using buildah'
   env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
