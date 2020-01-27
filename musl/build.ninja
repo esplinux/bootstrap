@@ -1,0 +1,22 @@
+musl=musl-1.1.24
+
+
+build $musl/configure: download
+  url = https://www.musl-libc.org/releases/$musl.tar.gz 
+
+build $musl/config.mak: configure $musl/configure
+  description = Configuring $musl
+  prefix = CC=clang CFLAGS="$cflags"
+  opts = --prefix=''
+
+build $musl/Makefile: phony $musl/config.mak
+
+build out-$musl/lib/libc.a: make $musl/Makefile
+  description = Building $musl
+  prefix = DESTDIR=$$PWD/out-$musl
+  target = install
+
+build $musl.tgz: package | out-$musl/lib/libc.a
+  builddir = out-$musl
+
+build musl: phony $musl.tgz

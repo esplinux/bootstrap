@@ -7,13 +7,97 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'ubuntu-18.04'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- script: |
+    sudo apt-get update
+    sudo apt-get install apt-transport-https ca-certificates gnupg software-properties-common curl
+    curl -L https://apt.kitware.com/keys/kitware-archive-latest.asc 2> /dev/null | sudo apt-key add
+    sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
+    curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/Release.key 2> /dev/null | sudo apt-key add
+    sudo apt-add-repository 'deb https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/ /'
+    sudo apt-get update
+    sudo apt-get install curl git clang lld cmake make ninja-build podman buildah
+    sudo mkdir -p /etc/containers
+  displayName: 'Install bootstrap dependencies'
+
+- script: |
+    whoami
+    echo PATH=$PATH
+    which curl
+    curl --version
+    which git
+    git --version
+    which as
+    as --version
+    which clang
+    clang --version
+    which ld.lld
+    ld.lld --version
+    which cmake
+    cmake --version
+    which make
+    make --version
+    which ninja
+    ninja --version
+    which podman
+    podman --version
+    which buildah
+    buildah --version
+  displayName: 'Debug build tool information'
+  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
+- script: ninja -v musl
+  displayName: 'Build musl bootstrap'
+  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
+- script: ninja -v toybox
+  displayName: 'Build toybox bootstrap'
+  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
+- script: ninja -v dash
+  displayName: 'Build dash bootstrap'
+  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
+#- script: ninja -v libcxx
+#  displayName: 'Build libcxx bootstrap'
+#  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
+#- script: ninja -v llvm
+#  displayName: 'Build llvm bootstrap'
+#  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
+- script: |
+    TOP=$(pwd)
+    mkdir rootfs
+    cd rootfs
+    tar xf ../musl-*.tgz
+    tar xf ../toybox-*.tgz
+    tar xf ../dash-*.tgz
+    cd bin
+    ln -s dash sh
+    cd $TOP
+    find rootfs -printf "%P\n" -type f -o -type l -o -type d | sed -r '/^\s*$$/d' | tar -czf rootfs.tgz --no-recursion -C rootfs -T -
+    podman import rootfs.tgz esplinux/bootstrap
+    podman images
+  displayName: 'Building Container'
+  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
+# GitHub Release
+# Create, edit, or delete a GitHub release
+#- task: GitHubRelease@0
+#  inputs:
+#    gitHubConnection: 'github.com_emolitor'
+#    repositoryName: '$(Build.Repository.Name)'
+#    action: 'edit'
+#    tagSource: 'manual' # Required when action == Create# Options: auto, manual
+#    tag: 'Bootstrap' # Required when action == Edit || Action == Delete || TagSource == Manual
+#    assets: '*.tgz' #assets: '$(Build.ArtifactStagingDirectory)/*' # Optional
+#    assetUploadMode: 'delete' # Optional. Options: delete, replace
+#    isPreRelease: true # Optional
 
 - script: |
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
-  displayName: 'Run another multi-line script'
+  displayName: 'Run a multi-line script'

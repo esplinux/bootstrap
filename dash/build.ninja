@@ -1,0 +1,20 @@
+dash=dash-0.5.10
+
+
+build $dash/configure: download
+  url = http://gondor.apana.org.au/~herbert/dash/files/$dash.tar.gz
+
+build $dash/Makefile: configure $dash/configure | out-$musl/lib/libc.a
+  description = Configuring $dash
+  prefix = CC=clang CFLAGS="--sysroot=$$PWD/../out-$musl $cflags" LDFLAGS="$ldflags"
+  opts = --prefix='' --host=none
+
+build out-$dash/bin/dash: make $dash/Makefile
+  description = Building $dash
+  prefix = DESTDIR=$$PWD/out-$dash
+  target = install
+
+build $dash.tgz: package | out-$dash/bin/dash
+  builddir = out-$dash
+
+build dash: phony $dash.tgz

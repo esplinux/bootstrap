@@ -1,0 +1,91 @@
+llvm=llvm-10
+
+
+rule mksysroot
+  command = mkdir $out;cp -r out-$musl/* out-libcxx-$llvm/* $out
+
+build $llvm: git
+  url = --branch release/10.x https://github.com/llvm/llvm-project
+  destination = $llvm
+
+build $llvm/llvm: phony $llvm
+
+build build-libcxx-$llvm/build.ninja: cmake $llvm/llvm | out-$linux/include/linux/version.h out-$musl/lib/libc.a
+  opts =  -G Ninja $
+    -DCMAKE_CROSSCOMPILING=ON $
+    -DCMAKE_INSTALL_PREFIX='' $
+    -DCMAKE_BUILD_TYPE=Release $
+    -DCMAKE_C_COMPILER=clang $
+    -DCMAKE_C_FLAGS="$clfags -I$$PWD/out-$linux/include" $
+    -DCMAKE_CXX_COMPILER=clang++ $
+    -DCMAKE_CXX_FLAGS="$cxxflags -I$$PWD/out-$linux/include" $
+    -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-unknown-linux-musl $
+    -DLLVM_TARGET_ARCH=X86 $
+    -DLLVM_TARGETS_TO_BUILD=X86 $
+    -DLLVM_ENABLE_ASSERTIONS=ON $
+    -DLLVM_ENABLE_EH=ON $
+    -DLLVM_ENABLE_RTTI=ON $
+    -DLLVM_ENABLE_PROJECTS='libunwind;libcxxabi;libcxx' $
+    -DLIBUNWIND_USE_COMPILER_RT=ON $
+    -DLIBUNWIND_ENABLE_SHARED=OFF $
+    -DLIBUNWIND_ENABLE_SHARED=OFF $
+    -DLIBUNWIND_SYSROOT=$$PWD/out-$musl $
+    -DLIBCXXABI_USE_COMPILER_RT=ON $
+    -DLIBCXXABI_USE_LLVM_UNWINDER=ON $
+    -DLIBCXXABI_ENABLE_STATIC_UNWINDER=ON $
+    -DLIBCXXABI_SYSROOT=$$PWD/out-$musl $
+    -DLIBCXX_USE_COMPILER_RT=ON $
+    -DLIBCXX_HAS_MUSL_LIBC=ON $
+    -DLIBCXX_SYSROOT=$$PWD/out-$musl
+
+build out-libcxx-$llvm/lib/libc++abi.so out-libcxx-$llvm/lib/libc++.so: ninja build-libcxx-$llvm/build.ninja
+  prefix = DESTDIR=$$PWD/out-libcxx-$llvm
+  target = install-libcxxabi install-libcxx
+
+build libcxx-$llvm.tgz: package | out-libcxx-$llvm/lib/libc++abi.so out-libcxx-$llvm/lib/libc++.so
+  builddir = out-libcxx-$llvm
+
+build out-sysroot-$llvm: mksysroot | out-libcxx-$llvm/lib/libc++abi.so out-libcxx-$llvm/lib/libc++.so
+
+build build-$llvm/build.ninja: cmake $llvm/llvm | out-sysroot-$llvm
+  opts =  -G Ninja $
+    -DCMAKE_CROSSCOMPILING=ON $
+    -DCMAKE_INSTALL_PREFIX='' $
+    -DCMAKE_BUILD_TYPE=Release $
+    -DCMAKE_C_COMPILER=clang $
+    -DCMAKE_C_FLAGS="--sysroot=$$PWD/out-sysroot-$llvm $cflags" $
+    -DCMAKE_CXX_COMPILER=clang++ $
+    -DCMAKE_CXX_FLAGS="--sysroot=$$PWD/out-sysroot-$llvm $cxxflags -I$$PWD/out-sysroot-$llvm/include/c++/v1" $
+    -DCMAKE_EXE_LINKER_FLAGS="--sysroot=$$PWD/out-sysroot-$llvm --rtlib=compiler-rt -stdlib=libc++ -lc++abi" $
+    -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-unknown-linux-musl $
+    -DLLVM_TARGET_ARCH=X86 $
+    -DLLVM_TARGETS_TO_BUILD=X86 $
+    -DLLVM_BUILD_STATIC=ON $
+    -DLLVM_ENABLE_ASSERTIONS=ON $
+    -DLLVM_ENABLE_EH=ON $
+    -DLLVM_ENABLE_LIBCXX=ON $
+    -DLLVM_ENABLE_LIBXML2=OFF $
+    -DLLVM_ENABLE_LLD=ON $
+    -DLLVM_ENABLE_RTTI=ON $
+    -DLLVM_ENABLE_ZLIB=OFF $
+    -DLLVM_INSTALL_BINUTILS_SYMLINKS=ON $
+    -DLLVM_INSTALL_CCTOOLS_SYMLINKS=ON $
+    -DLLVM_ENABLE_PROJECTS='compiler-rt;clang;lld;llvm' $
+    -DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON $
+    -DCOMPILER_RT_BUILD_LIBFUZZER=OFF $
+    -DCOMPILER_RT_BUILD_SANITIZERS=OFF $
+    -DCOMPILER_RT_BUILD_XRAY=OFF $
+    -DLIBCLANG_BUILD_STATIC=ON $
+    -DCLANG_DEFAULT_LINKER=lld $
+    -DCLANG_DEFAULT_RTLIB=compiler-rt $
+    -DCLANG_DEFAULT_CXX_STDLIB=libc++
+
+build out-$llvm/bin/clang: ninja build-$llvm/build.ninja
+  prefix = DESTDIR=$$PWD/out-$llvm
+  target = install
+
+build $llvm.tgz: package | out-$llvm/bin/clang
+  builddir = out-$llvm
+
+build libcxx: phony libcxx-$llvm.tgz
+build llvm: phony $llvm.tgz
