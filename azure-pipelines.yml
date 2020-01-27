@@ -75,21 +75,19 @@ steps:
   #  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
 - script: |
-    buildah from --name bootstrap scratch
-    mnt=$(buildah unshare buildah mount bootstrap)
+    cmt=$(buildah from --name bootstrap scratch)
+    mnt=$(buildah unshare buildah mount $cnt)
+    echo cnt=$cnt
     echo mnt=$mnt
     tar xf musl-*.tgz -C $mnt
     tar xf toybox-*.tgz -C $mnt
     tar xf dash-*.tgz -C $mnt
-    buildah unshare buildah unmount bootstrap
-    buildah config --cmd sh bootstrap
-    buildah config --label Uri=$BUILD_REPOSITORY_URI
-    buildah config --label Branch=$BUILD_SOURCEBRANCHNAME
-    buildah config --label Commit=$BUILD_SOURCEVERSION
-    buildah commit bootstrap esplinux/bootstrap
-    buildah containers
-    buildah images
-    podman images
+    buildah unshare buildah unmount $cnt
+    buildah config --cmd sh $cnt
+    buildah config --label Uri=$BUILD_REPOSITORY_URI $cnt
+    buildah config --label Branch=$BUILD_SOURCEBRANCHNAME $cnt
+    buildah config --label Commit=$BUILD_SOURCEVERSION $cnt
+    buildah commit $cnt esplinux/bootstrap
     podman login -u $(docker-user) -p $(docker-pass) docker.io
     podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
     podman logout docker.io
