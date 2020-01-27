@@ -1,6 +1,9 @@
 dash=dash-0.5.10
 
 
+rule _dash_ln
+  command = cd $$(dirname $out); ln -s dash sh
+
 build $dash/configure: download
   url = http://gondor.apana.org.au/~herbert/dash/files/$dash.tar.gz
 
@@ -14,7 +17,9 @@ build out-$dash/bin/dash: make $dash/Makefile
   prefix = DESTDIR=$$PWD/out-$dash
   target = install
 
-build $dash.tgz: package | out-$dash/bin/dash
+build out-$dash/bin/sh: _dash_ln | out-$dash/bin/dash
+
+build $dash.tgz: package | out-$dash/bin/dash out-$dash/bin/sh
   builddir = out-$dash
 
 build dash: phony $dash.tgz
