@@ -83,6 +83,9 @@ steps:
     tar xf dash-*.tgz -C $mnt
     buildah unshare buildah unmount bootstrap
     buildah config --cmd sh bootstrap
+    buildah config --label Uri=$BUILD_REPOSITORY_URI
+    buildah config --label Branch=$BUILD_SOURCEBRANCHNAME
+    buildah config --label Commit=$BUILD_SOURCEVERSION
     buildah commit bootstrap esplinux/bootstrap
     buildah containers
     buildah images
