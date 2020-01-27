@@ -23,25 +23,9 @@ steps:
     sudo mkdir -p /etc/containers
   displayName: 'Install Prerequisites'
 
-- script: ninja -v musl
-  displayName: 'Build Musl'
+- script: ninja
+  displayName: 'Build'
   env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
-
-- script: ninja -v toybox
-  displayName: 'Build Toybox'
-  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
-
-- script: ninja -v dash
-  displayName: 'Build Dash'
-  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
-
-- script: ninja -v libcxx
-  displayName: 'Build LibCXX'
-  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
-
-#- script: ninja -v llvm
-#  displayName: 'Build LLVM'
-#  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
 # Docker Release
 - script: |
@@ -53,6 +37,7 @@ steps:
     tar xf toybox-*.tgz -C $mnt
     tar xf dash-*.tgz -C $mnt
     tar xf libcxx-*.tgz -C $mnt
+    tar xf llvm-*.tgz -C $mnt
     buildah unshare buildah unmount $cnt
     buildah config --cmd sh $cnt
     buildah config --label Commit=$BUILD_REPOSITORY_URI/commit/$BUILD_SOURCEVERSION $cnt
