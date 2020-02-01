@@ -82,6 +82,16 @@ jobs:
     displayName: 'Buildah/Podman Release'
     env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
+  # Docker Release
+  - script: |
+      cnt=$(buildah from esplinux/bootstrap)
+      buildah config --label com.azure.dev.pipelines.agent.handler.node.path=/usr/local/bin/node $cnt
+      buildah config --cmd node $cnt
+      buildah commit --squash $cnt esplinux/bootstrap-azurepipelines
+      podman login -u $(docker-user) -p $(docker-pass) docker.io
+      podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap-azurepipelines
+      podman logout docker.io
+
   # GitHub Release
   - task: GitHubRelease@0
     inputs:
