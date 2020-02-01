@@ -1,0 +1,21 @@
+# Use LTS 12 version to create a fully static version
+nodejs=nodejs-STATIC-ABOMINATION
+nodejs_lts=v12.14.1
+
+
+build $nodejs/configure: git
+  url = --branch $nodejs_lts https://github.com/nodejs/node
+  destination = $nodejs
+
+build $nodejs/Makefile: configure $nodejs/configure
+  description = Configuring $nodejs
+  opts = --without-ssl --without-inspector --without-intl --fully-static
+
+build out-$nodejs/usr/local/bin/node: make $nodejs/Makefile | out-sysroot-$llvm
+  prefix = DESTDIR=$$PWD/out-$nodejs
+  target = install
+
+build $nodejs.tgz: package | out-$nodejs/usr/local/bin/node
+  builddir = out-$nodejs
+
+build nodejs: phony $nodejs.tgz

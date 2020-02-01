@@ -91,6 +91,8 @@ jobs:
       podman login -u $(docker-user) -p $(docker-pass) docker.io
       podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap-azurepipelines
       podman logout docker.io
+    displayName: 'Buildah/Podman Azure Release'
+    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
   # GitHub Release
   - task: GitHubRelease@0
