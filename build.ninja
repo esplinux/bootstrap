@@ -25,6 +25,8 @@ include musl/build.ninja
 include toybox/build.ninja
 include dash/build.ninja
 include llvm/build.ninja
+include bash/build.ninja
+include nodejs/build.ninja
 
 
 # Default clean tasks which must be located after the package includes
@@ -33,9 +35,9 @@ build clean: rm
   rm = src-* build-* out-* *.tgz *.log
 
 build distclean: rm
-  rm = src-* build-* out-* *.tgz *.log $linux $musl $toybox $dash $llvm $netbsd-curses $zsh
+  rm = src-* build-* out-* *.tgz *.log $linux $musl $toybox $dash $llvm $netbsd-curses $zsh $bash $nodejs
 
 
 # Default builds
 ##############################################################################
-default musl toybox dash libcxx lld clang
+default musl toybox dash libcxx lld clang bash

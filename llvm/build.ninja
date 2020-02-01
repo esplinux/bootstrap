@@ -10,7 +10,7 @@ build $llvm: git
 
 build $llvm/llvm: phony $llvm
 
-build build-libcxx-$llvm/build.ninja: cmake $llvm/llvm | out-$linux/include/linux/version.h out-$musl/lib/libc.a
+build build-libcxx-$llvm/build.ninja: cmake $llvm/llvm | out-$linux/include/linux/version.h out-$musl/lib/libc.so
   opts =  -G Ninja $
     -DCMAKE_CROSSCOMPILING=ON $
     -DCMAKE_INSTALL_PREFIX='' $

@@ -1,0 +1,19 @@
+bash=bash-5.0
+
+
+build $bash/configure: download
+  url = http://ftp.gnu.org/gnu/bash/$bash.tar.gz
+
+build $bash/Makefile: configure $bash/configure | out-$musl/lib/libc.so
+  description = Configuring $dash
+  prefix = CC=clang CFLAGS="--sysroot=$$PWD/../out-$musl $cflags" LDFLAGS="$ldflags"
+  opts = --prefix='' --host=none
+
+build out-$bash/bin/bash: make $bash/Makefile
+  description = Building $bash
+  target = install DESTDIR=$$PWD/out-$bash
+
+build $bash.tgz: package | out-$bash/bin/bash
+  builddir = out-$bash
+
+build bash: phony $bash.tgz

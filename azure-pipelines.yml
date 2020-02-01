@@ -51,6 +51,14 @@ jobs:
     displayName: 'Build Dash'
     env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
+  - script: TERM=dumb ninja bash
+    displayName: 'Build Bash'
+    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
+  - script: TERM=dumb ninja nodejs
+    displayName: 'Build NodeJS'
+    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+
   # Docker Release
   - script: |
       cnt=$(buildah from scratch)
@@ -63,6 +71,8 @@ jobs:
       tar xf clang-*.tgz -C $mnt
       tar xf toybox-*.tgz -C $mnt
       tar xf dash-*.tgz -C $mnt
+      tar xf bash-*.tgz -C $mnt
+      tar xf nodejs-*.tgz -C $mnt
       buildah unshare buildah unmount $cnt
       buildah config --cmd sh $cnt
       buildah commit --squash $cnt esplinux/bootstrap

@@ -26,15 +26,15 @@ rule patch
   command = cd $in;patch -i ../patches/$in.patch
 
 rule configure
-  command = cd $$(dirname $in); $prefix ./configure $opts >> ../configure-$$(dirname $in).log
+  command = cd $$(dirname $in); $prefix ./configure $opts
 
 rule make
   description = Building $out
-  command = $prefix make -j$nproc -C $$(dirname $in) $target >> make-$$(dirname $in).log
+  command = $prefix make -j$nproc -C $$(dirname $in) $target
 
 rule cmake
   description = CMAKE $in
-  command = cmake -B$$(dirname $out) -S$in $opts >> cmake-$$(dirname $out).log
+  command = cmake -B$$(dirname $out) -S$in $opts
 
 rule ninja
   command = $prefix ninja -C$$(dirname $in) -f $$(basename $in) $target

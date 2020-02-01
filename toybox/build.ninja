@@ -5,7 +5,7 @@ build $toybox/Makefile: git
   url = https://github.com/landley/toybox
   destination = $toybox
 
-build out-$toybox/bin/toybox: make $toybox/Makefile | out-$musl/lib/libc.a out-$linux/include/linux/fs.h out-$linux/include/linux/rfkill.h
+build out-$toybox/bin/toybox: make $toybox/Makefile | out-$musl/lib/libc.so out-$linux/include/linux/fs.h out-$linux/include/linux/rfkill.h
   description = Building $toybox
   prefix = CC=clang CFLAGS="--sysroot=$$PWD/out-$musl $cflags -I$$PWD/out-$linux/include" LDFLAGS="$ldflags" PREFIX=$$PWD/out-$toybox/bin
   nproc = 1

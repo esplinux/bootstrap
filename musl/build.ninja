@@ -11,12 +11,12 @@ build $musl/config.mak: configure $musl/configure
 
 build $musl/Makefile: phony $musl/config.mak
 
-build out-$musl/lib/libc.a: make $musl/Makefile
+build out-$musl/lib/libc.so: make $musl/Makefile
   description = Building $musl
   prefix = DESTDIR=$$PWD/out-$musl
   target = install
 
-build $musl.tgz: package | out-$musl/lib/libc.a
+build $musl.tgz: package | out-$musl/lib/libc.so
   builddir = out-$musl
 
 build musl: phony $musl.tgz
