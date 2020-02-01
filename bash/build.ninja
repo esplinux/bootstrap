@@ -5,9 +5,9 @@ build $bash/configure: download
   url = http://ftp.gnu.org/gnu/bash/$bash.tar.gz
 
 build $bash/Makefile: configure $bash/configure | out-$musl/lib/libc.so
-  description = Configuring $dash
+  description = Configuring $bash
   prefix = CC=clang CFLAGS="--sysroot=$$PWD/../out-$musl $cflags" LDFLAGS="$ldflags"
-  opts = --prefix='' --host=none
+  opts = --prefix='' --host=none --without-bash-malloc --enable-static-link
 
 build out-$bash/bin/bash: make $bash/Makefile
   description = Building $bash
