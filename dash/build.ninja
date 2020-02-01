@@ -9,7 +9,7 @@ build $dash/configure: download
 
 build $dash/Makefile: configure $dash/configure | out-$musl/lib/libc.so
   description = Configuring $dash
-  prefix = CC=clang CFLAGS="--sysroot=$$PWD/../out-$musl $cflags" LDFLAGS="$ldflags"
+  prefix = CC=clang CFLAGS="--sysroot=$$PWD/../out-$musl $cflags" LDFLAGS="$ldflags --static"
   opts = --prefix='' --host=none
 
 build out-$dash/bin/dash: make $dash/Makefile
