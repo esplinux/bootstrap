@@ -12,8 +12,9 @@ pool:
 jobs:
 - job: Bootstrap
   timeoutInMinutes: 0
-  container: fedora:31
-  options: --privileged
+  container: 
+    image: fedora:31
+    options: --privileged
 
   # Install build tools, podman and buildah
   # Configure libpod to use vfs storage so it works in a container
