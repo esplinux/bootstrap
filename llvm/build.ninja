@@ -16,7 +16,7 @@ build build-libcxx-$llvm/build.ninja: cmake $llvm/llvm | out-$linux/include/linu
     -DCMAKE_INSTALL_PREFIX='' $
     -DCMAKE_BUILD_TYPE=Release $
     -DCMAKE_C_COMPILER=clang $
-    -DCMAKE_C_FLAGS="$clfags -I$$PWD/out-$linux/include" $
+    -DCMAKE_C_FLAGS="$cflags -I$$PWD/out-$linux/include" $
     -DCMAKE_CXX_COMPILER=clang++ $
     -DCMAKE_CXX_FLAGS="$cxxflags -I$$PWD/out-$linux/include" $
     -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-unknown-linux-musl $
