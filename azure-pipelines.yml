@@ -17,7 +17,7 @@ jobs:
   # Add updated version of CMake, Podman and Buildah to Ubuntu Image
   steps:
   - script: |
-      sudo dnf -y install git clang lld cmake make ninja-build podman buildah rsync
+      sudo dnf -y install git clang lld cmake make ninja-build podman buildah rsync findutils diffutils
     displayName: 'Install Prerequisites'
 
   - script: TERM=dumb ninja musl toybox dash bash
