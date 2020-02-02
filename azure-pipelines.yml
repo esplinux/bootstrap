@@ -16,19 +16,10 @@ jobs:
     image: quay.io/buildah/stable
     options: --privileged --cap-add SYS_ADMIN --device /dev/fuse
 
-  # Install build tools, podman and buildah
-  # Configure libpod to use vfs storage so it works in a container
-  #    sudo sed -i 's/driver = "overlay"/driver = "vfs"/' /etc/containers/storage.conf
-  #    sudo sed -i 's/cgroup_manager = "systemd"/cgroup_manager = "cgroupfs"/' /usr/share/containers/libpod.conf
-  #    sudo dnf -y install git clang lld cmake make ninja-build buildah rsync findutils diffutils
+  # Install build tools and buildah
   steps:
   - script: |
-      sudo dnf -y install podman
-      buildah info
-      podman info
-      buildah from scratch
-      sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
-      sudo buildah logout docker.io
+      sudo dnf -y install git clang lld cmake make ninja-build rsync findutils diffutils
     displayName: 'Install Prerequisites'
 
   - script: TERM=dumb ninja musl toybox dash bash
@@ -36,9 +27,9 @@ jobs:
 
   - script: |
       CONTAINER_NAME="esplinux/bootstrap-base" scripts/buildcontainer.sh musl toybox dash
-      buildah login -u $(docker-user) -p $(docker-pass) docker.io
-      buildah push esplinux/bootstrap-base docker://docker.io/esplinux/bootstrap-base
-      buildah logout docker.io
+      sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
+      sudo buildah push esplinux/bootstrap-base docker://docker.io/esplinux/bootstrap-base
+      sudo buildah logout docker.io
     displayName: 'Podman Bootstrap Base'
 
   - script: TERM=dumb ninja libcxx
@@ -52,19 +43,19 @@ jobs:
 
   - script: |
       CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl toybox dash libcxx lld clang
-      podman login -u $(docker-user) -p $(docker-pass) docker.io
-      podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
-      podman logout docker.io
+      sudo podman login -u $(docker-user) -p $(docker-pass) docker.io
+      sudo podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
+      sduo podman logout docker.io
     displayName: 'Podman Bootstrap'
 
   - script: TERM=dumb ninja nodejs
     displayName: 'Build NodeJS'
 
   - script: |
-      CONTAINER_NAME="esplinux/bootstrap-azurepipeline" scripts/buildcontainer.sh musl toybox dash libcxx lld clang bash nodejs
-      podman login -u $(docker-user) -p $(docker-pass) docker.io
-      podman push esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
-      podman logout docker.io
+      CMD=node CONTAINER_NAME="esplinux/bootstrap-azurepipeline" scripts/buildcontainer.sh musl toybox dash libcxx lld clang bash nodejs
+      sudo podman login -u $(docker-user) -p $(docker-pass) docker.io
+      sudo podman push esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
+      sudo podman logout docker.io
     displayName: 'Podman Bootstrap Azure Pipeline'
 
   # GitHub Release
