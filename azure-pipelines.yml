@@ -20,9 +20,11 @@ jobs:
   # Configure libpod to use vfs storage so it works in a container
   #    sudo sed -i 's/driver = "overlay"/driver = "vfs"/' /etc/containers/storage.conf
   #    sudo sed -i 's/cgroup_manager = "systemd"/cgroup_manager = "cgroupfs"/' /usr/share/containers/libpod.conf
+  #    sudo dnf -y install git clang lld cmake make ninja-build buildah rsync findutils diffutils
   steps:
   - script: |
-      sudo dnf -y install git clang lld cmake make ninja-build buildah rsync findutils diffutils
+      sudo dnf -y install buildah
+      buildah --storage-driver vfs from scratch
       buildah --storage-driver vfs info
       buildah --storage-driver vfs login -u $(docker-user) -p $(docker-pass) docker.io
       buildah --storage-driver vfs logout docker.io
