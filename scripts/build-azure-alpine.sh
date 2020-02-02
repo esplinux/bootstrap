@@ -5,4 +5,6 @@ buildah run $cnt -- sh -c "echo 'http://dl-cdn.alpinelinux.org/alpine/edge/testi
 buildah run $cnt apk add bash sudo nodejs
 buildah config --label com.azure.dev.pipelines.agent.handler.node.path=/usr/bin/node $cnt
 buildah config --cmd node $cnt
-buildah commit $cnt esplinux/alpine-azurepipeline
+buildah commit --squash $cnt esplinux/alpine-azurepipeline
+
+# push with buildah push -f docker esplinux/alpine-azurepipeline docker://docker.io/esplinux/alpine-azurepipeline
