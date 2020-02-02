@@ -40,4 +40,4 @@ build distclean: rm
 
 # Default builds
 ##############################################################################
-default musl toybox dash libcxx lld clang bash
+default musl toybox dash libcxx lld clang bash nodejs

@@ -10,10 +10,10 @@ do
 done
 
 cd rootfs
-tar -zcvf ../rootfs.tgz .
+tar -zcf ../rootfs.tgz .
 cd ..
 
-podman import -c 'CMD ["sh"]' rootfs.tgz $CONTAINER_NAME 
+podman import -c 'CMD ["node"]' -c 'LABEL com.azure.dev.pipelines.agent.handler.node.path=/usr/local/bin/node' rootfs.tgz $CONTAINER_NAME 
 
 rm -rf rootfs rootfs.tgz
 
