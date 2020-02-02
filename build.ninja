@@ -11,7 +11,7 @@ nproc = 12
 ##############################################################################
 cflags = -target x86_64-unknown-linux-musl -Os
 cxxflags = -target x86_64-unknown-linux-musl -Os
-ldflags = -w -s
+ldflags = -fuse-ld=lld -w -s
 
 
 # Default build rules

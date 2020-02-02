@@ -13,13 +13,13 @@ jobs:
 - job: Bootstrap
   timeoutInMinutes: 0
   container: 
-    image: quay.io/buildah/stable
+    image: esplinux/alpine-azurepipeline
     options: --privileged --cap-add SYS_ADMIN --device /dev/fuse
 
   # Install build tools and buildah
   steps:
   - script: |
-      sudo dnf -y install git clang lld cmake make ninja-build rsync findutils diffutils
+      sudo apk add build-base clang lld git cmake ninja buildah
     displayName: 'Install Prerequisites'
 
   - script: TERM=dumb ninja musl toybox dash bash

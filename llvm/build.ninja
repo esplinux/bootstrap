@@ -57,7 +57,7 @@ build build-$llvm/build.ninja: cmake $llvm/llvm | out-sysroot-$llvm
     -DCMAKE_C_FLAGS="--sysroot=$$PWD/out-sysroot-$llvm $cflags" $
     -DCMAKE_CXX_COMPILER=clang++ $
     -DCMAKE_CXX_FLAGS="--sysroot=$$PWD/out-sysroot-$llvm $cxxflags -I$$PWD/out-sysroot-$llvm/include/c++/v1" $
-    -DCMAKE_EXE_LINKER_FLAGS="--sysroot=$$PWD/out-sysroot-$llvm --rtlib=compiler-rt -stdlib=libc++ -lc++abi" $
+    -DCMAKE_EXE_LINKER_FLAGS="$ldflags --sysroot=$$PWD/out-sysroot-$llvm --rtlib=compiler-rt -stdlib=libc++ -lc++abi" $
     -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-unknown-linux-musl $
     -DLLVM_TARGET_ARCH=X86 $
     -DLLVM_TARGETS_TO_BUILD=X86 $
