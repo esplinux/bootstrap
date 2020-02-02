@@ -25,8 +25,8 @@ jobs:
   - script: |
       buildah info
       buildah from scratch
-      buildah login -u $(docker-user) -p $(docker-pass) docker.io
-      buildah logout docker.io
+      sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
+      sudo buildah logout docker.io
     displayName: 'Install Prerequisites'
 
   - script: TERM=dumb ninja musl toybox dash bash
