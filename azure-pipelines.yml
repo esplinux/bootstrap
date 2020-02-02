@@ -19,7 +19,7 @@ jobs:
   # Install build tools and buildah
   steps:
   - script: |
-      sudo apk add buildah build-base clang cmake curl git lld ninja
+      sudo apk add buildah build-base clang cmake curl git lld ninja rsync
     displayName: 'Install Prerequisites'
 
   - script: TERM=dumb ninja musl toybox dash bash

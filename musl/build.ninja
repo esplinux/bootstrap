@@ -6,7 +6,7 @@ build $musl/configure: download
 
 build $musl/config.mak: configure $musl/configure
   description = Configuring $musl
-  prefix = CC=clang CFLAGS="$cflags"
+  prefix = CC=clang
   opts = --prefix=''
 
 build $musl/Makefile: phony $musl/config.mak
