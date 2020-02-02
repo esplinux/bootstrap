@@ -27,9 +27,11 @@ jobs:
 
   - script: |
       CONTAINER_NAME="esplinux/bootstrap-base" scripts/buildcontainer.sh musl toybox dash
+      buildah images
+      sudo buildah images
       sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
       sudo buildah push esplinux/bootstrap-base docker://docker.io/esplinux/bootstrap-base
-      sduo buildah logout docker.io
+      sudo buildah logout docker.io
     displayName: 'Podman Bootstrap Base'
 
   - script: TERM=dumb ninja libcxx
