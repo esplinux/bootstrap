@@ -13,7 +13,7 @@ jobs:
 - job: Bootstrap
   timeoutInMinutes: 0
   container: 
-    image: fedora:31
+    image: quay.io/buildah/stable
     #options: --privileged
 
   # Install build tools, podman and buildah
@@ -24,10 +24,10 @@ jobs:
   steps:
   - script: |
       sudo dnf -y install buildah
-      buildah --storage-driver vfs from scratch
-      buildah --storage-driver vfs info
-      buildah --storage-driver vfs login -u $(docker-user) -p $(docker-pass) docker.io
-      buildah --storage-driver vfs logout docker.io
+      buildah info
+      buildah from scratch
+      buildah login -u $(docker-user) -p $(docker-pass) docker.io
+      buildah logout docker.io
     displayName: 'Install Prerequisites'
 
   - script: TERM=dumb ninja musl toybox dash bash
