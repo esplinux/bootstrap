@@ -17,19 +17,6 @@ cd ..
 
 # Hack label for Azure Pipelines into all containers
 podman import -c "CMD [\"$CMD\"]" -c 'LABEL com.azure.dev.pipelines.agent.handler.node.path=/usr/local/bin/node' rootfs.tgz $CONTAINER_NAME 
-
+podman images
+podman inspect $CONTAINER_NAME
 rm -rf rootfs rootfs.tgz
-
-#cnt=$(buildah from scratch)
-#echo cnt=$cnt
-#mnt=$(buildah unshare buildah mount $cnt)
-#echo mnt=$mnt
-#for tarball in "$@"
-#do
-#  echo untaring $tarball
-#  tar xf $tarball-*.tgz -C $mnt
-#done
-#buildah unshare buildah unmount $cnt
-#buildah config --cmd sh $cnt
-#buildah commit --squash $cnt $CONTAINER_NAME
-#buildah rm $cnt
