@@ -14,7 +14,7 @@ jobs:
   timeoutInMinutes: 0
   container: 
     image: quay.io/buildah/stable
-    options: --privileged --cap-add SYS_ADMIN --device /dev/fuse
+    options: --cap-add SYS_ADMIN --device /dev/fuse
 
   # Install build tools, podman and buildah
   # Configure libpod to use vfs storage so it works in a container
