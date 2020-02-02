@@ -2,21 +2,24 @@
 
 CONTAINER_NAME="${CONTAINER_NAME:-esplinux/test}"
 CMD="${CMD:-sh}"
+TOP=$(pwd)
 
 echo Building container $CONTAINER_NAME CMD $CMD
 
-mkdir rootfs
+buildah --name $CONTAINER_NAME from scratch
+mnt=$(buildah unshare buildah mount $CONTAINER_NAME)
+cd $mnt
 for tarball in "$@"
 do
-  tar xf $tarball-*.tgz -C rootfs
+  tar xf $TOP/$tarball-*.tgz
 done
-
-cd rootfs
-tar -zcf ../rootfs.tgz .
-cd ..
+buildah unshare buildah unmount $CONTAINER_NAME
+buildah config --cmd $CMD $CONTAINER_NAME
 
 # Hack label for Azure Pipelines into all containers
-podman import -c "CMD [\"$CMD\"]" -c 'LABEL com.azure.dev.pipelines.agent.handler.node.path=/usr/local/bin/node' rootfs.tgz $CONTAINER_NAME 
-podman images
-podman inspect $CONTAINER_NAME
-rm -rf rootfs rootfs.tgz
+buildah config --label com.azure.dev.pipelines.agent.handler.node.path=/usr/local/bin/node $CONTAINER_NAME
+
+buildah commit $CONTAINER_NAME $CONTAINER_NAME
+
+buildah images
+buildah inspect $CONTAINER_NAME
