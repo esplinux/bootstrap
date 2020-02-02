@@ -9,6 +9,8 @@ trigger:
 pool:
   vmImage: 'ubuntu-18.04'
 
+container: fedora:31
+
 jobs:
 - job: Bootstrap
   timeoutInMinutes: 0
@@ -16,66 +18,44 @@ jobs:
   # Add updated version of CMake, Podman and Buildah to Ubuntu Image
   steps:
   - script: |
-      sudo apt-get update
-      sudo apt-get install apt-transport-https ca-certificates gnupg software-properties-common curl
-      curl -L https://apt.kitware.com/keys/kitware-archive-latest.asc 2> /dev/null | sudo apt-key add
-      sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
-      curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/Release.key 2> /dev/null | sudo apt-key add
-      sudo apt-add-repository 'deb https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/ /'
-      sudo apt-get update
-      sudo apt-get install git clang lld cmake make ninja-build podman buildah
-      sudo mkdir -p /etc/containers
+      sudo dnf install git clang lld cmake make ninja-build podman buildah
     displayName: 'Install Prerequisites'
 
-  - script: TERM=dumb ninja musl
-    displayName: 'Build Musl'
-    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+  - script: TERM=dumb ninja musl toybox dash bash
+    displayName: 'Build Base [Musl, Toybox, Dash, Bash]'
+
+  - script: |
+      CONTAINER_NAME="esplinux/bootstrap-base" scripts/buildcontainer.sh musl toybox dash
+      podman login -u $(docker-user) -p $(docker-pass) docker.io
+      podman push esplinux/bootstrap-base docker://docker.io/esplinux/bootstrap-base
+      podman logout docker.io
+    displayName: 'Podman Bootstrap Base'
 
   - script: TERM=dumb ninja libcxx
     displayName: 'Build LibCXX'
-    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
   - script: TERM=dumb ninja lld
     displayName: 'Build LLD'
-    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
   - script: TERM=dumb ninja clang
     displayName: 'Build Clang'
-    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
-  - script: TERM=dumb ninja toybox
-    displayName: 'Build Toybox'
-    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
-
-  - script: TERM=dumb ninja dash
-    displayName: 'Build Dash'
-    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
-
-  - script: TERM=dumb ninja bash
-    displayName: 'Build Bash'
-    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
-
-  - script: TERM=dumb ninja nodejs
-    displayName: 'Build NodeJS'
-    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
-
-  # Docker Release
-  #- script: |
-  #    CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl libcxx toybox dash lld clang
-  #    podman login -u $(docker-user) -p $(docker-pass) docker.io
-  #    podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
-  #    podman logout docker.io
-  #  displayName: 'Podman Release'
-  #  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
-
-  # Docker Release
   - script: |
-      CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl libcxx toybox dash lld clang bash nodejs
+      CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl toybox dash libcxx lld clang
       podman login -u $(docker-user) -p $(docker-pass) docker.io
       podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
       podman logout docker.io
-    displayName: 'Podman Release'
-    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+    displayName: 'Podman Bootstrap'
+
+  - script: TERM=dumb ninja nodejs
+    displayName: 'Build NodeJS'
+
+  - script: |
+      CONTAINER_NAME="esplinux/bootstrap-azurepipeline" scripts/buildcontainer.sh musl toybox dash libcxx lld clang bash nodejs
+      podman login -u $(docker-user) -p $(docker-pass) docker.io
+      podman push esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
+      podman logout docker.io
+    displayName: 'Podman Bootstrap Azure Pipeline'
 
   # GitHub Release
   - task: GitHubRelease@0
