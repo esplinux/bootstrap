@@ -23,7 +23,7 @@ jobs:
   #    sudo dnf -y install git clang lld cmake make ninja-build buildah rsync findutils diffutils
   steps:
   - script: |
-      dnf -y install podman
+      sudo dnf -y install podman
       buildah info
       podman info
       buildah from scratch
