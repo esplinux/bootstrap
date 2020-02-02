@@ -9,11 +9,10 @@ trigger:
 pool:
   vmImage: 'ubuntu-18.04'
 
-container: fedora:31
-
 jobs:
 - job: Bootstrap
   timeoutInMinutes: 0
+  container: fedora:31
 
   # Add updated version of CMake, Podman and Buildah to Ubuntu Image
   steps:
