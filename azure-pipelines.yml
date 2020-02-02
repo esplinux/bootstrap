@@ -27,9 +27,9 @@ jobs:
 
   - script: |
       CONTAINER_NAME="esplinux/bootstrap-base" scripts/buildcontainer.sh musl toybox dash
-      buildah --runroot /tmp --root /tmp login -u $(docker-user) -p $(docker-pass) docker.io
-      buildah --runroot /tmp --root /tmp push esplinux/bootstrap-base docker://docker.io/esplinux/bootstrap-base
-      buildah --runroot /tmp --root /tmp logout docker.io
+      sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
+      sudo buildah push esplinux/bootstrap-base docker://docker.io/esplinux/bootstrap-base
+      sduo buildah logout docker.io
     displayName: 'Podman Bootstrap Base'
 
   - script: TERM=dumb ninja libcxx
@@ -43,9 +43,9 @@ jobs:
 
   - script: |
       CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl toybox dash libcxx lld clang
-      podman --runroot /tmp --root /tmp login -u $(docker-user) -p $(docker-pass) docker.io
-      podman --runroot /tmp --root /tmp push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
-      podman --runroot /tmp --root /tmp logout docker.io
+      sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
+      sudo buildah push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
+      sudo buildah logout docker.io
     displayName: 'Podman Bootstrap'
 
   - script: TERM=dumb ninja nodejs
@@ -53,9 +53,9 @@ jobs:
 
   - script: |
       CMD=node CONTAINER_NAME="esplinux/bootstrap-azurepipeline" scripts/buildcontainer.sh musl toybox dash libcxx lld clang bash nodejs
-      podman --runroot /tmp --root /tmp login -u $(docker-user) -p $(docker-pass) docker.io
-      podman --runroot /tmp --root /tmp push esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
-      podman --runroot /tmp --root /tmp logout docker.io
+      sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
+      sudo buildah push esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
+      sudo buildah logout docker.io
     displayName: 'Podman Bootstrap Azure Pipeline'
 
   # GitHub Release
