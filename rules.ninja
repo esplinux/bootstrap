@@ -18,9 +18,10 @@ rule git
   description = Cloning $destination
   command = git clone -q --depth=1 $url $destination
 
+#  command = find $builddir -printf "%P\n" -type f -o -type l -o -type d | sed -r '/^\s*$$/d' | tar -czf $out --no-recursion -C $builddir -T -
 rule package
   description = Packaging $out
-  command = find $builddir -printf "%P\n" -type f -o -type l -o -type d | sed -r '/^\s*$$/d' | tar -czf $out --no-recursion -C $builddir -T -
+  command = cd $builddir; tar -czf ../$out .; cd ..
 
 rule patch
   command = cd $in;patch -i ../patches/$in.patch

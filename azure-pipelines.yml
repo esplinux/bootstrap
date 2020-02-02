@@ -60,38 +60,21 @@ jobs:
     env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
   # Docker Release
-  - script: |
-      cnt=$(buildah from scratch)
-      mnt=$(buildah unshare buildah mount $cnt)
-      echo cnt=$cnt
-      echo mnt=$mnt
-      tar xf musl-*.tgz -C $mnt
-      tar xf libcxx-*.tgz -C $mnt
-      tar xf lld-*.tgz -C $mnt
-      tar xf clang-*.tgz -C $mnt
-      tar xf toybox-*.tgz -C $mnt
-      tar xf dash-*.tgz -C $mnt
-      tar xf bash-*.tgz -C $mnt
-      tar xf nodejs-*.tgz -C $mnt
-      buildah unshare buildah unmount $cnt
-      buildah config --cmd sh $cnt
-      buildah commit --squash $cnt esplinux/bootstrap
-      podman login -u $(docker-user) -p $(docker-pass) docker.io
-      podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
-      podman logout docker.io
-    displayName: 'Buildah/Podman Release'
-    env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
+  #- script: |
+  #    CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl libcxx toybox dash lld clang
+  #    podman login -u $(docker-user) -p $(docker-pass) docker.io
+  #    podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
+  #    podman logout docker.io
+  #  displayName: 'Podman Release'
+  #  env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
   # Docker Release
   - script: |
-      cnt=$(buildah from esplinux/bootstrap)
-      buildah config --label com.azure.dev.pipelines.agent.handler.node.path=/usr/local/bin/node $cnt
-      buildah config --cmd node $cnt
-      buildah commit --squash $cnt esplinux/bootstrap-azurepipelines
+      CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl libcxx toybox dash lld clang bash nodejs
       podman login -u $(docker-user) -p $(docker-pass) docker.io
-      podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap-azurepipelines
+      podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
       podman logout docker.io
-    displayName: 'Buildah/Podman Azure Release'
+    displayName: 'Podman Release'
     env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin" }
 
   # GitHub Release
