@@ -14,7 +14,7 @@ jobs:
   timeoutInMinutes: 0
   container: 
     image: quay.io/buildah/stable
-    options: --cap-add SYS_ADMIN --device /dev/fuse
+    options: --privileged --cap-add SYS_ADMIN --device /dev/fuse
 
   # Install build tools, podman and buildah
   # Configure libpod to use vfs storage so it works in a container
@@ -23,7 +23,9 @@ jobs:
   #    sudo dnf -y install git clang lld cmake make ninja-build buildah rsync findutils diffutils
   steps:
   - script: |
+      dnf -y install podman
       buildah info
+      podman info
       buildah from scratch
       sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
       sudo buildah logout docker.io
