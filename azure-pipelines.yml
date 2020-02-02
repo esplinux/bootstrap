@@ -28,7 +28,7 @@ jobs:
     displayName: 'Build Base [Musl, Toybox, Dash, Bash]'
 
   - script: |
-      CONTAINER_NAME="esplinux/bootstrap-base" scripts/buildcontainer.sh musl toybox dash
+      sudo CONTAINER_NAME="esplinux/bootstrap-base" scripts/buildcontainer.sh musl toybox dash
       podman login -u $(docker-user) -p $(docker-pass) docker.io
       podman push esplinux/bootstrap-base docker://docker.io/esplinux/bootstrap-base
       podman logout docker.io
@@ -44,7 +44,7 @@ jobs:
     displayName: 'Build Clang'
 
   - script: |
-      CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl toybox dash libcxx lld clang
+      sudo CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl toybox dash libcxx lld clang
       podman login -u $(docker-user) -p $(docker-pass) docker.io
       podman push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
       podman logout docker.io
@@ -54,7 +54,7 @@ jobs:
     displayName: 'Build NodeJS'
 
   - script: |
-      CONTAINER_NAME="esplinux/bootstrap-azurepipeline" scripts/buildcontainer.sh musl toybox dash libcxx lld clang bash nodejs
+      sudo CONTAINER_NAME="esplinux/bootstrap-azurepipeline" scripts/buildcontainer.sh musl toybox dash libcxx lld clang bash nodejs
       podman login -u $(docker-user) -p $(docker-pass) docker.io
       podman push esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
       podman logout docker.io
