@@ -13,13 +13,14 @@ jobs:
 - job: Bootstrap
   timeoutInMinutes: 0
   container: fedora:31
+  options: --privileged
 
   # Install build tools, podman and buildah
   # Configure libpod to use vfs storage so it works in a container
+  #    sudo sed -i 's/driver = "overlay"/driver = "vfs"/' /etc/containers/storage.conf
   steps:
   - script: |
       sudo dnf -y install git clang lld cmake make ninja-build podman buildah rsync findutils diffutils
-      sudo sed -i 's/driver = "overlay"/driver = "vfs"/' /etc/containers/storage.conf
     displayName: 'Install Prerequisites'
 
   - script: TERM=dumb ninja musl toybox dash bash
