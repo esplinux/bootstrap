@@ -22,8 +22,8 @@ jobs:
       sudo apk add buildah build-base clang cmake curl git lld llvm llvm-dev python3 ninja rsync zlib zlib-dev
     displayName: 'Install Prerequisites'
 
-  - script: TERM=dumb ninja host-clang
-    displayName: 'Build Host Tools [Clang, Compiler-RT, LLD]'
+  - script: TERM=dumb ninja host-tools
+    displayName: 'Build Host Tools [Clang, Compiler-RT, LibUnwind, LLD]'
 
   - script: TERM=dumb ninja musl toybox dash
     displayName: 'Build Base [Musl, Toybox, Dash]'
