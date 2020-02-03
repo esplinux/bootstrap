@@ -20,11 +20,11 @@ include rules.ninja
 
 # Packages to build
 ##############################################################################
+include llvm/build.ninja
 include linux/build.ninja
 include musl/build.ninja
 include toybox/build.ninja
 include dash/build.ninja
-include llvm/build.ninja
 include bash/build.ninja
 include nodejs/build.ninja
 
@@ -35,9 +35,9 @@ build clean: rm
   rm = src-* build-* out-* *.tgz *.log
 
 build distclean: rm
-  rm = src-* build-* out-* *.tgz *.log $linux $musl $toybox $dash $llvm $bash $nodejs
+  rm = src-* build-* out-* *.tgz *.log host-tools-* $linux $musl $toybox $dash $llvm $bash $nodejs
 
 
 # Default builds
 ##############################################################################
-default musl toybox dash libcxx lld clang bash nodejs
+default host-clang musl toybox dash libcxx lld clang bash nodejs

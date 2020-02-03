@@ -22,8 +22,11 @@ jobs:
       sudo apk add buildah build-base clang cmake curl git lld llvm llvm-dev python3 ninja rsync
     displayName: 'Install Prerequisites'
 
-  - script: TERM=dumb ninja musl toybox dash bash
-    displayName: 'Build Base [Musl, Toybox, Dash, Bash]'
+  - script: TERM=dumb ninja host-clang
+    displayName: 'Build Host Tools [Clang, Compiler-RT, LLD]'
+
+  - script: TERM=dumb ninja musl toybox dash
+    displayName: 'Build Base [Musl, Toybox, Dash]'
 
   - script: |
       CONTAINER_NAME="esplinux/bootstrap-base" scripts/buildcontainer.sh musl toybox dash
@@ -49,6 +52,9 @@ jobs:
       sudo buildah push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
       sudo buildah logout docker.io
     displayName: 'Podman Bootstrap'
+
+  - script: TERM=dumb ninja bash
+    displayName: 'Build Bash'
 
   - script: TERM=dumb ninja nodejs
     displayName: 'Build NodeJS'
