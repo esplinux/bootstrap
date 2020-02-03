@@ -11,6 +11,10 @@ build build-host-$llvm/build.ninja: cmake $llvm/llvm  | out-$musl/lib/libc.so
   opts =  -G Ninja $
     -DCMAKE_INSTALL_PREFIX=$$PWD/host-tools-$llvm $
     -DCMAKE_BUILD_TYPE=MinSizeRel $
+    -DCMAKE_C_COMPILER=clang $
+    -DCMAKE_C_FLAGS=-I$$PWD/out-$linux/include $
+    -DCMAKE_CXX_COMPILER=clang++ $
+    -DCMAKE_CXX_FLAGS=-I$$PWD/out-$linux/include $
     -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-unknown-linux-musl $
     -DLLVM_TARGET_ARCH=X86 $
     -DLLVM_TARGETS_TO_BUILD=X86 $
@@ -30,6 +34,7 @@ build build-host-$llvm/build.ninja: cmake $llvm/llvm  | out-$musl/lib/libc.so
     -DLIBUNWIND_USE_COMPILER_RT=ON $
     -DLIBUNWIND_ENABLE_SHARED=OFF $
     -DLIBUNWIND_SYSROOT=$$PWD/out-$musl $
+    -DLIBUNWIND_TARGET_TRIPLE=x86_64-unknown-linux-musl $
     -DLIBCXXABI_USE_COMPILER_RT=ON $
     -DLIBCXXABI_USE_LLVM_UNWINDER=ON $
     -DLIBCXXABI_ENABLE_STATIC_UNWINDER=ON $
