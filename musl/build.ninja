@@ -1,9 +1,8 @@
 build $musl/configure: download
   url = https://www.musl-libc.org/releases/$musl.tar.gz 
 
-build $musl/config.mak: configure $musl/configure | host-tools-$llvm/bin/clang
+build $musl/config.mak: configure $musl/configure
   description = Configuring $musl
-  prefix = CC=$$PWD/../host-tools-$llvm/bin/clang
   opts = --prefix=''
 
 build $musl/Makefile: phony $musl/config.mak
