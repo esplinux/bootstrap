@@ -9,8 +9,8 @@ build $dash/configure: download
 
 build $dash/Makefile: configure $dash/configure | out-$musl/lib/libc.so host-tools-$llvm/bin/clang
   description = Configuring $dash
-  prefix = CC=$$PWD/../host-tools-$llvm/bin/clang CFLAGS="--sysroot=$$PWD/../out-$musl $cflags" LDFLAGS="$ldflags -rtlib=compiler-rt --static"
-  opts = --prefix='' --host=none
+  prefix = CC="$$PWD/../host-tools-$llvm/bin/clang --sysroot=$$PWD/../out-$musl -rtlib=compiler-rt $cflags" LDFLAGS="$ldflags"
+  opts = --prefix='' --host=none --enable-static
 
 build out-$dash/bin/dash: make $dash/Makefile
   description = Building $dash
