@@ -19,10 +19,10 @@ build build-host-$llvm/build.ninja: cmake $llvm/llvm
     -DLLVM_ENABLE_LIBXML2=OFF $
     -DLLVM_ENABLE_LLD=ON $
     -DLLVM_ENABLE_RTTI=ON $
-    -DLLVM_ENABLE_ZLIB=OFF $
+    -DLLVM_ENABLE_ZLIB=ON $
     -DLLVM_INSTALL_BINUTILS_SYMLINKS=ON $
     -DLLVM_INSTALL_CCTOOLS_SYMLINKS=ON $
-    -DLLVM_ENABLE_PROJECTS='compiler-rt;clang;lld;llvm;' $
+    -DLLVM_ENABLE_PROJECTS='compiler-rt;libunwind;clang;lld;llvm;' $
     -DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON $
     -DCOMPILER_RT_BUILD_LIBFUZZER=OFF $
     -DCOMPILER_RT_BUILD_SANITIZERS=OFF $
@@ -31,7 +31,7 @@ build build-host-$llvm/build.ninja: cmake $llvm/llvm
     -DCLANG_DEFAULT_RTLIB=compiler-rt
 
 build host-tools-$llvm/bin/clang: ninja build-host-$llvm/build.ninja
-  target = install-clang install-compiler-rt install-lld install-unwind install-libcxxabi install-libcxx
+  target = install-clang install-compiler-rt install-lld install-unwind
   pool = console
 
 
@@ -129,7 +129,7 @@ build out-$llvm/bin/llvm-config: ninja build-$llvm/build.ninja | out-lld-$llvm/b
 build $llvm.tgz: package | out-$llvm/bin/llvm-config
   builddir = out-$llvm
 
-build host-clang: phony host-tools-$llvm/bin/clang
+build host-tools: phony host-tools-$llvm/bin/clang
 build libcxx: phony libcxx-$llvm.tgz
 build lld: phony lld-$llvm.tgz
 build clang: phony clang-$llvm.tgz

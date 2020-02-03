@@ -19,7 +19,7 @@ jobs:
   # Install build tools and buildah
   steps:
   - script: |
-      sudo apk add buildah build-base clang cmake curl git lld llvm llvm-dev python3 ninja rsync
+      sudo apk add buildah build-base clang cmake curl git lld llvm llvm-dev python3 ninja rsync zlib-zlib-dev
     displayName: 'Install Prerequisites'
 
   - script: TERM=dumb ninja host-clang
