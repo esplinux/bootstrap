@@ -1,6 +1,3 @@
-llvm=llvm-10
-
-
 rule mksysroot
   command = mkdir $out;cp -r out-$musl/* out-libcxx-$llvm/* $out
 
@@ -12,9 +9,8 @@ build $llvm/llvm: phony $llvm
 
 build build-host-$llvm/build.ninja: cmake $llvm/llvm
   opts =  -G Ninja $
-    -DCMAKE_CROSSCOMPILING=ON $
     -DCMAKE_INSTALL_PREFIX=$$PWD/host-tools-$llvm $
-    -DCMAKE_BUILD_TYPE=Release $
+    -DCMAKE_BUILD_TYPE=MinSizeRel $
     -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-unknown-linux-musl $
     -DLLVM_TARGET_ARCH=X86 $
     -DLLVM_TARGETS_TO_BUILD=X86 $
@@ -26,15 +22,16 @@ build build-host-$llvm/build.ninja: cmake $llvm/llvm
     -DLLVM_ENABLE_ZLIB=OFF $
     -DLLVM_INSTALL_BINUTILS_SYMLINKS=ON $
     -DLLVM_INSTALL_CCTOOLS_SYMLINKS=ON $
-    -DLLVM_ENABLE_PROJECTS='compiler-rt;clang;lld;llvm' $
+    -DLLVM_ENABLE_PROJECTS='compiler-rt;clang;lld;llvm;' $
     -DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON $
     -DCOMPILER_RT_BUILD_LIBFUZZER=OFF $
     -DCOMPILER_RT_BUILD_SANITIZERS=OFF $
     -DCOMPILER_RT_BUILD_XRAY=OFF $
-    -DCLANG_DEFAULT_LINKER=lld
+    -DCLANG_DEFAULT_LINKER=lld $
+    -DCLANG_DEFAULT_RTLIB=compiler-rt
 
 build host-tools-$llvm/bin/clang: ninja build-host-$llvm/build.ninja
-  target = install-clang install-compiler-rt install-lld
+  target = install-clang install-compiler-rt install-lld install-unwind install-libcxxabi install-libcxx
   pool = console
 
 
@@ -42,12 +39,11 @@ build build-libcxx-$llvm/build.ninja: cmake $llvm/llvm | out-$linux/include/linu
   opts =  -G Ninja $
     -DCMAKE_CROSSCOMPILING=ON $
     -DCMAKE_INSTALL_PREFIX='' $
-    -DCMAKE_BUILD_TYPE=Release $
-    -DCMAKE_C_COMPILER=host-tools-$llvm/bin/clang $
-    -DCMAKE_C_FLAGS="$cflags -I$$PWD/out-$linux/include" $
-    -DCMAKE_CXX_COMPILER=host-tools-$llvm/bin/clang++ $
-    -DCMAKE_CXX_FLAGS="$cxxflags -I$$PWD/out-$linux/include" $
-    -DCMAKE_EXE_LINKER_FLAGS="$ldflags --sysroot=$$PWD/out-sysroot-$llvm --rtlib=compiler-rt" $
+    -DCMAKE_BUILD_TYPE=MinSizeRel $
+    -DCMAKE_C_COMPILER=$$PWD/host-tools-$llvm/bin/clang $
+    -DCMAKE_C_FLAGS=-I$$PWD/out-$linux/include $
+    -DCMAKE_CXX_COMPILER=$$PWD/host-tools-$llvm/bin/clang++ $
+    -DCMAKE_CXX_FLAGS=-I$$PWD/out-$linux/include $
     -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-unknown-linux-musl $
     -DLLVM_TARGET_ARCH=X86 $
     -DLLVM_TARGETS_TO_BUILD=X86 $
@@ -80,10 +76,10 @@ build build-$llvm/build.ninja: cmake $llvm/llvm | out-sysroot-$llvm
   opts =  -G Ninja $
     -DCMAKE_CROSSCOMPILING=ON $
     -DCMAKE_INSTALL_PREFIX='' $
-    -DCMAKE_BUILD_TYPE=Release $
-    -DCMAKE_C_COMPILER=host-tools-$llvm/bin/clang $
+    -DCMAKE_BUILD_TYPE=MinSizeRel $
+    -DCMAKE_C_COMPILER=$$PWD/../host-tools-$llvm/bin/clang $
     -DCMAKE_C_FLAGS="--sysroot=$$PWD/out-sysroot-$llvm $cflags" $
-    -DCMAKE_CXX_COMPILER=host-tools-$llvm/bin/clang++ $
+    -DCMAKE_CXX_COMPILER=$$PWD/../host-tools-$llvm/bin/clang++ $
     -DCMAKE_CXX_FLAGS="--sysroot=$$PWD/out-sysroot-$llvm $cxxflags -I$$PWD/out-sysroot-$llvm/include/c++/v1" $
     -DCMAKE_EXE_LINKER_FLAGS="$ldflags --sysroot=$$PWD/out-sysroot-$llvm --rtlib=compiler-rt -stdlib=libc++ -lc++abi" $
     -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-unknown-linux-musl $

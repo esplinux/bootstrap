@@ -1,6 +1,3 @@
-dash=dash-0.5.10
-
-
 rule _dash_ln
   command = cd $$(dirname $out); ln -s dash sh
 
@@ -9,7 +6,7 @@ build $dash/configure: download
 
 build $dash/Makefile: configure $dash/configure | out-$musl/lib/libc.so host-tools-$llvm/bin/clang
   description = Configuring $dash
-  prefix = CC="$$PWD/../host-tools-$llvm/bin/clang --sysroot=$$PWD/../out-$musl -rtlib=compiler-rt $cflags" LDFLAGS="$ldflags"
+  prefix = CC="$$PWD/../host-tools-$llvm/bin/clang --sysroot=$$PWD/../out-$musl $cflags" LDFLAGS="$ldflags"
   opts = --prefix='' --host=none --enable-static
 
 build out-$dash/bin/dash: make $dash/Makefile

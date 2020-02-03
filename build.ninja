@@ -7,11 +7,22 @@ nproc = 12
 # new version of esp/bootstrap or porting to a new architecture
 ##############################################################################
 
+# Package Versions
+##############################################################################
+llvm=llvm-10
+linux=linux-5.4.15
+musl=musl-1.1.24
+toybox=toybox-HEAD
+dash=dash-0.5.10
+bash=bash-5.0
+nodejs=node-js-STATIC-ABOMINATION
+
+
 # Defaults inherited by included build files
 ##############################################################################
-cflags = -target x86_64-unknown-linux-musl -Os
-cxxflags = -target x86_64-unknown-linux-musl -Os
-ldflags = -fuse-ld=lld -w -s
+cflags = -Os
+cxxflags = -Os
+ldflags = -w -s
 
 
 # Default build rules
