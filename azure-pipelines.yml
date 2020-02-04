@@ -12,13 +12,14 @@ pool:
 jobs:
 - job: Bootstrap
   timeoutInMinutes: 0
-  container: 
+  container: fedora:31
     image: 
     options: --privileged --cap-add SYS_ADMIN --device /dev/fuse
 
   # Install build tools and buildah
   steps:
   - script: |
+      dnf -y install buildah git llvm clang lld cmake make ninja-build findutils rsync glibc-static
       sudo apk add buildah build-base clang cmake curl git linux-headers lld llvm python3 ninja rsync
     displayName: 'Install Prerequisites'
 
