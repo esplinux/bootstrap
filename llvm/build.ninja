@@ -7,7 +7,7 @@ build $llvm: git
 
 build $llvm/llvm: phony $llvm
 
-build build-host-$llvm/build.ninja: cmake $llvm/llvm  | out-$musl/lib/libc.so
+build build-host-$llvm/build.ninja: cmake $llvm/llvm  | out-$linux/include/linux/version.h out-$musl/lib/libc.so
   opts =  -G Ninja $
     -DCMAKE_INSTALL_PREFIX=$$PWD/host-tools-$llvm $
     -DCMAKE_BUILD_TYPE=MinSizeRel $
@@ -39,9 +39,11 @@ build build-host-$llvm/build.ninja: cmake $llvm/llvm  | out-$musl/lib/libc.so
     -DLIBCXXABI_USE_LLVM_UNWINDER=ON $
     -DLIBCXXABI_ENABLE_STATIC_UNWINDER=ON $
     -DLIBCXXABI_SYSROOT=$$PWD/out-$musl $
+    -DLIBCXXABI_TARGET_TRIPLE=x86_64-unknown-linux-musl $
     -DLIBCXX_USE_COMPILER_RT=ON $
     -DLIBCXX_HAS_MUSL_LIBC=ON $
     -DLIBCXX_SYSROOT=$$PWD/out-$musl $
+    -DLIBCXX_TARGET_TRIPLE=x86_64-unknown-linux-musl $
     -DCLANG_DEFAULT_LINKER=lld $
     -DCLANG_DEFAULT_RTLIB=compiler-rt
 

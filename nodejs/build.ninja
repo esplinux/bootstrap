@@ -11,7 +11,7 @@ build $nodejs/Makefile: configure $nodejs/configure
   description = Configuring $nodejs
   opts = --without-ssl --without-inspector --without-intl --fully-static
 
-build out-$nodejs/usr/local/bin/node: make $nodejs/Makefile | out-sysroot-$llvm
+build out-$nodejs/usr/local/bin/node: make $nodejs/Makefile
   prefix = DESTDIR=$$PWD/out-$nodejs
   target = install
   pool = console
