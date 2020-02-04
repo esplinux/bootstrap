@@ -52,102 +52,105 @@ build host-tools-$llvm/bin/clang: ninja build-host-$llvm/build.ninja
   pool = console
 
 
-build build-libcxx-$llvm/build.ninja: cmake $llvm/llvm | out-$linux/include/linux/version.h out-$musl/lib/libc.so host-tools-$llvm/bin/clang
-  opts =  -G Ninja $
-    -DCMAKE_CROSSCOMPILING=ON $
-    -DCMAKE_INSTALL_PREFIX='' $
-    -DCMAKE_BUILD_TYPE=MinSizeRel $
-    -DCMAKE_C_COMPILER=$$PWD/host-tools-$llvm/bin/clang $
-    -DCMAKE_C_FLAGS=-I$$PWD/out-$linux/include $
-    -DCMAKE_CXX_COMPILER=$$PWD/host-tools-$llvm/bin/clang++ $
-    -DCMAKE_CXX_FLAGS=-I$$PWD/out-$linux/include $
-    -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-unknown-linux-musl $
-    -DLLVM_TARGET_ARCH=X86 $
-    -DLLVM_TARGETS_TO_BUILD=X86 $
-    -DLLVM_ENABLE_ASSERTIONS=ON $
-    -DLLVM_ENABLE_EH=ON $
-    -DLLVM_ENABLE_RTTI=ON $
-    -DLLVM_ENABLE_PROJECTS='libunwind;libcxxabi;libcxx' $
-    -DLIBUNWIND_USE_COMPILER_RT=ON $
-    -DLIBUNWIND_ENABLE_SHARED=OFF $
-    -DLIBUNWIND_SYSROOT=$$PWD/out-$musl $
-    -DLIBCXXABI_USE_COMPILER_RT=ON $
-    -DLIBCXXABI_USE_LLVM_UNWINDER=ON $
-    -DLIBCXXABI_ENABLE_STATIC_UNWINDER=ON $
-    -DLIBCXXABI_SYSROOT=$$PWD/out-$musl $
-    -DLIBCXX_USE_COMPILER_RT=ON $
-    -DLIBCXX_HAS_MUSL_LIBC=ON $
-    -DLIBCXX_SYSROOT=$$PWD/out-$musl
+#build build-libcxx-$llvm/build.ninja: cmake $llvm/llvm | out-$linux/include/linux/version.h out-$musl/lib/libc.so host-tools-$llvm/bin/clang
+#  opts =  -G Ninja $
+#    -DCMAKE_CROSSCOMPILING=ON $
+#    -DCMAKE_INSTALL_PREFIX='' $
+#    -DCMAKE_BUILD_TYPE=MinSizeRel $
+#    -DCMAKE_C_COMPILER=$$PWD/host-tools-$llvm/bin/clang $
+#    -DCMAKE_C_FLAGS=-I$$PWD/out-$linux/include $
+#    -DCMAKE_CXX_COMPILER=$$PWD/host-tools-$llvm/bin/clang++ $
+#    -DCMAKE_CXX_FLAGS=-I$$PWD/out-$linux/include $
+#    -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-unknown-linux-musl $
+#    -DLLVM_TARGET_ARCH=X86 $
+#    -DLLVM_TARGETS_TO_BUILD=X86 $
+#    -DLLVM_ENABLE_ASSERTIONS=ON $
+#    -DLLVM_ENABLE_EH=ON $
+#    -DLLVM_ENABLE_RTTI=ON $
+#    -DLLVM_ENABLE_PROJECTS='libunwind;libcxxabi;libcxx' $
+#    -DLIBUNWIND_USE_COMPILER_RT=ON $
+#    -DLIBUNWIND_ENABLE_SHARED=OFF $
+#    -DLIBUNWIND_SYSROOT=$$PWD/out-$musl $
+#    -DLIBCXXABI_USE_COMPILER_RT=ON $
+#    -DLIBCXXABI_USE_LLVM_UNWINDER=ON $
+#    -DLIBCXXABI_ENABLE_STATIC_UNWINDER=ON $
+#    -DLIBCXXABI_SYSROOT=$$PWD/out-$musl $
+#    -DLIBCXX_USE_COMPILER_RT=ON $
+#    -DLIBCXX_HAS_MUSL_LIBC=ON $
+#    -DLIBCXX_SYSROOT=$$PWD/out-$musl
 
-build out-libcxx-$llvm/lib/libc++abi.so out-libcxx-$llvm/lib/libc++.so: ninja build-libcxx-$llvm/build.ninja
-  prefix = DESTDIR=$$PWD/out-libcxx-$llvm
-  target = install-libcxxabi install-libcxx
-  pool = console
+#build out-libcxx-$llvm/lib/libc++abi.so out-libcxx-$llvm/lib/libc++.so: ninja build-libcxx-$llvm/build.ninja
+#  prefix = DESTDIR=$$PWD/out-libcxx-$llvm
+#  target = install-libcxxabi install-libcxx
+#  pool = console
 
-build libcxx-$llvm.tgz: package | out-libcxx-$llvm/lib/libc++abi.so out-libcxx-$llvm/lib/libc++.so
-  builddir = out-libcxx-$llvm
+#build libcxx-$llvm.tgz: package | out-libcxx-$llvm/lib/libc++abi.so out-libcxx-$llvm/lib/libc++.so
+#  builddir = out-libcxx-$llvm
 
-build out-sysroot-$llvm: mksysroot | out-libcxx-$llvm/lib/libc++abi.so out-libcxx-$llvm/lib/libc++.so
+#build out-sysroot-$llvm: mksysroot | out-libcxx-$llvm/lib/libc++abi.so out-libcxx-$llvm/lib/libc++.so
 
-build build-$llvm/build.ninja: cmake $llvm/llvm | out-sysroot-$llvm
-  opts =  -G Ninja $
-    -DCMAKE_CROSSCOMPILING=ON $
-    -DCMAKE_INSTALL_PREFIX='' $
-    -DCMAKE_BUILD_TYPE=MinSizeRel $
-    -DCMAKE_C_COMPILER=$$PWD/../host-tools-$llvm/bin/clang $
-    -DCMAKE_C_FLAGS="--sysroot=$$PWD/out-sysroot-$llvm $cflags" $
-    -DCMAKE_CXX_COMPILER=$$PWD/../host-tools-$llvm/bin/clang++ $
-    -DCMAKE_CXX_FLAGS="--sysroot=$$PWD/out-sysroot-$llvm $cxxflags -I$$PWD/out-sysroot-$llvm/include/c++/v1" $
-    -DCMAKE_EXE_LINKER_FLAGS="$ldflags --sysroot=$$PWD/out-sysroot-$llvm --rtlib=compiler-rt -stdlib=libc++ -lc++abi" $
-    -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-unknown-linux-musl $
-    -DLLVM_TARGET_ARCH=X86 $
-    -DLLVM_TARGETS_TO_BUILD=X86 $
-    -DLLVM_BUILD_STATIC=ON $
-    -DLLVM_ENABLE_ASSERTIONS=ON $
-    -DLLVM_ENABLE_EH=ON $
-    -DLLVM_ENABLE_LIBCXX=ON $
-    -DLLVM_ENABLE_LIBXML2=OFF $
-    -DLLVM_ENABLE_LLD=ON $
-    -DLLVM_ENABLE_RTTI=ON $
-    -DLLVM_ENABLE_ZLIB=OFF $
-    -DLLVM_INSTALL_BINUTILS_SYMLINKS=ON $
-    -DLLVM_INSTALL_CCTOOLS_SYMLINKS=ON $
-    -DLLVM_ENABLE_PROJECTS='compiler-rt;clang;lld;llvm' $
-    -DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON $
-    -DCOMPILER_RT_BUILD_LIBFUZZER=OFF $
-    -DCOMPILER_RT_BUILD_SANITIZERS=OFF $
-    -DCOMPILER_RT_BUILD_XRAY=OFF $
-    -DLIBCLANG_BUILD_STATIC=ON $
-    -DCLANG_DEFAULT_LINKER=lld $
-    -DCLANG_DEFAULT_RTLIB=compiler-rt $
-    -DCLANG_DEFAULT_CXX_STDLIB=libc++
+#build build-$llvm/build.ninja: cmake $llvm/llvm | out-sysroot-$llvm
+#  opts =  -G Ninja $
+#    -DCMAKE_CROSSCOMPILING=ON $
+#    -DCMAKE_INSTALL_PREFIX='' $
+#    -DCMAKE_BUILD_TYPE=MinSizeRel $
+#    -DCMAKE_C_COMPILER=$$PWD/../host-tools-$llvm/bin/clang $
+#    -DCMAKE_C_FLAGS="--sysroot=$$PWD/out-sysroot-$llvm $cflags" $
+#    -DCMAKE_CXX_COMPILER=$$PWD/../host-tools-$llvm/bin/clang++ $
+#    -DCMAKE_CXX_FLAGS="--sysroot=$$PWD/out-sysroot-$llvm $cxxflags -I$$PWD/out-sysroot-$llvm/include/c++/v1" $
+#    -DCMAKE_EXE_LINKER_FLAGS="$ldflags --sysroot=$$PWD/out-sysroot-$llvm --rtlib=compiler-rt -stdlib=libc++ -lc++abi" $
+#    -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-unknown-linux-musl $
+#    -DLLVM_TARGET_ARCH=X86 $
+#    -DLLVM_TARGETS_TO_BUILD=X86 $
+#    -DLLVM_BUILD_STATIC=ON $
+#    -DLLVM_ENABLE_ASSERTIONS=ON $
+#    -DLLVM_ENABLE_EH=ON $
+#    -DLLVM_ENABLE_LIBCXX=ON $
+#    -DLLVM_ENABLE_LIBXML2=OFF $
+#    -DLLVM_ENABLE_LLD=ON $
+#    -DLLVM_ENABLE_RTTI=ON $
+#    -DLLVM_ENABLE_ZLIB=OFF $
+#    -DLLVM_INSTALL_BINUTILS_SYMLINKS=ON $
+#    -DLLVM_INSTALL_CCTOOLS_SYMLINKS=ON $
+#    -DLLVM_ENABLE_PROJECTS='compiler-rt;clang;lld;llvm' $
+#    -DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON $
+#    -DCOMPILER_RT_BUILD_LIBFUZZER=OFF $
+#    -DCOMPILER_RT_BUILD_SANITIZERS=OFF $
+#    -DCOMPILER_RT_BUILD_XRAY=OFF $
+#    -DLIBCLANG_BUILD_STATIC=ON $
+#    -DCLANG_DEFAULT_LINKER=lld $
+#    -DCLANG_DEFAULT_RTLIB=compiler-rt $
+#    -DCLANG_DEFAULT_CXX_STDLIB=libc++
 
-build out-lld-$llvm/bin/lld: ninja build-$llvm/build.ninja
-  prefix = DESTDIR=$$PWD/out-lld-$llvm
-  target = install-lld
-  pool = console
+#build out-lld-$llvm/bin/lld: ninja build-$llvm/build.ninja
+#  prefix = DESTDIR=$$PWD/out-lld-$llvm
+#  target = install-lld
+#  pool = console
 
-build lld-$llvm.tgz: package | out-lld-$llvm/bin/lld
-  builddir = out-lld-$llvm
+#build lld-$llvm.tgz: package | out-lld-$llvm/bin/lld
+#  builddir = out-lld-$llvm
 
-build out-clang-$llvm/bin/clang: ninja build-$llvm/build.ninja | out-lld-$llvm/bin/lld
-  prefix = DESTDIR=$$PWD/out-clang-$llvm
-  target = install-clang install-compiler-rt
-  pool = console
+#build out-clang-$llvm/bin/clang: ninja build-$llvm/build.ninja | out-lld-$llvm/bin/lld
+#  prefix = DESTDIR=$$PWD/out-clang-$llvm
+#  target = install-clang install-compiler-rt
+#  pool = console
 
-build clang-$llvm.tgz: package | out-clang-$llvm/bin/clang
-  builddir = out-clang-$llvm
+#build clang-$llvm.tgz: package | out-clang-$llvm/bin/clang
+#  builddir = out-clang-$llvm
 
-build out-$llvm/bin/llvm-config: ninja build-$llvm/build.ninja | out-lld-$llvm/bin/lld out-clang-$llvm/bin/clang
-  prefix = DESTDIR=$$PWD/out-$llvm
-  target = install
-  pool = console
+#build out-$llvm/bin/llvm-config: ninja build-$llvm/build.ninja | out-lld-$llvm/bin/lld out-clang-$llvm/bin/clang
+#  prefix = DESTDIR=$$PWD/out-$llvm
+#  target = install
+#  pool = console
 
-build $llvm.tgz: package | out-$llvm/bin/llvm-config
-  builddir = out-$llvm
+#build $llvm.tgz: package | out-$llvm/bin/llvm-config
+#  builddir = out-$llvm
+
+build $llvm.tgz: package | host-tools-$llvm/bin/clang
+  builddir = host-tools-$llvm
 
 build host-tools: phony host-tools-$llvm/bin/clang
-build libcxx: phony libcxx-$llvm.tgz
-build lld: phony lld-$llvm.tgz
-build clang: phony clang-$llvm.tgz
+#build libcxx: phony libcxx-$llvm.tgz
+#build lld: phony lld-$llvm.tgz
+#build clang: phony clang-$llvm.tgz
 build llvm: phony $llvm.tgz
