@@ -1,10 +1,13 @@
+rule disable_toy
+  command = sed -i 's/default y/default n/' $out
+
 build $toybox/Makefile: git
   url = https://github.com/landley/toybox
   destination = $toybox
 
-build out-$toybox/bin/toybox: make $toybox/Makefile | out-$musl/lib/libc.so out-$linux/include/linux/fs.h out-$linux/include/linux/rfkill.h host-tools-$llvm/bin/clang
+build out-$toybox/bin/toybox: make $toybox/Makefile
   description = Building $toybox
-  prefix = CC=$$PWD/host-tools-$llvm/bin/clang CFLAGS="--sysroot=$$PWD/out-$musl $cflags -I$$PWD/out-$linux/include" LDFLAGS="$ldflags --static" PREFIX=$$PWD/out-$toybox/bin
+  prefix = CC=clang CFLAGS="$cflags" LDFLAGS="$ldflags --static" PREFIX=$$PWD/out-$toybox/bin
   nproc = 1
   target = defconfig toybox install_flat
 

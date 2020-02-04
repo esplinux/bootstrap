@@ -1,10 +1,10 @@
 build $bash/configure: download
   url = http://ftp.gnu.org/gnu/bash/$bash.tar.gz
 
-build $bash/Makefile: configure $bash/configure | out-$musl/lib/libc.so
+build $bash/Makefile: configure $bash/configure | out-$musl/lib/libc.so out-$llvm/bin/clang
   description = Configuring $bash
-  prefix = CC=$$PWD/../host-tools-$llvm/bin/clang CFLAGS="--sysroot=$$PWD/../out-$musl $cflags" LDFLAGS="$ldflags"
-  opts = --prefix='' --host=none --without-bash-malloc --enable-static-link
+  prefix = CC=$$PWD/../out-$llvm/bin/clang CFLAGS="--sysroot=$$PWD/../out-$musl $cflags" LDFLAGS="$ldflags"
+  opts = --prefix='' --host=none --without-bash-malloc
 
 build out-$bash/bin/bash: make $bash/Makefile
   description = Building $bash

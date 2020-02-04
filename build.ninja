@@ -52,4 +52,4 @@ build distclean: rm
 # Default builds
 ##############################################################################
 #default musl host-tools toybox dash libcxx lld clang bash nodejs
-default musl host-tools toybox dash bash nodejs
+default musl llvm toybox dash bash nodejs

@@ -13,13 +13,13 @@ jobs:
 - job: Bootstrap
   timeoutInMinutes: 0
   container: 
-    image: esplinux/alpine-azurepipeline
+    image: 
     options: --privileged --cap-add SYS_ADMIN --device /dev/fuse
 
   # Install build tools and buildah
   steps:
   - script: |
-      sudo apk add buildah build-base clang cmake curl git lld python3 ninja rsync zlib zlib-dev
+      sudo apk add buildah build-base clang cmake curl git linux-headers lld llvm python3 ninja rsync
     displayName: 'Install Prerequisites'
 
   - script: TERM=dumb ninja host-tools

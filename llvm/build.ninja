@@ -7,9 +7,9 @@ build $llvm: git
 
 build $llvm/llvm: phony $llvm
 
-build build-host-$llvm/build.ninja: cmake $llvm/llvm  | out-$linux/include/linux/version.h out-$musl/lib/libc.so
+build build-$llvm/build.ninja: cmake $llvm/llvm  | out-$linux/include/linux/version.h out-$musl/lib/libc.so
   opts =  -G Ninja $
-    -DCMAKE_INSTALL_PREFIX=$$PWD/host-tools-$llvm $
+    -DCMAKE_INSTALL_PREFIX='' $
     -DCMAKE_BUILD_TYPE=MinSizeRel $
     -DCMAKE_C_COMPILER=clang $
     -DCMAKE_C_FLAGS=-I$$PWD/out-$linux/include $
@@ -23,7 +23,7 @@ build build-host-$llvm/build.ninja: cmake $llvm/llvm  | out-$linux/include/linux
     -DLLVM_ENABLE_LIBXML2=OFF $
     -DLLVM_ENABLE_LLD=ON $
     -DLLVM_ENABLE_RTTI=ON $
-    -DLLVM_ENABLE_ZLIB=ON $
+    -DLLVM_ENABLE_ZLIB=OFF $
     -DLLVM_INSTALL_BINUTILS_SYMLINKS=ON $
     -DLLVM_INSTALL_CCTOOLS_SYMLINKS=ON $
     -DLLVM_ENABLE_PROJECTS='compiler-rt;libunwind;libcxxabi;libcxx;clang;lld;llvm;' $
@@ -47,7 +47,8 @@ build build-host-$llvm/build.ninja: cmake $llvm/llvm  | out-$linux/include/linux
     -DCLANG_DEFAULT_LINKER=lld $
     -DCLANG_DEFAULT_RTLIB=compiler-rt
 
-build host-tools-$llvm/bin/clang: ninja build-host-$llvm/build.ninja
+build out-$llvm/bin/clang: ninja build-$llvm/build.ninja
+  prefix = DESTDIR=$$PWD/out-$llvm
   target = install-clang install-compiler-rt install-lld install-unwind install-libcxxabi install-libcxx
   pool = console
 
@@ -146,10 +147,10 @@ build host-tools-$llvm/bin/clang: ninja build-host-$llvm/build.ninja
 #build $llvm.tgz: package | out-$llvm/bin/llvm-config
 #  builddir = out-$llvm
 
-build $llvm.tgz: package | host-tools-$llvm/bin/clang
-  builddir = host-tools-$llvm
+build $llvm.tgz: package | out-$llvm/bin/clang
+  builddir = out-$llvm
 
-build host-tools: phony host-tools-$llvm/bin/clang
+#build host-tools: phony host-tools-$llvm/bin/clang
 #build libcxx: phony libcxx-$llvm.tgz
 #build lld: phony lld-$llvm.tgz
 #build clang: phony clang-$llvm.tgz
