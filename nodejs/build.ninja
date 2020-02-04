@@ -9,6 +9,7 @@ build $nodejs/configure: git
 
 build $nodejs/Makefile: configure $nodejs/configure
   description = Configuring $nodejs
+  prefix = CC=clang CXX=clang++
   opts = --without-ssl --without-inspector --without-intl --fully-static
 
 build out-$nodejs/usr/local/bin/node: make $nodejs/Makefile
