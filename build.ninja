@@ -15,11 +15,14 @@ musl=musl-1.1.24
 toybox=toybox-HEAD
 dash=dash-0.5.10
 bash=bash-5.0
-nodejs=node-js-STATIC-ABOMINATION
+nodejs=node-v12.14.1
 
 
 # Defaults inherited by included build files
 ##############################################################################
+sysroot = out-$musl
+cc = out-$llvm/bin/clang
+cxx = out-$llvm/bin/clang++
 cflags = -Os
 cxxflags = -Os
 ldflags = -w -s
@@ -51,5 +54,4 @@ build distclean: rm
 
 # Default builds
 ##############################################################################
-#default musl host-tools toybox dash libcxx lld clang bash nodejs
 default musl llvm toybox dash bash nodejs

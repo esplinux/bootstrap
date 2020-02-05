@@ -1,18 +1,26 @@
 # Use LTS 12 version to create a fully static version
-nodejs=nodejs-STATIC-ABOMINATION
-nodejs_lts=v12.14.1
 
+node_cflags = --sysroot=$sysroot $cflags
+node_cxxflags = --sysroot=$sysroot $cxxflags -I$$PWD/../out-$llvm/include/c++/v1 -I$$PWD/../out-$linux/include 
+node_linkflags = --sysroot=$sysroot -stdlib=libc++ -L$$PWD/../out-$llvm/lib
 
-build $nodejs/configure: git
-  url = --branch $nodejs_lts https://github.com/nodejs/node
-  destination = $nodejs
+rule node_force_no_libatomic
+  command = sed -i 's/OS in ("linux", "mac") and llvm_version != "0.0"/OS in ("_____", "mac") and llvm_version != "0.0"/' $out
 
-build $nodejs/Makefile: configure $nodejs/configure
+build $nodejs/configure: download
+  url = https://nodejs.org/download/release/$nodejs_version/$nodejs.tar.gz
+
+build $nodejs/node.gyp: node_force_no_libatomic | $nodejs/configure
+
+build $nodejs/Makefile: configure $nodejs/configure | out-$llvm/bin/clang out-$linux/include/linux/version.h $nodejs/node.gyp
   description = Configuring $nodejs
-  prefix = CC=clang CXX=clang++
+  prefix = export CC="$cc $node_cflags"; $
+    export CXX="$cxx $node_cxxflags"; $
+    export LINK="$cxx $node_linkflags";
   opts = --without-ssl --without-inspector --without-intl --fully-static
 
 build out-$nodejs/usr/local/bin/node: make $nodejs/Makefile
+  description = Build $nodejs
   prefix = DESTDIR=$$PWD/out-$nodejs
   target = install
   pool = console

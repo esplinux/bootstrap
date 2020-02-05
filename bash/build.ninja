@@ -1,9 +1,11 @@
+bash_cflags = --sysroot=$$PWD/../$sysroot $cflags
+
 build $bash/configure: download
   url = http://ftp.gnu.org/gnu/bash/$bash.tar.gz
 
-build $bash/Makefile: configure $bash/configure
+build $bash/Makefile: configure $bash/configure | $cc
   description = Configuring $bash
-  prefix = CC=clang CFLAGS="$cflags" LDFLAGS="$ldflags --static"
+  prefix = CC=$$PWD/../$cc CFLAGS="$bash_cflags" LDFLAGS="$ldflags --static"
   opts = --prefix='' --host=none --without-bash-malloc
 
 build out-$bash/bin/bash: make $bash/Makefile

@@ -12,8 +12,8 @@ pool:
 jobs:
 - job: Bootstrap
   timeoutInMinutes: 0
-  container: fedora:31
-    image: 
+  container:
+    image: fedora:31
     options: --privileged --cap-add SYS_ADMIN --device /dev/fuse
 
   # Install build tools and buildah
@@ -22,11 +22,14 @@ jobs:
       dnf -y install buildah git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7
     displayName: 'Install Prerequisites'
 
-  - script: TERM=dumb ninja host-tools
-    displayName: 'Build Host Tools [Clang, Compiler-RT, LibUnwind, LLD]'
+  - script: TERM=dumb ninja musl
+    displayName: 'Build MUSL'
 
-  - script: TERM=dumb ninja musl toybox dash
-    displayName: 'Build Base [Musl, Toybox, Dash]'
+  - script: TERM=dumb ninja llvm
+    displayName: 'Build Clang'
+
+  - script: TERM=dumb ninja toybox dash
+    displayName: 'Build Base [Toybox, Dash]'
 
   - script: |
       CONTAINER_NAME="esplinux/bootstrap-base" scripts/buildcontainer.sh musl toybox dash
@@ -37,17 +40,8 @@ jobs:
       sudo buildah logout docker.io
     displayName: 'Podman Bootstrap Base'
 
-  - script: TERM=dumb ninja libcxx
-    displayName: 'Build LibCXX'
-
-  - script: TERM=dumb ninja lld
-    displayName: 'Build LLD'
-
-  - script: TERM=dumb ninja clang
-    displayName: 'Build Clang'
-
   - script: |
-      CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl toybox dash libcxx lld clang
+      CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl toybox dash llvm
       sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
       sudo buildah push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
       sudo buildah logout docker.io
@@ -60,7 +54,7 @@ jobs:
     displayName: 'Build NodeJS'
 
   - script: |
-      CMD=node CONTAINER_NAME="esplinux/bootstrap-azurepipeline" scripts/buildcontainer.sh musl toybox dash libcxx lld clang bash nodejs
+      CMD=node CONTAINER_NAME="esplinux/bootstrap-azurepipeline" scripts/buildcontainer.sh musl toybox dash llvm bash nodejs
       sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
       sudo buildah push esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
       sudo buildah logout docker.io

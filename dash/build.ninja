@@ -4,9 +4,9 @@ rule _dash_ln
 build $dash/configure: download
   url = http://gondor.apana.org.au/~herbert/dash/files/$dash.tar.gz
 
-build $dash/Makefile: configure $dash/configure | out-$musl/lib/libc.so
+build $dash/Makefile: configure $dash/configure | out-$musl/lib/libc.so $cc
   description = Configuring $dash
-  prefix = CC=clang CFLAGS="$cflags" LDFLAGS="$ldflags"
+  prefix = CC=$$PWD/../$cc CFLAGS="--sysroot=$$PWD/../$sysroot $cflags" LDFLAGS="$ldflags"
   opts = --prefix='' --host=none --enable-static
 
 build out-$dash/bin/dash: make $dash/Makefile
