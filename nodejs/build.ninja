@@ -1,22 +1,22 @@
 # Use LTS 12 version to create a fully static version
 
-node_cflags = --sysroot=$sysroot $cflags
-node_cxxflags = --sysroot=$sysroot $cxxflags -I$$PWD/../out-$llvm/include/c++/v1 -I$$PWD/../out-$linux/include 
-node_linkflags = --sysroot=$sysroot -stdlib=libc++ -L$$PWD/../out-$llvm/lib
+node_cflags = --sysroot=$$PWD/../$sysroot $cflags
+node_cxxflags = --sysroot=$$PWD/../$sysroot $cxxflags -I$$PWD/../out-$llvm/include/c++/v1 -I$$PWD/../out-$linux/include 
+node_linkflags = --sysroot=$$PWD/../$sysroot -stdlib=libc++ -L$$PWD/../out-$llvm/lib -lc++abi
 
 rule node_force_no_libatomic
   command = sed -i 's/OS in ("linux", "mac") and llvm_version != "0.0"/OS in ("_____", "mac") and llvm_version != "0.0"/' $out
 
 build $nodejs/configure: download
-  url = https://nodejs.org/download/release/$nodejs_version/$nodejs.tar.gz
+  url = https://nodejs.org/download/release/$$(echo $nodejs | sed s/node-//)/$nodejs.tar.gz
 
 build $nodejs/node.gyp: node_force_no_libatomic | $nodejs/configure
 
 build $nodejs/Makefile: configure $nodejs/configure | out-$llvm/bin/clang out-$linux/include/linux/version.h $nodejs/node.gyp
   description = Configuring $nodejs
-  prefix = export CC="$cc $node_cflags"; $
-    export CXX="$cxx $node_cxxflags"; $
-    export LINK="$cxx $node_linkflags";
+  prefix = export CC="$$PWD/../$cc $node_cflags"; $
+    export CXX="$$PWD/../$cxx $node_cxxflags"; $
+    export LINK="$$PWD/../$cxx $node_linkflags";
   opts = --without-ssl --without-inspector --without-intl --fully-static
 
 build out-$nodejs/usr/local/bin/node: make $nodejs/Makefile

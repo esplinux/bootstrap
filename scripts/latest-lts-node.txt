@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+lts_version=$(curl -sL https://nodejs.org/en/download/ | grep "Latest LTS Version:" | sed 's/.*<strong>//' | sed 's/<\/strong>.*//')
+
+echo https://nodejs.org/dist/v$lts_version/node-v$lts_version.tar.gz

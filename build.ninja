@@ -10,12 +10,12 @@ nproc = 12
 # Package Versions
 ##############################################################################
 llvm=llvm-10
-linux=linux-5.4.15
+linux=linux-5.4.18
 musl=musl-1.1.24
 toybox=toybox-HEAD
 dash=dash-0.5.10
 bash=bash-5.0
-nodejs=node-v12.14.1
+nodejs=node-v12.15.0
 
 
 # Defaults inherited by included build files
