@@ -36,4 +36,4 @@ build distclean: rm
 
 # Default builds
 ##############################################################################
-default musl clang toybox dash bearssl curl bash node
+default musl clang toybox dash curl bash node

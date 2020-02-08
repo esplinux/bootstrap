@@ -31,11 +31,11 @@ jobs:
   - script: TERM=dumb ninja clang
     displayName: 'Build Clang'
 
-  - script: TERM=dumb ninja toybox dash
-    displayName: 'Build Base [Toybox, Dash]'
+  - script: TERM=dumb ninja toybox dash curl
+    displayName: 'Build Base [Toybox, Dash, Curl]'
 
   - script: |
-      CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl toybox dash clang
+      CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl clang toybox dash curl
       sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
       sudo buildah push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
       sudo buildah logout docker.io
