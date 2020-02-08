@@ -46,7 +46,7 @@ build build-$llvm/build.ninja: cmake $llvm/llvm  | out-$linux/include/linux/vers
 
 build out-clang-$llvm/bin/clang: ninja build-$llvm/build.ninja
   prefix = DESTDIR=$$PWD/out-clang-$llvm
-  target = install-clang install-compiler-rt install-lld install-unwind install-libcxxabi install-libcxx
+  target = install-clang install-compiler-rt install-lld install-unwind install-libcxxabi install-libcxx install-clang-resource-headers
   pool = console
 
 build clang-$llvm.tgz: package | out-clang-$llvm/bin/clang

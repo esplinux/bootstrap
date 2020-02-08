@@ -1,0 +1,20 @@
+bearssl_cc = $cc --sysroot=$sysroot
+
+rule _bearssl_configure
+  command = printf "include conf/Unix.mk\n" > $bearssl/conf/esp.mk; $
+    printf "BUILD=$$PWD/out-$bearssl\n" >> $bearssl/conf/esp.mk; $
+    printf "CC=$bearssl_cc\n" >> $bearssl/conf/esp.mk; $
+    printf "LD=$bearssl_cc\n" >> $bearssl/conf/esp.mk; $
+    printf "LDDLL=$bearssl_cc\n" >> $bearssl/conf/esp.mk
+
+build $bearssl/Makefile: git
+  url = https://www.bearssl.org/git/BearSSL
+  destination = $bearssl
+
+build $bearssl/conf/esp.mk: _bearssl_configure | $bearssl/Makefile
+
+build out-$bearssl/libbearssl.a: make $bearssl/Makefile | clang $bearssl/conf/esp.mk
+  description = Building $bearssl
+  target = CONF=esp
+
+build bearssl: phony out-$bearssl/libbearssl.a

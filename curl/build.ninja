@@ -1,0 +1,17 @@
+build $curl/configure: download
+  url = https://curl.haxx.se/download/$curl.tar.gz
+
+build $curl/Makefile: configure $curl/configure | clang out-$musl/lib/libc.so
+  description = Configuring $curl
+  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags -I$$PWD/../$bearssl/inc" LDFLAGS="$ldflags -L$$PWD/../out-$bearssl --static"
+  opts = --prefix='' --with-bearssl --disable-shared --host=none
+
+build out-$curl/bin/curl: make $curl/Makefile
+  description = Building $curl
+  prefix = DESTDIR=$$PWD/out-$curl
+  target = install
+
+build $curl.tgz: package | out-$curl/bin/curl
+  builddir = out-$curl
+
+build curl: phony $curl.tgz
