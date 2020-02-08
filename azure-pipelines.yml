@@ -22,7 +22,7 @@ jobs:
       sudo dnf -y install buildah git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7
     displayName: 'Install Prerequisites'
 
-  - script: ./configure
+  - script: ./configure.sh
     displayName: 'Configure'
 
   - script: TERM=dumb ninja musl
