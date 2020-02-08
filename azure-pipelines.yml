@@ -16,36 +16,36 @@ jobs:
     image: fedora:31
     options: --privileged --cap-add SYS_ADMIN --device /dev/fuse
 
-  # Install build tools and buildah
+  # Install build tools
   steps:
   - script: |
       sudo dnf -y install buildah git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7
     displayName: 'Install Prerequisites'
 
+  - script: ./configure
+    displayName: 'Configure'
+
   - script: TERM=dumb ninja musl
     displayName: 'Build MUSL'
 
-  - script: TERM=dumb ninja llvm
+  - script: TERM=dumb ninja clang
     displayName: 'Build Clang'
 
   - script: TERM=dumb ninja toybox dash
     displayName: 'Build Base [Toybox, Dash]'
 
   - script: |
-      CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl toybox dash llvm
+      CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl toybox dash clang
       sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
       sudo buildah push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
       sudo buildah logout docker.io
     displayName: 'Podman Bootstrap'
 
-  - script: TERM=dumb ninja bash
-    displayName: 'Build Bash'
-
-  - script: TERM=dumb ninja nodejs
-    displayName: 'Build NodeJS'
+  - script: TERM=dumb ninja bash node
+    displayName: 'Build Azure Deps [Bash Node]'
 
   - script: |
-      CMD=node CONTAINER_NAME="esplinux/bootstrap-azurepipeline" scripts/buildcontainer.sh musl toybox dash llvm bash nodejs
+      CMD=node CONTAINER_NAME="esplinux/bootstrap-azurepipeline" scripts/buildcontainer.sh musl toybox dash clang bash node
       sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
       sudo buildah push esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
       sudo buildah logout docker.io

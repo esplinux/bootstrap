@@ -1,7 +1,3 @@
-# Change this to the number of cores you have
-nproc = 12
-
-
 ##############################################################################
 # You should only have to change items below here if you are developing a new
 # new version of esp/bootstrap or porting to a new architecture
@@ -9,24 +5,11 @@ nproc = 12
 
 # Package Versions
 ##############################################################################
-llvm=llvm-10
-linux=linux-5.4.18
-musl=musl-1.1.24
-toybox=toybox-HEAD
-dash=dash-0.5.10
-bash=bash-5.0
-nodejs=node-v12.15.0
-
+include versions.ninja
 
 # Defaults inherited by included build files
 ##############################################################################
-sysroot = out-$musl
-cc = out-$llvm/bin/clang
-cxx = out-$llvm/bin/clang++
-cflags = -Os
-cxxflags = -Os
-ldflags = -w -s
-
+include tools.ninja
 
 # Default build rules
 ##############################################################################
@@ -40,7 +23,7 @@ include llvm/build.ninja
 include toybox/build.ninja
 include dash/build.ninja
 include bash/build.ninja
-include nodejs/build.ninja
+include node/build.ninja
 
 
 # Default clean tasks which must be located after the package includes
@@ -54,4 +37,4 @@ build distclean: rm
 
 # Default builds
 ##############################################################################
-default musl llvm toybox dash bash nodejs
+default musl clang toybox dash bash node

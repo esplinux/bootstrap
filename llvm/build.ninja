@@ -1,6 +1,3 @@
-rule mksysroot
-  command = mkdir $out;cp -r out-$musl/* out-libcxx-$llvm/* $out
-
 build $llvm: git
   url = --branch release/10.x https://github.com/llvm/llvm-project
   destination = $llvm
@@ -33,26 +30,26 @@ build build-$llvm/build.ninja: cmake $llvm/llvm  | out-$linux/include/linux/vers
     -DCOMPILER_RT_BUILD_XRAY=OFF $
     -DLIBUNWIND_USE_COMPILER_RT=ON $
     -DLIBUNWIND_ENABLE_SHARED=OFF $
-    -DLIBUNWIND_SYSROOT=$$PWD/out-$musl $
+    -DLIBUNWIND_SYSROOT=$sysroot $
     -DLIBUNWIND_TARGET_TRIPLE=x86_64-unknown-linux-musl $
     -DLIBCXXABI_USE_COMPILER_RT=ON $
     -DLIBCXXABI_USE_LLVM_UNWINDER=ON $
     -DLIBCXXABI_ENABLE_STATIC_UNWINDER=ON $
-    -DLIBCXXABI_SYSROOT=$$PWD/out-$musl $
+    -DLIBCXXABI_SYSROOT=$sysroot $
     -DLIBCXXABI_TARGET_TRIPLE=x86_64-unknown-linux-musl $
     -DLIBCXX_USE_COMPILER_RT=ON $
     -DLIBCXX_HAS_MUSL_LIBC=ON $
-    -DLIBCXX_SYSROOT=$$PWD/out-$musl $
+    -DLIBCXX_SYSROOT=$sysroot $
     -DLIBCXX_TARGET_TRIPLE=x86_64-unknown-linux-musl $
     -DCLANG_DEFAULT_LINKER=lld $
     -DCLANG_DEFAULT_RTLIB=compiler-rt
 
-build out-$llvm/bin/clang: ninja build-$llvm/build.ninja
-  prefix = DESTDIR=$$PWD/out-$llvm
+build out-clang-$llvm/bin/clang: ninja build-$llvm/build.ninja
+  prefix = DESTDIR=$$PWD/out-clang-$llvm
   target = install-clang install-compiler-rt install-lld install-unwind install-libcxxabi install-libcxx
   pool = console
 
-build $llvm.tgz: package | out-$llvm/bin/clang
-  builddir = out-$llvm
+build clang-$llvm.tgz: package | out-clang-$llvm/bin/clang
+  builddir = out-clang-$llvm
 
-build llvm: phony $llvm.tgz
+build clang: phony clang-$llvm.tgz

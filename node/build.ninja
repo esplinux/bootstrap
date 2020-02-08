@@ -1,0 +1,31 @@
+# Use LTS 12 version to create a fully static version
+
+node_cflags = --sysroot=$sysroot $cflags
+node_cxxflags = --sysroot=$sysroot $cxxflags -I$$PWD/../out-clang-$llvm/include/c++/v1 -I$$PWD/../out-$linux/include 
+node_linkflags = --sysroot=$sysroot -stdlib=libc++ -L$$PWD/../out-clang-$llvm/lib -lc++abi
+
+rule node_force_no_libatomic
+  command = sed -i 's/OS in ("linux", "mac") and llvm_version != "0.0"/OS in ("_____", "mac") and llvm_version != "0.0"/' $out
+
+build $node/configure: download
+  url = https://nodejs.org/download/release/$$(echo $node | sed s/node-//)/$node.tar.gz
+
+build $node/node.gyp: node_force_no_libatomic | $node/configure
+
+build $node/config.mk: configure $node/configure | clang out-$linux/include/linux/version.h $node/node.gyp
+  description = Configuring $node
+  prefix = export CC="$cc $node_cflags"; $
+    export CXX="$cxx $node_cxxflags"; $
+    export LINK="$cxx $node_linkflags";
+  opts = --without-ssl --without-inspector --without-intl --fully-static
+
+build out-$node/usr/local/bin/node: make $node/config.mk
+  description = Build $node
+  prefix = DESTDIR=$$PWD/out-$node
+  target = install
+  pool = console
+
+build $node.tgz: package | out-$node/usr/local/bin/node
+  builddir = out-$node
+
+build node: phony $node.tgz
