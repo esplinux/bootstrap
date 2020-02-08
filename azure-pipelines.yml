@@ -19,7 +19,7 @@ jobs:
   # Install build tools
   steps:
   - script: |
-      sudo dnf -y install buildah git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7 python
+      sudo dnf -y install buildah git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7 python which
     displayName: 'Install Prerequisites'
 
   - script: ./configure.sh
