@@ -57,8 +57,10 @@ jobs:
 
   - script: |
       CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl clang toybox dash curl
+      buildah push esplinux/bootstrap docker-archive:esplinux-bootstrap.tar
+      gzip --suffix=.tgz esplinux-bootstrap.tar
       buildah login -u $(docker-user) -p $(docker-pass) docker.io
-      buildah push -f docker esplinux/bootstrap docker://docker.io/esplinux/bootstrap
+      buildah --log-level debug push -f docker esplinux/bootstrap docker://docker.io/esplinux/bootstrap
       buildah logout docker.io
     displayName: 'Podman Bootstrap'
 
@@ -76,6 +78,8 @@ jobs:
 
   - script: |
       CMD=node CONTAINER_NAME="esplinux/bootstrap-azurepipeline" scripts/buildcontainer.sh musl toybox dash clang bash node
+      buildah push esplinux/bootstrap-azurepipeline docker-archive:esplinux-bootstrap-azurepipeline.tar
+      gzip --suffix=.tgz esplinux-bootstrap-azurepipeline.tar
       buildah login -u $(docker-user) -p $(docker-pass) docker.io
       buildah push -f docker esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
       buildah logout docker.io
