@@ -13,16 +13,15 @@ include rules.ninja
 
 # Packages to build
 ##############################################################################
-include musl/build.ninja
-include linux/build.ninja
-include llvm/build.ninja
-include toybox/build.ninja
-include dash/build.ninja
-include bearssl/build.ninja
-include curl/build.ninja
-include bash/build.ninja
-include node/build.ninja
-
+subninja musl/build.ninja
+subninja linux/build.ninja
+subninja llvm/build.ninja
+subninja toybox/build.ninja
+subninja dash/build.ninja
+subninja bearssl/build.ninja
+subninja curl/build.ninja
+subninja bash/build.ninja
+subninja node/build.ninja
 
 # Default clean tasks which must be located after the package includes
 ##############################################################################

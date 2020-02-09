@@ -1,8 +1,8 @@
 # Use LTS 12 version to create a fully static version
 
-node_cflags = --sysroot=$sysroot $cflags
-node_cxxflags = --sysroot=$sysroot $cxxflags -I$$PWD/../out-clang-$llvm/include/c++/v1 -I$$PWD/../out-$linux/include 
-node_linkflags = --sysroot=$sysroot -stdlib=libc++ -L$$PWD/../out-clang-$llvm/lib -lc++abi
+cflags = --sysroot=$sysroot $cflags
+cxxflags = --sysroot=$sysroot $cxxflags -I$$PWD/../out-clang-$llvm/include/c++/v1 -I$$PWD/../out-$linux/include 
+linkflags = --sysroot=$sysroot -stdlib=libc++ -L$$PWD/../out-clang-$llvm/lib -lc++abi
 
 # Hack until node fixes LLVM/Clang 10 detection
 rule nodeForceNoLibAtomic
@@ -16,9 +16,9 @@ build forceNoLibAtomic: nodeForceNoLibAtomic | $node/configure
 
 build $node/config.mk: configure $node/configure | clang out-$linux/include/linux/version.h forceNoLibAtomic
   description = Configuring $node
-  prefix = export CC="$cc $node_cflags"; $
-    export CXX="$cxx $node_cxxflags"; $
-    export LINK="$cxx $node_linkflags";
+  prefix = export CC="$cc $cflags"; $
+    export CXX="$cxx $cxxflags"; $
+    export LINK="$cxx $linkflags";
   opts = --without-ssl --without-inspector --without-intl --fully-static
 
 build out-$node/usr/local/bin/node: make $node/config.mk
