@@ -19,4 +19,5 @@ build out-$dash/bin/sh: _dash_ln | out-$dash/bin/dash
 build $dash.tgz: package | out-$dash/bin/dash out-$dash/bin/sh
   builddir = out-$dash
 
+build $dash: phony $dash/configure
 build dash: phony $dash.tgz

@@ -5,3 +5,5 @@ build out-$linux/include/linux/version.h out-$linux/include/linux/fs.h out-$linu
   description = Building $linux headers
   prefix = CC=clang
   target = INSTALL_HDR_PATH=$$PWD/out-$linux headers_install
+
+build $linux: phony $linux/Makefile

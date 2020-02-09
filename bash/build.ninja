@@ -13,4 +13,5 @@ build out-$bash/bin/bash: make $bash/Makefile
 build $bash.tgz: package | out-$bash/bin/bash
   builddir = out-$bash
 
+build $bash: phony $bash/configure
 build bash: phony $bash.tgz

@@ -14,4 +14,5 @@ build out-$curl/bin/curl: make $curl/Makefile
 build $curl.tgz: package | out-$curl/bin/curl
   builddir = out-$curl
 
+build $curl: phony $curl/configure
 build curl: phony $curl.tgz

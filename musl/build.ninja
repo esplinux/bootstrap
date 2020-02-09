@@ -16,4 +16,5 @@ build out-$musl/lib/libc.so: make $musl/Makefile
 build $musl.tgz: package | out-$musl/lib/libc.so
   builddir = out-$musl
 
+build $musl: phony $musl/configure
 build musl: phony $musl.tgz

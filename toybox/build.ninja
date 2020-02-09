@@ -11,4 +11,5 @@ build out-$toybox/bin/toybox: make $toybox/Makefile | clang out-$linux/include/l
 build $toybox.tgz: package | out-$toybox/bin/toybox
   builddir = out-$toybox
 
+build $toybox: phony $toybox/Makefile
 build toybox: phony $toybox.tgz

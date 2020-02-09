@@ -26,12 +26,14 @@ include node/build.ninja
 
 # Default clean tasks which must be located after the package includes
 ##############################################################################
+build fetch_sources: phony $musl $linux $llvm $toybox $dash $bearssl $curl $bash $node
+
 build clean: rm
   rm = src-* build-* out-* *.tgz *.log
 
 build distclean: rm
   rm = src-* build-* out-* *.tgz *.log host-tools-* config.ninja $
-    $musl $linux $clang $toybox $dash $bearssl $curl $bash $nodejs
+    $musl $linux $clang $llvm $toybox $dash $bearssl $curl $bash $node
 
 
 # Default builds

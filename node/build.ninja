@@ -28,4 +28,5 @@ build out-$node/usr/local/bin/node: make $node/config.mk
 build $node.tgz: package | out-$node/usr/local/bin/node
   builddir = out-$node
 
+build $node: phony $node/configure
 build node: phony $node.tgz
