@@ -19,7 +19,4 @@ buildah config --cmd $CMD $CONTAINER_NAME
 # Hack label for Azure Pipelines into all containers
 buildah config --label com.azure.dev.pipelines.agent.handler.node.path=/usr/local/bin/node $CONTAINER_NAME
 
-buildah commit $CONTAINER_NAME $CONTAINER_NAME
-
-buildah images
-buildah inspect $CONTAINER_NAME
+buildah commit --squash $CONTAINER_NAME $CONTAINER_NAME
