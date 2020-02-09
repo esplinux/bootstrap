@@ -15,7 +15,7 @@ pool:
   vmImage: 'ubuntu-18.04'
 
 variables:
-  XDG_RUNTIME_DIR=/tmp
+  XDG_RUNTIME_DIR: /tmp
 
 jobs:
 - job: Bootstrap
