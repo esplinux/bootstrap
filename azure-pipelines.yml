@@ -14,6 +14,7 @@ schedules:
 pool:
   vmImage: 'ubuntu-18.04'
 
+# Hack but XDG_RUNTIME_DIR is not set which will call rootless buildah to fail
 variables:
   XDG_RUNTIME_DIR: /tmp
 
@@ -25,17 +26,6 @@ jobs:
     options: --privileged --cap-add SYS_ADMIN --device /dev/fuse
 
   steps:
-  - script: echo XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
-    displayName: 'Debug'
-
-  - script: buildah pull busybox
-    displayName: 'Test Buildah pull'
-
-  - script: |
-      buildah login -u $(docker-user) -p $(docker-pass) docker.io
-      buildah logout docker.io
-    displayName: 'Test Buildah login/logout'
-
   - script: |
       sudo dnf -y install buildah git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7 python which
     displayName: 'Install Prerequisites'
@@ -54,9 +44,9 @@ jobs:
 
   - script: |
       CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl clang toybox dash curl
-      sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
-      sudo buildah push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
-      sudo buildah logout docker.io
+      buildah login -u $(docker-user) -p $(docker-pass) docker.io
+      buildah push esplinux/bootstrap docker://docker.io/esplinux/bootstrap
+      buildah logout docker.io
     displayName: 'Podman Bootstrap'
 
   - script: TERM=dumb ninja bash node
@@ -64,9 +54,9 @@ jobs:
 
   - script: |
       CMD=node CONTAINER_NAME="esplinux/bootstrap-azurepipeline" scripts/buildcontainer.sh musl toybox dash clang bash node
-      sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
-      sudo buildah push esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
-      sudo buildah logout docker.io
+      buildah login -u $(docker-user) -p $(docker-pass) docker.io
+      buildah push esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
+      buildah logout docker.io
     displayName: 'Podman Bootstrap Azure Pipeline'
 
   - task: GitHubRelease@0
