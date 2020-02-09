@@ -28,7 +28,7 @@ jobs:
 
   steps:
   - script: |
-      sudo dnf -y install buildah git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7 python which
+      sudo dnf -y install buildah git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7 python which ccache
     displayName: 'Install Prerequisites'
 
   - script: ./configure.sh
@@ -40,8 +40,15 @@ jobs:
   - script: TERM=dumb ninja musl
     displayName: 'Build MUSL'
 
+  # git ls-remote https://github.com/llvm/llvm-project --tags release/10.x
   - script: cd $(find -maxdepth 1 -type d -name 'llvm-*'); git rev-parse HEAD > ../llvmCache.key
     displayName: 'Generate llvmCache.key'
+
+  - task: Cache@2
+    inputs:
+      key: 'build-llvm | $(AZURE_CACHE_REVISION) | llvmCache.key'
+      path: build-llvm-10
+    displayName: 'Cache Clang Build'
 
   - task: Cache@2
     inputs:
