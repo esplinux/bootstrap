@@ -1,7 +1,4 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# Build bootrsap container used for scratch builds of ESPLinux
 
 trigger:
 - master
@@ -24,7 +21,6 @@ jobs:
     image: quay.io/buildah/stable
     options: --privileged --cap-add SYS_ADMIN --device /dev/fuse
 
-  # Test Buildah
   steps:
   - script: |
       buildah pull busybox
@@ -32,8 +28,6 @@ jobs:
       buildah logout docker.io
     displayName: 'Test Buildah'
 
-  # Install build tools
-  steps:
   - script: |
       sudo dnf -y install buildah git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7 python which
     displayName: 'Install Prerequisites'
@@ -67,7 +61,6 @@ jobs:
       sudo buildah logout docker.io
     displayName: 'Podman Bootstrap Azure Pipeline'
 
-  # GitHub Release
   - task: GitHubRelease@0
     inputs:
       gitHubConnection: 'github.com_emolitor'
