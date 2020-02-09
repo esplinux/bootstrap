@@ -62,7 +62,7 @@ jobs:
       buildah logout docker.io
     displayName: 'Podman Bootstrap'
 
-    - script: basename $(find -maxdepth 1 -type d -name 'node-*') > nodeCache.key
+    - script: basename `find -maxdepth 1 -type d -name 'node-*'` > nodeCache.key
     displayName: 'Generate nodeCache.key'
 
     - task: Cache@2
