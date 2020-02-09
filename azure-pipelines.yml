@@ -17,6 +17,7 @@ pool:
 # Hack but XDG_RUNTIME_DIR is not set which will call rootless buildah to fail
 variables:
   XDG_RUNTIME_DIR: /tmp
+  AZURE_CACHE_REVISION: 0
 
 jobs:
 - job: Bootstrap
@@ -33,8 +34,20 @@ jobs:
   - script: ./configure.sh
     displayName: 'Configure'
 
+  - script: TERM=dumb ninja fetch_sources
+    displayName: 'Fetch Sources'
+
   - script: TERM=dumb ninja musl
     displayName: 'Build MUSL'
+
+  - script: cd llvm-*; git rev-parse HEAD > ../llvmCache.key
+    displayName: 'Generate llvmCache.key'
+
+  - task: Cache@2
+    inputs:
+      key: 'clang | $(AZURE_CACHE_REVISION) | llvmCache.key'
+      path: out-clang-llvm-10
+    displayName: 'Cache Clang'
 
   - script: TERM=dumb ninja clang
     displayName: 'Build Clang'
@@ -51,6 +64,15 @@ jobs:
 
   - script: TERM=dumb ninja bash node
     displayName: 'Build Azure Deps [Bash Node]'
+
+  - script: cd node-*; basename $PWD > ../nodeCache.key
+    displayName: 'Generate nodeCache.key'
+
+  - task: Cache@2
+    inputs:
+      key: 'node | $(AZURE_CACHE_REVISION) | nodeCache.key'
+      path: out-node-v12.15.0
+    displayName: 'Cache Node'
 
   - script: |
       CMD=node CONTAINER_NAME="esplinux/bootstrap-azurepipeline" scripts/buildcontainer.sh musl toybox dash clang bash node
