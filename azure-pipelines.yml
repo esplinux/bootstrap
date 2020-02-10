@@ -18,6 +18,7 @@ pool:
 variables:
   XDG_RUNTIME_DIR: /tmp
   AZURE_CACHE_REVISION: 0
+  CCACHE_DIR: $(Pipeline.Workspace)/ccache
 
 jobs:
 - job: Bootstrap
@@ -46,15 +47,9 @@ jobs:
 
   - task: Cache@2
     inputs:
-      key: 'build-llvm | $(AZURE_CACHE_REVISION) | llvmCache.key'
-      path: build-llvm-10
-    displayName: 'Cache Clang Build'
-
-  - task: Cache@2
-    inputs:
-      key: 'clang | $(AZURE_CACHE_REVISION) | llvmCache.key'
-      path: out-clang-llvm-10
-    displayName: 'Cache Clang'
+      key: 'ccache | $(AZURE_CACHE_REVISION) | llvmCache.key'
+      path: $(CCACHE_DIR)
+    displayName: 'CCache'
 
   - script: TERM=dumb ninja clang
     displayName: 'Build Clang'
@@ -64,8 +59,6 @@ jobs:
 
   - script: |
       CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl clang toybox dash curl
-      buildah push esplinux/bootstrap docker-archive:esplinux-bootstrap.tar
-      gzip --suffix=.tgz esplinux-bootstrap.tar
       buildah login -u $(docker-user) -p $(docker-pass) docker.io
       buildah --log-level debug push -f docker esplinux/bootstrap docker://docker.io/esplinux/bootstrap
       buildah logout docker.io
@@ -74,19 +67,11 @@ jobs:
   - script: basename $(find -maxdepth 1 -type d -name 'node-*') > nodeCache.key
     displayName: 'Generate nodeCache.key'
 
-  - task: Cache@2
-    inputs:
-      key: 'node | $(AZURE_CACHE_REVISION) | nodeCache.key'
-      path: out-node-v12.15.0
-    displayName: 'Cache Node'
-
   - script: TERM=dumb ninja bash node
     displayName: 'Build Azure Deps [Bash Node]'
 
   - script: |
       CMD=node CONTAINER_NAME="esplinux/bootstrap-azurepipeline" scripts/buildcontainer.sh musl toybox dash clang bash node
-      buildah push esplinux/bootstrap-azurepipeline docker-archive:esplinux-bootstrap-azurepipeline.tar
-      gzip --suffix=.tgz esplinux-bootstrap-azurepipeline.tar
       buildah login -u $(docker-user) -p $(docker-pass) docker.io
       buildah push -f docker esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
       buildah logout docker.io
