@@ -63,9 +63,9 @@ jobs:
 
   - script: |
       CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl clang toybox dash curl
-      buildah login -u $(docker-user) -p $(docker-pass) docker.io
-      buildah --log-level debug push -f docker esplinux/bootstrap docker://docker.io/esplinux/bootstrap
-      buildah logout docker.io
+      buildah unshare buildah login -u $(docker-user) -p $(docker-pass) docker.io
+      buildah unshare buildah push -f docker esplinux/bootstrap docker://docker.io/esplinux/bootstrap
+      buildah unshare buildah logout docker.io
     displayName: 'Podman Bootstrap'
 
   - script: basename $(find -maxdepth 1 -type d -name 'node-*') > nodeCache.key
