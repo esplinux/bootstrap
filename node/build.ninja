@@ -16,8 +16,8 @@ build forceNoLibAtomic: nodeForceNoLibAtomic | $node/configure
 
 build $node/config.mk: configure $node/configure | clang out-$linux/include/linux/version.h forceNoLibAtomic
   description = Configuring $node
-  prefix = export CC="$cc $cflags"; $
-    export CXX="$cxx $cxxflags"; $
+  prefix = export CC="ccache $cc $cflags"; $
+    export CXX="ccache $cxx $cxxflags"; $
     export LINK="$cxx $linkflags";
   opts = --without-ssl --without-inspector --without-intl --fully-static
 
