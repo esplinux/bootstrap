@@ -31,8 +31,8 @@ jobs:
 
   steps:
   - script: |
-      sudo sed -i '/^mountopt =.*/d' /etc/containers/storage.conf
       sudo dnf -y install buildah git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7 python which ccache
+      sudo sed -i '/^mountopt =.*/d' /etc/containers/storage.conf
     displayName: 'Install Prerequisites and configure container storage'
 
   - bash:
