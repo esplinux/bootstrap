@@ -28,7 +28,11 @@ jobs:
     options: --privileged --cap-add SYS_ADMIN --device /dev/fuse
 
   steps:
+  - bash:
+      echo "##vso[task.setvariable variable=WEEKLY_CACHE]$(date +%Y-%V)"
+
   - script: |
+      echo "!!!!! WEEKLY_CACHE: $WEEKLY_CACHE"
       sudo dnf -y install buildah git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7 python which ccache
     displayName: 'Install Prerequisites'
 
