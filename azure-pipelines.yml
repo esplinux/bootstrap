@@ -32,6 +32,7 @@ jobs:
   steps:
   - script: |
       sudo dnf -y install buildah git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7 python which ccache
+      sudo sed -i 's/driver = "overlay"/driver = "vfs"/' /etc/containers/storage.conf
       sudo sed -i '/^mountopt =.*/d' /etc/containers/storage.conf
     displayName: 'Install Prerequisites and configure container storage'
 
