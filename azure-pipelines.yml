@@ -63,7 +63,7 @@ jobs:
 
   - script: |
       cat /etc/containers/storage.conf
-      CONTAINER_NAME="esplinux/bootstrap" scripts/buildcontainer.sh musl clang toybox dash curl
+      CONTAINER_NAME="esplinux/bootstrap" buildah --storage-driver=vfs unshare scripts/buildcontainer.sh musl clang toybox dash curl
       buildah --storage-driver=vfs login -u $(docker-user) -p $(docker-pass) docker.io
       buildah --storage-driver=vfs push -f docker esplinux/bootstrap docker://docker.io/esplinux/bootstrap
       buildah --storage-driver=vfs logout docker.io
