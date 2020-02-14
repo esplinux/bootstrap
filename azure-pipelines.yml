@@ -84,10 +84,10 @@ jobs:
     displayName: 'Build Azure Deps [Bash Node]'
 
   - script: |
-      #CMD=node CONTAINER_NAME="esplinux/bootstrap-azurepipeline" scripts/buildcontainer.sh musl toybox dash clang bash node
-      buildah login -u $(docker-user) -p $(docker-pass) docker.io
-      buildah push -f docker esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
-      buildah logout docker.io
+      CMD=node CONTAINER_NAME="esplinux/bootstrap-azurepipeline" buildah --storage-driver=vfs unshare scripts/buildcontainer.sh musl toybox dash clang bash node
+      buildah --storage-driver=vfs login -u $(docker-user) -p $(docker-pass) docker.io
+      buildah --storage-driver=vfs push -f docker esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
+      buildah --storage-driver=vfs logout docker.io
     displayName: 'Podman Bootstrap Azure Pipeline'
 
   - task: GitHubRelease@0
