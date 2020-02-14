@@ -31,7 +31,8 @@ jobs:
 
   steps:
   - script: |
-      sudo dnf -y install git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7 python which ccache
+      sudo dnf clean all
+      sudo dnf -y install --refresh git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7 python which ccache
       cat /etc/containers/storage.conf
       #      sudo sed -i 's/driver = "overlay"/driver = "vfs"/' /etc/containers/storage.conf
       #      sudo sed -i '/^mountopt =.*/d' /etc/containers/storage.conf
