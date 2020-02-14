@@ -43,39 +43,52 @@ jobs:
       echo "##vso[task.setvariable variable=WEEKLY_CACHE_KEY]$(date +%Y-%V)"
     displayName: 'Calculate Cache Keys'
 
-  - task: Cache@2
-    inputs:
-      key: 'ccache | $(AZURE_CACHE_REVISION) | $(WEEKLY_CACHE_KEY)'
-      path: $(CCACHE_DIR)
-    displayName: 'CCache'
+    #- task: Cache@2
+    #inputs:
+    #  key: 'ccache | $(AZURE_CACHE_REVISION) | $(WEEKLY_CACHE_KEY)'
+    #  path: $(CCACHE_DIR)
+    #displayName: 'CCache'
 
   - script: ./configure.sh
     displayName: 'Configure'
 
-  - script: TERM=dumb ninja fetch_sources
-    displayName: 'Fetch Sources'
+    #- script: TERM=dumb ninja fetch_sources
+    #displayName: 'Fetch Sources'
 
-  - script: TERM=dumb ninja musl
-    displayName: 'Build MUSL'
+    #- script: TERM=dumb ninja musl
+    #displayName: 'Build MUSL'
 
-  - script: TERM=dumb ninja clang
-    displayName: 'Build Clang'
+    #- script: TERM=dumb ninja clang
+    #displayName: 'Build Clang'
 
-  - script: TERM=dumb ninja toybox dash curl
-    displayName: 'Build Base [Toybox, Dash, Curl]'
+    #- script: TERM=dumb ninja toybox dash curl
+    #displayName: 'Build Base [Toybox, Dash, Curl]'
+
+  - script: |
+      curl -sLO https://github.com/esplinux/bootstrap/releases/download/Bootstrap/musl-1.1.24.tgz
+      curl -sLO https://github.com/esplinux/bootstrap/releases/download/Bootstrap/toybox-HEAD.tgz
+      curl -sLO https://github.com/esplinux/bootstrap/releases/download/Bootstrap/dash-0.5.10.tgz
+      curl -sLO https://github.com/esplinux/bootstrap/releases/download/Bootstrap/clang-llvm-10.tgz
+      curl -sLO https://github.com/esplinux/bootstrap/releases/download/Bootstrap/curl-7.68.0.tgz
+    displayName: 'Downloading tarballs'
 
   - script: |
       #CONTAINER_NAME="esplinux/bootstrap" buildah --storage-driver=vfs unshare scripts/buildcontainer.sh musl clang toybox dash curl
-      buildah --name esplinux/bootstrap from scratch
-      mnt=$(buildah unshare buildah mount esplinux/bootstrap)
+      echo 'buildah --name bootstrap from scratch'
+      buildah --name bootstrap from scratch
+      echo 'mnt=$(buildah unshare buildah mount bootstrap)'
+      mnt=$(buildah unshare buildah mount bootstrap)
       tar -C $mnt -xf musl-*.tgz
       tar -C $mnt -xf clang-*.tgz
       tar -C $mnt -xf toybox-*.tgz
       tar -C $mnt -xf dash-*.tgz
       tar -C $mnt -xf curl-*.tgz
-      buildah unshare buildah unmount esplinux/boostrap
-      buildah config --cmd sh esplinux/bootstrap
-      buildah commit --squash esplinux/bootstrap esplinux/boostrap
+      echo 'buildah unshare buildah unmount boostrap'
+      buildah unshare buildah unmount boostrap
+      echo 'buildah config --cmd sh bootstrap'
+      buildah config --cmd sh bootstrap
+      echo 'buildah commit --squash bootstrap esplinux/boostrap'
+      buildah commit --squash bootstrap esplinux/boostrap
       buildah images
       buildah login -u $(docker-user) -p $(docker-pass) docker.io
       buildah push -f docker esplinux/bootstrap docker://docker.io/esplinux/bootstrap
@@ -86,23 +99,24 @@ jobs:
     displayName: 'Build Azure Deps [Bash Node]'
 
   - script: |
+      echo Disabled
       #CMD=node CONTAINER_NAME="esplinux/bootstrap-azurepipeline" buildah --storage-driver=vfs unshare scripts/buildcontainer.sh musl toybox dash clang bash node
-      buildah --name esplinux/bootstrap-azurepipeline from scratch
-      mnt=$(buildah unshare buildah mount esplinux/bootstrap-azurepipeline)
-      tar -C $mnt -xf musl-*.tgz
-      tar -C $mnt -xf clang-*.tgz
-      tar -C $mnt -xf toybox-*.tgz
-      tar -C $mnt -xf dash-*.tgz
-      tar -C $mnt -xf curl-*.tgz
-      tar -C $mnt -xf bash-*.tgz
-      tar -C $mnt -xf node-*.tgz
-      buildah unshare buildah unmount esplinux/boostrap-azurepipeline
-      buildah config --cmd sh esplinux/bootstrap-azure-pipeline
-      buildah commit --squash esplinux/bootstrap-azure-pipeline esplinux/boostrap-azurepipeline
-      buildah images
-      buildah login -u $(docker-user) -p $(docker-pass) docker.io
-      buildah push -f docker esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
-      buildah logout docker.io
+      #buildah --name esplinux/bootstrap-azurepipeline from scratch
+      #mnt=$(buildah unshare buildah mount esplinux/bootstrap-azurepipeline)
+      #tar -C $mnt -xf musl-*.tgz
+      #tar -C $mnt -xf clang-*.tgz
+      #tar -C $mnt -xf toybox-*.tgz
+      #tar -C $mnt -xf dash-*.tgz
+      #tar -C $mnt -xf curl-*.tgz
+      #tar -C $mnt -xf bash-*.tgz
+      #tar -C $mnt -xf node-*.tgz
+      #buildah unshare buildah unmount esplinux/boostrap-azurepipeline
+      #buildah config --cmd sh esplinux/bootstrap-azure-pipeline
+      #buildah commit --squash esplinux/bootstrap-azure-pipeline esplinux/boostrap-azurepipeline
+      #buildah images
+      #buildah login -u $(docker-user) -p $(docker-pass) docker.io
+      #buildah push -f docker esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
+      #buildah logout docker.io
     displayName: 'Podman Bootstrap Azure Pipeline'
 
   - task: GitHubRelease@0
