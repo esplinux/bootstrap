@@ -16,7 +16,8 @@ pool:
 
 # Hack if XDG_RUNTIME_DIR is not set rootless buildah wll fail
 # Force VFS Mode as we are already on an OverlayFS
-#variables:
+variables:
+  AZURE_CACHE_REVISION: 0
 #  STORAGE_DRIVER: vfs
 #  XDG_RUNTIME_DIR: /tmp
 #  AZURE_CACHE_REVISION: 0
@@ -44,7 +45,7 @@ jobs:
 
   - task: Cache@2
     inputs:
-      key: 'ccache | $(AZURE_CACHE_REVISION) | $WEEKLY_CACHE_KEY'
+      key: 'ccache | $(AZURE_CACHE_REVISION) | $(WEEKLY_CACHE_KEY)'
       path: $(CCACHE_DIR)
     displayName: 'CCache'
 
