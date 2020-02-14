@@ -37,7 +37,7 @@ jobs:
       echo "##vso[task.setvariable variable=WEEKLY_CACHE_KEY]$(date +%Y-%V)"
     displayName: 'Calculate Cache Keys'
 
- - task: Cache@2
+  - task: Cache@2
     inputs:
       key: 'ccache | $(AZURE_CACHE_REVISION) | $(WEEKLY_CACHE_KEY)'
       path: $(CCACHE_DIR)
