@@ -74,20 +74,15 @@ jobs:
 
   - script: |
       #CONTAINER_NAME="esplinux/bootstrap" buildah --storage-driver=vfs unshare scripts/buildcontainer.sh musl clang toybox dash curl
-      echo 'buildah --name bootstrap from scratch'
       sudo buildah --name bootstrap from scratch
-      echo 'mnt=$(buildah unshare buildah mount bootstrap)'
       mnt=$(sudo buildah mount bootstrap)
-      tar -C $mnt -xf musl-*.tgz
-      tar -C $mnt -xf clang-*.tgz
-      tar -C $mnt -xf toybox-*.tgz
-      tar -C $mnt -xf dash-*.tgz
-      tar -C $mnt -xf curl-*.tgz
-      echo 'buildah unshare buildah unmount boostrap'
+      sudo tar -C $mnt -xf musl-*.tgz
+      sudo tar -C $mnt -xf clang-*.tgz
+      sduo tar -C $mnt -xf toybox-*.tgz
+      sduo tar -C $mnt -xf dash-*.tgz
+      sduo tar -C $mnt -xf curl-*.tgz
       sudo buildah unmount bootstrap
-      echo 'buildah config --cmd sh bootstrap'
       sudo buildah config --cmd sh bootstrap
-      echo 'buildah commit --squash bootstrap esplinux/boostrap'
       sudo buildah commit --squash bootstrap esplinux/bootstrap
       sudo buildah images
       echo 'Buildah login'
