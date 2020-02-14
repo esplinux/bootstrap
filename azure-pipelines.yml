@@ -84,11 +84,11 @@ jobs:
       tar -C $mnt -xf dash-*.tgz
       tar -C $mnt -xf curl-*.tgz
       echo 'buildah unshare buildah unmount boostrap'
-      buildah unshare buildah unmount boostrap
+      buildah unshare buildah unmount bootstrap
       echo 'buildah config --cmd sh bootstrap'
       buildah config --cmd sh bootstrap
       echo 'buildah commit --squash bootstrap esplinux/boostrap'
-      buildah commit --squash bootstrap esplinux/boostrap
+      buildah commit --squash bootstrap esplinux/bootstrap
       buildah images
       buildah login -u $(docker-user) -p $(docker-pass) docker.io
       buildah push -f docker esplinux/bootstrap docker://docker.io/esplinux/bootstrap
