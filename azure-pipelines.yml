@@ -89,8 +89,8 @@ jobs:
       sudo tar -C $mnt -xf bash-*.tgz
       sudo tar -C $mnt -xf node-*.tgz
       sudo buildah unmount bootstrap-azurepipeline
-      sudo buildah config --cmd sh bootstrap-azure-pipeline
-      sudo buildah commit --squash bootstrap-azure-pipeline esplinux/bootstrap-azurepipeline
+      sudo buildah config --cmd sh bootstrap-azurepipeline
+      sudo buildah commit --squash bootstrap-azurepipeline esplinux/bootstrap-azurepipeline
       sudo buildah images
       sudo buildah login -u $(docker-user) -p $(docker-pass) docker.io
       sudo buildah push -f docker esplinux/bootstrap-azurepipeline docker://docker.io/esplinux/bootstrap-azurepipeline
