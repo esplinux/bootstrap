@@ -5,7 +5,7 @@ name: default
 
 steps:
 - name: Build
-  image: fedora
+  image: fedora:31
   commands:
   - sudo dnf clean all
   - sudo dnf -y install --refresh git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7 python which ccache diffutils findutils
@@ -17,5 +17,4 @@ steps:
   settings:
     api_key:
       from_secret: ghr_token
-    files: *.tgz
-    overwrite: true  
+    files: '*.tgz'
