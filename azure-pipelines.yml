@@ -19,13 +19,14 @@ pool:
 variables:
   AZURE_CACHE_REVISION: 0
   CCACHE_DIR: $(Pipeline.Workspace)/ccache
+  CCACHE_COMPILERCHECK: content
 
 jobs:
 - job: Bootstrap
   timeoutInMinutes: 0
   container:
     image: quay.io/buildah/stable
-    options: --privileged --cap-add SYS_ADMIN --device /dev/fuse
+    options: --privileged --cap-add SYS_ADMIN --device /dev/fuse -v /var/lib/containers:/var/lib/containers
 
   steps:
   - script: |
