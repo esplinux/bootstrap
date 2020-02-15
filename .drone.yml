@@ -1,0 +1,12 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: Test
+  image: fedora
+  commands:
+  - sudo dnf clean all
+  - sudo dny -y install --refresh git llvm clang lld cmake make ninja-build findutils rsync glibc-static python2.7 python which ccache
+  - ninja
