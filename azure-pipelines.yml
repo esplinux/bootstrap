@@ -17,7 +17,7 @@ pool:
 # Hack if XDG_RUNTIME_DIR is not set rootless buildah wll fail
 # Force VFS Mode as we are already on an OverlayFS
 variables:
-  AZURE_CACHE_REVISION: 0
+  AZURE_CACHE_REVISION: 1
   CCACHE_DIR: $(Pipeline.Workspace)/ccache
   CCACHE_COMPILERCHECK: content
 

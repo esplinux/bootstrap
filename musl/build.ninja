@@ -3,7 +3,7 @@ build $musl/configure: download
 
 build $musl/config.mak: configure $musl/configure
   description = Configuring $musl
-  prefix = CC=clang AR=llvm-ar RANLIB=llvm-ranlib LDFLAGS=-fuse-ld=lld
+  prefix = CC="ccache clang" CFLAGS="-O3 -pipe -march=$march" AR=llvm-ar RANLIB=llvm-ranlib LDFLAGS=-fuse-ld=lld
   opts = --prefix=''
 
 build $musl/Makefile: phony $musl/config.mak

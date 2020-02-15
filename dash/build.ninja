@@ -1,5 +1,5 @@
 rule dash_ln
-  command = cd $$(dirname $out); ln -s dash sh
+  command = cd $$(dirname $out); ln -sf dash sh
 
 build $dash/configure: download
   url = http://gondor.apana.org.au/~herbert/dash/files/$dash.tar.gz

@@ -38,13 +38,14 @@ check ninja
 check bash
 check nproc
 
+MARCH=broadwell
 NPROC=$(nproc)
 CC=$PWD/out-clang-$LLVM_version/bin/clang
 CXX=$PWD/out-clang-$LLVM_version/bin/clang++
 SYSROOT=$PWD/out-$MUSL_version
-CFLAGS="-Os"
-CXXFLAGS="-Os"
-LDFLAGS="-w -s"
+CFLAGS="-O3 -pipe -flto=thin -fexceptions -fasynchronous-unwind-tables -ffast-math -falign-functions=32 -march=$MARCH"
+CXXFLAGS="-O3 -pipe -flto=thin -fexceptions -fasynchronous-unwind-tables -ffast-math -falign-functions=32 -march=$MARCH"
+LDFLAGS="-flto=thin -Wl,--thinlto-cache-dir=/tmp"
 
 if ! test -f "config.ninja"; then
   echo "Creating config.ninja"
@@ -60,6 +61,7 @@ if ! test -f "config.ninja"; then
   echo "node=$NODE_version" >> config.ninja
   echo "bearssl=$BEARSSL_version" >> config.ninja
   echo "curl=$CURL_version" >> config.ninja
+  echo "march=$MARCH" >> config.ninja
   echo "nproc=$NPROC" >> config.ninja
   echo "cc=$CC" >> config.ninja
   echo "cxx=$CXX" >> config.ninja

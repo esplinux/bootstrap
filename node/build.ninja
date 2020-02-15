@@ -1,25 +1,23 @@
-# Use LTS 12 version to create a fully static version
-
-cflags = --sysroot=$sysroot $cflags
-cxxflags = --sysroot=$sysroot $cxxflags -I$$PWD/../out-clang-$llvm/include/c++/v1 -I$$PWD/../out-$linux/include 
+cflags = --sysroot=$sysroot -O3 -pipe -march=$march
+cxxflags = --sysroot=$sysroot -O3 -pipe -march=$march -I$$PWD/../out-clang-$llvm/include/c++/v1 -I$$PWD/../out-$linux/include 
 linkflags = --sysroot=$sysroot -stdlib=libc++ -L$$PWD/../out-clang-$llvm/lib -lc++abi
 
 # Hack until node fixes LLVM/Clang 10 detection
 rule nodeForceNoLibAtomic
-  command = touch forceNoLibAtomic; $
+  command = touch $node/forceNoLibAtomic; $
     sed -i 's/OS in ("linux", "mac") and llvm_version != "0.0"/OS in ("_____", "mac") and llvm_version != "0.0"/' $node/node.gyp
 
 build $node/configure: download
   url = https://nodejs.org/download/release/$$(echo $node | sed s/node-//)/$node.tar.gz
 
-build forceNoLibAtomic: nodeForceNoLibAtomic | $node/configure
+build $node/forceNoLibAtomic: nodeForceNoLibAtomic | $node/configure
 
-build $node/config.mk: configure $node/configure | clang out-$linux/include/linux/version.h forceNoLibAtomic
+build $node/config.mk: configure $node/configure | clang out-$linux/include/linux/version.h $node/forceNoLibAtomic
   description = Configuring $node
   prefix = export CC="ccache $cc $cflags"; $
     export CXX="ccache $cxx $cxxflags"; $
     export LINK="$cxx $linkflags";
-  opts = --without-ssl --without-inspector --without-intl --fully-static
+  opts = --dest-cpu=x64 --dest-os=linux --without-ssl --without-snapshot --without-inspector --without-intl --fully-static
 
 build out-$node/usr/local/bin/node: make $node/config.mk
   description = Build $node
