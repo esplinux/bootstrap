@@ -20,21 +20,19 @@ subninja toybox/build.ninja
 subninja dash/build.ninja
 subninja bearssl/build.ninja
 subninja curl/build.ninja
-subninja bash/build.ninja
-subninja node/build.ninja
 
 # Default clean tasks which must be located after the package includes
 ##############################################################################
-build fetch_sources: phony $musl $linux $llvm $toybox $dash $bearssl $curl $bash $node
+build fetch_sources: phony $musl $linux $llvm $toybox $dash $bearssl $curl
 
 build clean: rm
   rm = src-* build-* out-* *.tgz *.log
 
 build distclean: rm
-  rm = src-* build-* out-* *.tgz *.log host-tools-* config.ninja $
-    $musl $linux $clang $llvm $toybox $dash $bearssl $curl $bash $node
+  rm = src-* build-* out-* *.tgz *.log config.ninja $
+    $musl $linux $clang $llvm $toybox $dash $bearssl $curl
 
 
 # Default builds
 ##############################################################################
-default musl clang toybox dash curl bash node
+default musl clang toybox dash curl

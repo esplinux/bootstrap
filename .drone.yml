@@ -18,3 +18,6 @@ steps:
     api_key:
       from_secret: ghr_token
     files: '*.tgz'
+    overwrite: true
+  when:
+    event: tag
