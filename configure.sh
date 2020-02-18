@@ -21,7 +21,6 @@ check git
 check find
 check rsync
 check cmp
-check python2.7
 check python3
 
 check clang
