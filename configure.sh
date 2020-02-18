@@ -41,9 +41,9 @@ NPROC=$(nproc)
 CC=$PWD/out-clang-$LLVM_version/bin/clang
 CXX=$PWD/out-clang-$LLVM_version/bin/clang++
 SYSROOT=$PWD/out-$MUSL_version
-CFLAGS="-O3 -pipe -flto=thin -fexceptions -fasynchronous-unwind-tables -ffast-math -falign-functions=32 -march=$MARCH"
-CXXFLAGS="-O3 -pipe -flto=thin -fexceptions -fasynchronous-unwind-tables -ffast-math -falign-functions=32 -march=$MARCH"
-LDFLAGS="-flto=thin -Wl,--thinlto-cache-dir=/tmp"
+CFLAGS="-O2 -pipe -march=$MARCH"
+CXXFLAGS="-O2 -pipe -march=$MARCH"
+LDFLAGS="-z now -z relro -z defs -z noexecstack"
 
 if ! test -f "config.ninja"; then
   echo "Creating config.ninja"
