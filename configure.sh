@@ -35,11 +35,11 @@ check ninja
 check bash
 check nproc
 
+SYSROOT=$PWD/out-$MUSL_version
 MARCH=broadwell
 NPROC=$(nproc)
 CC=$PWD/out-clang-$LLVM_version/bin/clang
 CXX=$PWD/out-clang-$LLVM_version/bin/clang++
-SYSROOT=$PWD/out-$MUSL_version
 CFLAGS="-O2 -pipe -march=$MARCH"
 CXXFLAGS="-O2 -pipe -march=$MARCH"
 LDFLAGS="-z now -z relro -z defs -z noexecstack"
@@ -56,11 +56,11 @@ if ! test -f "config.ninja"; then
   echo "dash=$DASH_version" >> config.ninja
   echo "bearssl=$BEARSSL_version" >> config.ninja
   echo "curl=$CURL_version" >> config.ninja
+  echo "sysroot=$SYSROOT" >> config.ninja
   echo "march=$MARCH" >> config.ninja
   echo "nproc=$NPROC" >> config.ninja
   echo "cc=$CC" >> config.ninja
   echo "cxx=$CXX" >> config.ninja
-  echo "sysroot=$SYSROOT" >> config.ninja
   echo "cflags=$CFLAGS" >> config.ninja
   echo "cxxflags=$CXXFLAGS" >> config.ninja
   echo "ldflags=$LDFLAGS" >> config.ninja
