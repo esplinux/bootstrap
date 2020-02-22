@@ -35,4 +35,7 @@ build distclean: rm
 
 # Default builds
 ##############################################################################
-default musl clang toybox dash curl
+build sysroot.tgz: package | musl clang toybox dash curl
+  builddir = $sysroot
+
+default sysroot.tgz

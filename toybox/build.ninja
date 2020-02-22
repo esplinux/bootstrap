@@ -4,7 +4,7 @@ build $toybox/Makefile: git
 
 build $sysroot/bin/toybox: make $toybox/Makefile | clang out-$linux/include/linux/version.h
   description = Building $toybox
-  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags -I$$PWD/out-$linux/include" LDFLAGS="--static" PREFIX=$sysroot/bin
+  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags -I$$PWD/out-$linux/include" PREFIX=$sysroot/bin
   nproc = 1
   target = defconfig toybox install_flat
 

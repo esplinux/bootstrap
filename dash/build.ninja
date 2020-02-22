@@ -7,7 +7,7 @@ build $dash/configure: download
 build $dash/Makefile: configure $dash/configure | clang $sysroot/lib/libc.so
   description = Configuring $dash
   prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags"
-  opts = --prefix='' --host=none --enable-static
+  opts = --prefix='' --host=none 
 
 build $sysroot/bin/dash: make $dash/Makefile
   description = Building $dash
