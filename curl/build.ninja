@@ -3,8 +3,8 @@ build $curl/configure: download
 
 build $curl/Makefile: configure $curl/configure | clang $sysroot/lib/libc.so out-$bearssl/libbearssl.a
   description = Configuring $curl
-  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags -I$$PWD/../$bearssl/inc" LDFLAGS="-L$$PWD/../out-$bearssl --static"
-  opts = --prefix='' --with-bearssl --disable-shared --host=none
+  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags -I$$PWD/../$bearssl/inc" LDFLAGS="-w -s -L$$PWD/../out-$bearssl --static"
+  opts = --prefix='' --with-bearssl --host=none
 
 build $sysroot/bin/curl: make $curl/Makefile
   description = Building $curl

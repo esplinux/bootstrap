@@ -11,6 +11,7 @@ build build-$llvm/Makefile: cmake $llvm/llvm  | out-$linux/include/linux/version
     -DCMAKE_C_FLAGS="$cflags -I$$PWD/out-$linux/include" $
     -DCMAKE_CXX_COMPILER=clang++ $
     -DCMAKE_CXX_FLAGS="$cflags -I$$PWD/out-$linux/include" $
+    -DCMAKE_EXE_LINKER_FLAGS="-w -s" $
     -DLLVM_CCACHE_BUILD=ON $
     -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-unknown-linux-musl $
     -DLLVM_TARGET_ARCH=X86 $

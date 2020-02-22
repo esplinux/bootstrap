@@ -40,8 +40,8 @@ MARCH=broadwell
 NPROC=$(nproc)
 CC=$SYSROOT/bin/clang
 CXX=$SYSROOT/bin/clang++
-CFLAGS="-O2 -pipe -march=$MARCH"
-CXXFLAGS="-O2 -pipe -march=$MARCH"
+CFLAGS="-Os -pipe -march=$MARCH -mtune=$MARCH"
+CXXFLAGS="-Os -pipe -march=$MARCH -mtune=$MARCH"
 
 if ! test -f "config.ninja"; then
   echo "Creating config.ninja"
