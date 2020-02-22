@@ -1,8 +1,8 @@
 #!/bin/sh -e
 
 LLVM_version=llvm-10
-LINUX_version=linux-5.4.20
-MUSL_version=musl-1.1.24
+LINUX_version=linux-5.4.21
+MUSL_version=musl-1.2.0
 TOYBOX_version=toybox-HEAD
 DASH_version=dash-0.5.10
 BEARSSL_version=bearssl-HEAD
