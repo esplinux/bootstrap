@@ -23,9 +23,6 @@ rule package
   description = Packaging $out
   command = cd $builddir; tar -czf ../$out .; cd ..
 
-rule patch
-  command = cd $in;patch -i ../patches/$in.patch
-
 rule configure
   command = cd $$(dirname $in); $prefix ./configure $opts
 
@@ -36,15 +33,6 @@ rule make
 rule cmake
   description = CMAKE $in
   command = cmake -B$$(dirname $out) -S$in $opts
-
-rule ninja
-  command = $prefix ninja -C$$(dirname $in) -f $$(basename $in) $target
-
-rule cp
-  command = cp $in $out
-
-rule mkdir
-  command = mkdir $out
 
 rule rm
   command = rm -rf $rm

@@ -4,9 +4,8 @@ build $llvm: git
 
 build $llvm/llvm: phony $llvm
 
-build build-$llvm/build.ninja: cmake $llvm/llvm  | out-$linux/include/linux/version.h out-$musl/lib/libc.so
-  opts =  -G Ninja $
-    -DCMAKE_INSTALL_PREFIX='' $
+build build-$llvm/Makefile: cmake $llvm/llvm  | out-$linux/include/linux/version.h out-$musl/lib/libc.so
+  opts =  -DCMAKE_INSTALL_PREFIX='' $
     -DCMAKE_BUILD_TYPE=MinSizeRel $
     -DCMAKE_C_COMPILER=clang $
     -DCMAKE_C_FLAGS="-O3 -pipe -march=$march -I$$PWD/out-$linux/include" $
@@ -45,7 +44,7 @@ build build-$llvm/build.ninja: cmake $llvm/llvm  | out-$linux/include/linux/vers
     -DCLANG_DEFAULT_LINKER=lld $
     -DCLANG_DEFAULT_RTLIB=compiler-rt
 
-build out-clang-$llvm/bin/clang: ninja build-$llvm/build.ninja
+build out-clang-$llvm/bin/clang: make build-$llvm/Makefile
   prefix = DESTDIR=$$PWD/out-clang-$llvm
   target = install-clang install-compiler-rt install-lld install-unwind install-libcxxabi install-libcxx install-clang-resource-headers
   pool = console
