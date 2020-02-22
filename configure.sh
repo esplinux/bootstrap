@@ -7,6 +7,7 @@ TOYBOX_version=toybox-HEAD
 DASH_version=dash-0.5.10
 BEARSSL_version=bearssl-HEAD
 CURL_version=curl-7.68.0
+MAKE_version=make-3.82
 
 check()
 {
@@ -55,6 +56,7 @@ if ! test -f "config.ninja"; then
   echo "dash=$DASH_version" >> config.ninja
   echo "bearssl=$BEARSSL_version" >> config.ninja
   echo "curl=$CURL_version" >> config.ninja
+  echo "make=$MAKE_version" >> config.ninja
   echo "sysroot=$SYSROOT" >> config.ninja
   echo "march=$MARCH" >> config.ninja
   echo "nproc=$NPROC" >> config.ninja

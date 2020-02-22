@@ -1,0 +1,14 @@
+build $make/configure: download
+  url = https://ftp.gnu.org/gnu/make/$make.tar.gz
+
+build $make/Makefile: configure $make/configure | clang $sysroot/lib/libc.so
+  description = Configuring $make
+  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags" LDFLAGS="-w -s"
+  opts = --prefix='/opt/gnu' --host=none 
+
+build $sysroot/opt/gnu/bin/make: make $make/Makefile
+  description = Building $make
+  prefix = DESTDIR=$sysroot
+  target = install
+
+build make: phony $sysroot/opt/gnu/bin/make
