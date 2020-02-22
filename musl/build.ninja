@@ -3,18 +3,14 @@ build $musl/configure: download
 
 build $musl/config.mak: configure $musl/configure
   description = Configuring $musl
-  prefix = CC="ccache clang" CFLAGS="-O3 -pipe -march=$march" AR=llvm-ar RANLIB=llvm-ranlib LDFLAGS=-fuse-ld=lld
+  prefix = CC="ccache clang" CFLAGS="$cflags" AR=llvm-ar RANLIB=llvm-ranlib LDFLAGS=-fuse-ld=lld
   opts = --prefix=''
 
 build $musl/Makefile: phony $musl/config.mak
 
-build out-$musl/lib/libc.so: make $musl/Makefile
+build $sysroot/lib/libc.so: make $musl/Makefile
   description = Building $musl
-  prefix = DESTDIR=$$PWD/out-$musl
+  prefix = DESTDIR=$sysroot
   target = install
 
-build $musl.tgz: package | out-$musl/lib/libc.so
-  builddir = out-$musl
-
-build $musl: phony $musl/configure
-build musl: phony $musl.tgz
+build musl: phony $sysroot/lib/libc.so

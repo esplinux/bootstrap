@@ -4,20 +4,16 @@ rule dash_ln
 build $dash/configure: download
   url = http://gondor.apana.org.au/~herbert/dash/files/$dash.tar.gz
 
-build $dash/Makefile: configure $dash/configure | clang out-$musl/lib/libc.so
+build $dash/Makefile: configure $dash/configure | clang $sysroot/lib/libc.so
   description = Configuring $dash
-  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags" LDFLAGS="$ldflags"
+  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags"
   opts = --prefix='' --host=none --enable-static
 
-build out-$dash/bin/dash: make $dash/Makefile
+build $sysroot/bin/dash: make $dash/Makefile
   description = Building $dash
-  prefix = DESTDIR=$$PWD/out-$dash
+  prefix = DESTDIR=$sysroot
   target = install
 
-build out-$dash/bin/sh: dash_ln | out-$dash/bin/dash
+build $sysroot/bin/sh: dash_ln | $sysroot/bin/dash
 
-build $dash.tgz: package | out-$dash/bin/dash out-$dash/bin/sh
-  builddir = out-$dash
-
-build $dash: phony $dash/configure
-build dash: phony $dash.tgz
+build dash: phony $sysroot/bin/sh

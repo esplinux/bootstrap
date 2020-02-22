@@ -16,6 +16,3 @@ build $bearssl/conf/esp.mk: bearssl_configure | $bearssl/Makefile
 build out-$bearssl/libbearssl.a: make $bearssl/Makefile | clang $bearssl/conf/esp.mk
   description = Building $bearssl
   target = CONF=esp
-
-build $bearssl: phony $bearssl/Makefile
-build bearssl: phony out-$bearssl/libbearssl.a

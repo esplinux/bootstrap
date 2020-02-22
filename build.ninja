@@ -26,10 +26,10 @@ subninja curl/build.ninja
 build fetch_sources: phony $musl $linux $llvm $toybox $dash $bearssl $curl
 
 build clean: rm
-  rm = src-* build-* out-* *.tgz *.log
+  rm = src-* build-* out-* sysroot *.tgz *.log
 
 build distclean: rm
-  rm = src-* build-* out-* *.tgz *.log config.ninja $
+  rm = src-* build-* out-* sysroot *.tgz *.log config.ninja $
     $musl $linux $clang $llvm $toybox $dash $bearssl $curl
 
 

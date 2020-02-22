@@ -35,14 +35,13 @@ check ninja
 check bash
 check nproc
 
-SYSROOT=$PWD/out-$MUSL_version
+SYSROOT=$PWD/sysroot
 MARCH=broadwell
 NPROC=$(nproc)
-CC=$PWD/out-clang-$LLVM_version/bin/clang
-CXX=$PWD/out-clang-$LLVM_version/bin/clang++
+CC=$SYSROOT/bin/clang
+CXX=$SYSROOT/bin/clang++
 CFLAGS="-O2 -pipe -march=$MARCH"
 CXXFLAGS="-O2 -pipe -march=$MARCH"
-LDFLAGS="-z now -z relro -z defs -z noexecstack"
 
 if ! test -f "config.ninja"; then
   echo "Creating config.ninja"
@@ -63,5 +62,4 @@ if ! test -f "config.ninja"; then
   echo "cxx=$CXX" >> config.ninja
   echo "cflags=$CFLAGS" >> config.ninja
   echo "cxxflags=$CXXFLAGS" >> config.ninja
-  echo "ldflags=$LDFLAGS" >> config.ninja
 fi
