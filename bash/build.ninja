@@ -1,0 +1,14 @@
+build $gnubash/configure: download
+  url = https://ftp.gnu.org/gnu/bash/$gnubash.tar.gz
+
+build $gnubash/Makefile: configure $gnubash/configure | make yacc $sysroot/lib/libc.so $sysroot/lib/libcurses.so
+  description = Configuring $gnubash
+  prefix = YACC=$yacc CC=clang CFLAGS="--sysroot=$sysroot $cflags" LDFLAGS="-rtlib=compiler-rt --static"
+  opts = --prefix='/opt/gnu' --host=none --without-bash-malloc
+
+build $sysroot/opt/gnu/bin/bash: make $gnubash/Makefile
+  description = Building $gnubash
+  nproc = 1
+  target = install DESTDIR=$sysroot
+
+build bash: phony $sysroot/opt/gnu/bin/bash

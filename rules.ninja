@@ -26,9 +26,13 @@ rule package
 rule configure
   command = cd $$(dirname $in); $prefix ./configure $opts
 
-rule make
+rule host-make
   description = Building $out
   command = $prefix make -j$nproc -C $$(dirname $in) $target
+
+rule make
+  description = Building $out
+  command = $prefix $make -j$nproc -C $$(dirname $in) $target
 
 rule cmake
   description = CMAKE $in

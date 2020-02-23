@@ -1,13 +1,16 @@
 #!/bin/sh -e
 
-LLVM_version=llvm-10
-LINUX_version=linux-5.4.21
 MUSL_version=musl-1.2.0
+LINUX_version=linux-5.4.21
+LLVM_version=llvm-10
 TOYBOX_version=toybox-HEAD
 DASH_version=dash-0.5.10
 BEARSSL_version=bearssl-HEAD
 CURL_version=curl-7.68.0
-MAKE_version=make-3.82
+BYACC_version=byacc-20191125
+CURSES_version=netbsd-curses-HEAD
+GNUMAKE_version=make-3.81
+GNUBASH_version=bash-3.2.57
 
 check()
 {
@@ -37,10 +40,11 @@ check bash
 check nproc
 
 SYSROOT=$PWD/sysroot
+HOSTROOT=$PWD/build-host-$LLVM_version
 MARCH=broadwell
 NPROC=$(nproc)
-CC=$SYSROOT/bin/clang
-CXX=$SYSROOT/bin/clang++
+LLVM_TBLGEN=$PWD/build-host-$llvm/bin/llvm-tblgen
+CLANG_TBLGEN=$PWD/build-host-$llvm/bin/clang-tblgen
 CFLAGS="-Os -pipe -march=$MARCH -mtune=$MARCH"
 CXXFLAGS="-Os -pipe -march=$MARCH -mtune=$MARCH"
 
@@ -56,12 +60,19 @@ if ! test -f "config.ninja"; then
   echo "dash=$DASH_version" >> config.ninja
   echo "bearssl=$BEARSSL_version" >> config.ninja
   echo "curl=$CURL_version" >> config.ninja
-  echo "make=$MAKE_version" >> config.ninja
+  echo "byacc=$BYACC_version" >> config.ninja
+  echo "curses=$CURSES_version" >> config.ninja
+  echo "gnumake=$GNUMAKE_version" >> config.ninja
+  echo "gnubash=$GNUBASH_version" >> config.ninja
   echo "sysroot=$SYSROOT" >> config.ninja
   echo "march=$MARCH" >> config.ninja
   echo "nproc=$NPROC" >> config.ninja
-  echo "cc=$CC" >> config.ninja
-  echo "cxx=$CXX" >> config.ninja
+  echo "make=$SYSROOT/opt/gnu/bin/make" >> config.ninja
+  echo "cc=$SYSROOT/bin/clang" >> config.ninja
+  echo "cxx=$SYSROOT/bin/clang++" >> config.ninja
+  echo "yacc=$SYSROOT/bin/yacc" >> config.ninja
+  echo "llvm-tblgen=$HOSTROOT/bin/llvm-tblgen" >> config.ninja
+  echo "clang-tblgen=$HOSTROOT/bin/clang-tblgen" >> config.ninja
   echo "cflags=$CFLAGS" >> config.ninja
   echo "cxxflags=$CXXFLAGS" >> config.ninja
 fi

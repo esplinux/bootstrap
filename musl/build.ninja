@@ -8,7 +8,7 @@ build $musl/config.mak: configure $musl/configure
 
 build $musl/Makefile: phony $musl/config.mak
 
-build $sysroot/lib/libc.so: make $musl/Makefile
+build $sysroot/lib/libc.so: host-make $musl/Makefile
   description = Building $musl
   prefix = DESTDIR=$sysroot
   target = install
