@@ -5,10 +5,10 @@ name: default
 
 steps:
 - name: Build
-  image: fedora:31
+  image: ubuntu:18.04
   commands:
-  - sudo dnf clean all
-  - sudo dnf -y install --refresh git llvm clang lld cmake make ninja-build findutils rsync glibc-static python which ccache diffutils findutils
+  - sudo apt-get update
+  - sudo apt-get install git llvm clang lld cmake make ninja-build rsync python ccache
   - ./configure.sh
   - ninja
 
