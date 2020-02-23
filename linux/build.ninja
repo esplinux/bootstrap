@@ -1,7 +1,7 @@
 build $linux/Makefile: download
   url = https://cdn.kernel.org/pub/linux/kernel/v5.x/$linux.tar.gz
 
-build out-$linux/include/linux/version.h out-$linux/include/linux/fs.h out-$linux/include/linux/rfkill.h: make $linux/Makefile
+build out-$linux/include/linux/version.h out-$linux/include/linux/fs.h out-$linux/include/linux/rfkill.h: make $linux/Makefile | make
   description = Building $linux headers
   prefix = CC=clang
   target = INSTALL_HDR_PATH=$$PWD/out-$linux headers_install
