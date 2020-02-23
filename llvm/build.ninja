@@ -68,7 +68,7 @@ build build-clang-$llvm/Makefile: cmake $llvm/llvm  | make out-$linux/include/li
     -DCMAKE_C_FLAGS="--sysroot=$sysroot $cflags -I$$PWD/out-$linux/include" $
     -DCMAKE_CXX_COMPILER=clang++ $
     -DCMAKE_CXX_FLAGS="--sysroot=$sysroot -stdlib=libc++ $cflags -I$sysroot/include/c++/v1 -I$$PWD/out-$linux/include" $
-    -DCMAKE_EXE_LINKER_FLAGS="-rtlib=compiler-rt -w -s" $
+    -DCMAKE_EXE_LINKER_FLAGS="-rtlib=compiler-rt -w -s -lunwind -lc++abi" $
     -DCMAKE_SHARED_LINKER_FLAGS="-rtlib=compiler-rt" $
     -DLLVM_TABLEGEN=$llvm-tblgen $
     -DLLVM_BUILD_STATIC=ON $
