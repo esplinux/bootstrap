@@ -9,7 +9,7 @@ build $dash/Makefile: configure $dash/configure | clang $sysroot/lib/libc.so
   prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags" LDFLAGS="-w -s"
   opts = --prefix='' --host=none 
 
-build $sysroot/bin/dash: make $dash/Makefile
+build $sysroot/bin/dash: make $dash/Makefile | make
   description = Building $dash
   prefix = DESTDIR=$sysroot
   target = install

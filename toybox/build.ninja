@@ -2,7 +2,7 @@ build $toybox/Makefile: git
   url = https://github.com/landley/toybox
   destination = $toybox
 
-build $sysroot/bin/toybox: make $toybox/Makefile | clang out-$linux/include/linux/version.h
+build $sysroot/bin/toybox: make $toybox/Makefile | make clang out-$linux/include/linux/version.h
   description = Building $toybox
   prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags -I$$PWD/out-$linux/include" PREFIX=$sysroot/bin
   nproc = 1
