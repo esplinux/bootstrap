@@ -7,8 +7,8 @@ steps:
 - name: Build
   image: ubuntu:18.04
   commands:
-  - sudo apt-get update
-  - sudo apt-get install git llvm clang lld cmake make ninja-build rsync python ccache
+  - apt-get update
+  - apt-get install git llvm clang lld cmake make ninja-build rsync python ccache
   - ./configure.sh
   - ninja
 
