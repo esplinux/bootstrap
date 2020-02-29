@@ -12,7 +12,18 @@ steps:
   - ./configure.sh
   - ninja
 
-- name: Publish
+- name: Docker Release
+  image: plugins/docker
+  settings:
+    repo: esplinux/bootstrap
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+  when:
+    event: tag
+
+- name: GitHub Release
   image: plugins/github-release
   settings:
     api_key:
