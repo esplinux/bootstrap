@@ -29,6 +29,7 @@ steps:
     api_key:
       from_secret: ghr_token
     files: '*.tgz'
+    title: Bootstrap
     overwrite: true
   when:
     event: tag

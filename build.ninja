@@ -38,7 +38,9 @@ build distclean: rm
 
 # Default builds
 ##############################################################################
-build sysroot.tgz: package | musl make byacc curses bash clang toybox dash curl make cacert
+build $sysroot/tmp: mkdir
+
+build sysroot.tgz: package | $sysroot/tmp musl make byacc curses bash clang toybox dash curl make cacert
   builddir = $sysroot
 
 default sysroot.tgz

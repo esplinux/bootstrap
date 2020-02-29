@@ -8,4 +8,14 @@ build $sysroot/bin/toybox: make $toybox/Makefile | make clang out-$linux/include
   nproc = 1
   target = defconfig toybox install_flat
 
-build toybox: phony $sysroot/bin/toybox
+build $sysroot/bin/tr: make $toybox/Makefile | $sysroot/bin/toybox
+  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags -I$$PWD/out-$linux/include" PREFIX=$sysroot/bin
+  nproc = 1
+  target = tr
+
+build $sysroot/bin/expr: make $toybox/Makefile | $sysroot/bin/toybox
+  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags -I$$PWD/out-$linux/include" PREFIX=$sysroot/bin
+  nproc = 1
+  target = expr
+
+build toybox: phony $sysroot/bin/toybox $sysroot/bin/tr $sysroot/bin/expr
