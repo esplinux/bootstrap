@@ -1,12 +1,12 @@
 build $byacc/configure: download
   url = https://invisible-mirror.net/archives/byacc/$byacc.tgz
 
-build $byacc/Makefile: configure $byacc/configure | make $sysroot/lib/libc.so
+build $byacc/makefile: configure $byacc/configure | make $sysroot/lib/libc.so
   description = Configuring $byacc
   prefix = CC=clang CFLAGS="--sysroot=$sysroot $cflags" LDFLAGS='-rtlib=compiler-rt --static'
   opts = --prefix='' --host=none
 
-build $sysroot/bin/yacc: make $byacc/Makefile
+build $sysroot/bin/yacc: make $byacc/makefile
   description = Building $byacc
   prefix = DESTDIR=$sysroot
   target = install

@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 MUSL_version=musl-1.2.0
-LINUX_version=linux-5.4.21
+LINUX_version=linux-5.4.23
 LLVM_version=llvm-10
 TOYBOX_version=toybox-HEAD
 DASH_version=dash-0.5.10
