@@ -18,4 +18,5 @@ build $sysroot/bin/expr: make $toybox/Makefile | $sysroot/bin/toybox
   nproc = 1
   target = expr
 
-build toybox: phony $sysroot/bin/toybox $sysroot/bin/tr $sysroot/bin/expr
+#build toybox: phony $sysroot/bin/toybox $sysroot/bin/tr $sysroot/bin/expr
+build toybox: phony $sysroot/bin/toybox
