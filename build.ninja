@@ -24,11 +24,10 @@ subninja byacc/build.ninja
 subninja curses/build.ninja
 subninja make/build.ninja
 subninja bash/build.ninja
+subninja cacert/build.ninja
 
 # Default clean tasks which must be located after the package includes
 ##############################################################################
-build fetch_sources: phony $musl $gnumake $linux $byacc $gnubash $llvm $toybox $dash $bearssl $curl $curses
-
 build clean: rm
   rm = src-* build-* out-* sysroot *.tgz *.log
 
@@ -39,7 +38,7 @@ build distclean: rm
 
 # Default builds
 ##############################################################################
-build sysroot.tgz: package | musl make byacc curses bash clang toybox dash curl make
+build sysroot.tgz: package | musl make byacc curses bash clang toybox dash curl make cacert
   builddir = $sysroot
 
 default sysroot.tgz

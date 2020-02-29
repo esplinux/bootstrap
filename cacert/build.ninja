@@ -1,0 +1,4 @@
+build $sysroot/etc/ssl/certs/ca-certificates.crt: curl
+  url = https://curl.haxx.se/ca/cacert.pem
+
+build cacert: phony $sysroot/etc/ssl/certs/ca-certificates.crt

@@ -10,6 +10,10 @@ tarflags = xz
 
 # Default build rules
 ##############################################################################
+rule curl
+  description = Downloading $url
+  command = curl --connect-timeout 3 --retry 3 --retry-delay 1 -s -S $url -o $out
+
 rule download
   description = Downloading $url
   command = curl --connect-timeout 3 --retry 3 --retry-delay 1 -s -S $url | tar $tarflags
