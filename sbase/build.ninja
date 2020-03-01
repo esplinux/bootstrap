@@ -1,0 +1,53 @@
+rule install
+  command = cd $$(dirname $in); ln -s $$(basename $in) $$(basename $out)
+
+build $sbase/Makefile: git
+  url = https://git.suckless.org/sbase
+  destination = $sbase
+
+build $sbase/sbase-box: make $sbase/Makefile | clang
+  description = Building $sbase
+  target = CC=$cc CFLAGS='--sysroot=$sysroot $cflags' sbase-box
+
+build $sysroot/bin/sbase-box: cp $sbase/sbase-box
+build $sysroot/bin/cols: install $sysroot/bin/sbase-box
+build $sysroot/bin/cron: install $sysroot/bin/sbase-box
+build $sysroot/bin/ed: install $sysroot/bin/sbase-box
+build $sysroot/bin/expr: install $sysroot/bin/sbase-box
+build $sysroot/bin/fold: install $sysroot/bin/sbase-box
+build $sysroot/bin/join: install $sysroot/bin/sbase-box
+build $sysroot/bin/pathchk: install $sysroot/bin/sbase-box
+build $sysroot/bin/sha224sum: install $sysroot/bin/sbase-box
+build $sysroot/bin/sha256sum: install $sysroot/bin/sbase-box
+build $sysroot/bin/sha384sum: install $sysroot/bin/sbase-box
+build $sysroot/bin/sha512sum: install $sysroot/bin/sbase-box
+build $sysroot/bin/sha512-224sum: install $sysroot/bin/sbase-box
+build $sysroot/bin/sha512-256sum: install $sysroot/bin/sbase-box
+build $sysroot/bin/sponge: install $sysroot/bin/sbase-box
+build $sysroot/bin/tftp: install $sysroot/bin/sbase-box
+build $sysroot/bin/tr: install $sysroot/bin/sbase-box
+build $sysroot/bin/tsort: install $sysroot/bin/sbase-box
+build $sysroot/bin/unexpand: install $sysroot/bin/sbase-box
+build $sysroot/bin/xinstall: install $sysroot/bin/sbase-box
+
+build sbase: phony $
+  $sysroot/bin/sbase-box $
+  $sysroot/bin/cols $
+  $sysroot/bin/cron $
+  $sysroot/bin/ed $
+  $sysroot/bin/expr $
+  $sysroot/bin/fold $
+  $sysroot/bin/join $
+  $sysroot/bin/pathchk $
+  $sysroot/bin/sha224sum $
+  $sysroot/bin/sha256sum $
+  $sysroot/bin/sha384sum $
+  $sysroot/bin/sha512sum $
+  $sysroot/bin/sha512-224sum $
+  $sysroot/bin/sha512-256sum $
+  $sysroot/bin/sponge $
+  $sysroot/bin/tftp $
+  $sysroot/bin/tr $
+  $sysroot/bin/tsort $
+  $sysroot/bin/unexpand $
+  $sysroot/bin/xinstall

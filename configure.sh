@@ -4,6 +4,7 @@ MUSL_version=musl-1.2.0
 LINUX_version=linux-5.4.23
 LLVM_version=llvm-10
 TOYBOX_version=toybox-HEAD
+SBASE_version=sbase-HEAD
 DASH_version=dash-0.5.10
 BEARSSL_version=bearssl-HEAD
 CURL_version=curl-7.68.0
@@ -57,6 +58,7 @@ if ! test -f "config.ninja"; then
   echo "linux=$LINUX_version" >> config.ninja
   echo "llvm=$LLVM_version" >> config.ninja
   echo "toybox=$TOYBOX_version" >> config.ninja
+  echo "sbase=$SBASE_version" >> config.ninja
   echo "dash=$DASH_version" >> config.ninja
   echo "bearssl=$BEARSSL_version" >> config.ninja
   echo "curl=$CURL_version" >> config.ninja

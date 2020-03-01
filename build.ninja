@@ -16,6 +16,7 @@ include rules.ninja
 subninja musl/build.ninja
 subninja linux/build.ninja
 subninja llvm/build.ninja
+subninja sbase/build.ninja
 subninja toybox/build.ninja
 subninja dash/build.ninja
 subninja bearssl/build.ninja
@@ -23,8 +24,8 @@ subninja curl/build.ninja
 subninja byacc/build.ninja
 subninja curses/build.ninja
 subninja make/build.ninja
-subninja bash/build.ninja
 subninja cacert/build.ninja
+subninja bash/build.ninja
 
 # Default clean tasks which must be located after the package includes
 ##############################################################################
@@ -33,14 +34,14 @@ build clean: rm
 
 build distclean: rm
   rm = src-* build-* out-* sysroot *.tgz *.log config.ninja $
-    $musl $gnumake $linux $byacc $gnubash $clang $llvm $toybox $dash $bearssl $curl $curses
+    $musl $gnumake $linux $byacc $gnubash $clang $llvm $sbase $toybox $dash $bearssl $curl $curses
 
 
 # Default builds
 ##############################################################################
 build $sysroot/tmp: mkdir
 
-build sysroot.tgz: package | $sysroot/tmp musl make byacc curses bash clang toybox dash curl make cacert
+build sysroot.tgz: package | $sysroot/tmp musl make byacc curses bash clang sbase toybox dash curl make cacert
   builddir = $sysroot
 
 default sysroot.tgz

@@ -45,5 +45,8 @@ rule cmake
 rule mkdir
   command = mkdir $out
 
+rule cp
+  command = cp $in $out
+
 rule rm
   command = rm -rf $rm
