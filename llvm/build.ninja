@@ -99,11 +99,7 @@ build $sysroot/bin/clang: make build-clang-$llvm/Makefile
     install-clang-stripped $
     install-ar-stripped $
     install-ranlib-stripped $
-    install-dlltool-stripped $
-    install-diagtool-stripped $
     install-lld-stripped $
-    install-llc-stripped $
-    install-lli-stripped $
     install-nm-stripped $
     install-objcopy-stripped $
     install-strip-stripped $
