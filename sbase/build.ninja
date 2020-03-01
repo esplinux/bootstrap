@@ -1,5 +1,5 @@
 rule install
-  command = cd $$(dirname $in); ln -s $$(basename $in) $$(basename $out)
+  command = cd $$(dirname $in); ln -sf $$(basename $in) $$(basename $out)
 
 build $sbase/Makefile: git
   url = https://git.suckless.org/sbase

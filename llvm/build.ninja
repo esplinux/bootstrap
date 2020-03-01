@@ -83,9 +83,11 @@ build build-clang-$llvm/Makefile: cmake $llvm/llvm  | make out-$linux/include/li
     -DLLVM_ENABLE_LLD=ON $
     -DLLVM_ENABLE_RTTI=ON $
     -DLLVM_ENABLE_ZLIB=OFF $
+    -DLLVM_INCLUDE_TESTS=OFF $
+    -DLLVM_INCLUDE_BENCHMARKS=OFF $
     -DLLVM_INSTALL_BINUTILS_SYMLINKS=ON $
     -DLLVM_INSTALL_CCTOOLS_SYMLINKS=ON $
-    -DLLVM_ENABLE_PROJECTS='clang;lld' $
+    -DLLVM_ENABLE_PROJECTS='clang;lld;llvm' $
     -DCLANG_TABLEGEN=$clang-tblgen $
     -DCLANG_DEFAULT_LINKER=lld $
     -DCLANG_DEFAULT_RTLIB=compiler-rt $
@@ -93,7 +95,22 @@ build build-clang-$llvm/Makefile: cmake $llvm/llvm  | make out-$linux/include/li
 
 build $sysroot/bin/clang: make build-clang-$llvm/Makefile
   prefix = DESTDIR=$sysroot
-  target = install-clang install-lld install-clang-resource-headers
+  target = install-clang-resource-headers $
+    install-clang-stripped $
+    install-ar-stripped $
+    install-ranlib-stripped $
+    install-dlltool-stripped $
+    install-diagtool-stripped $
+    install-lld-stripped $
+    install-llc-stripped $
+    install-lli-stripped $
+    install-nm-stripped $
+    install-objcopy-stripped $
+    install-strip-stripped $
+    install-objdump-stripped $
+    install-readelf-stripped $
+    install-size-stripped $
+    install-strings-stripped
   pool = console
 
 build libcxx: phony $sysroot/lib/libc++.so
