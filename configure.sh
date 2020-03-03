@@ -7,6 +7,7 @@ TOYBOX_version=toybox-HEAD
 AWK_version=awk-HEAD
 SBASE_version=sbase-HEAD
 DASH_version=dash-0.5.10
+VIM_version=vim-8.2.0347
 BEARSSL_version=bearssl-HEAD
 CURL_version=curl-7.68.0
 BYACC_version=byacc-20191125
@@ -62,6 +63,7 @@ if ! test -f "config.ninja"; then
   echo "awk=$AWK_version" >> config.ninja
   echo "sbase=$SBASE_version" >> config.ninja
   echo "dash=$DASH_version" >> config.ninja
+  echo "vim=$VIM_version" >> config.ninja
   echo "bearssl=$BEARSSL_version" >> config.ninja
   echo "curl=$CURL_version" >> config.ninja
   echo "byacc=$BYACC_version" >> config.ninja

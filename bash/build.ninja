@@ -1,9 +1,13 @@
 build $gnubash/configure: download
   url = https://ftp.gnu.org/gnu/bash/$gnubash.tar.gz
 
-build $gnubash/Makefile: configure $gnubash/configure | make yacc $sysroot/lib/libc.so $sysroot/lib/libcurses.so
+build $gnubash/Makefile: configure $gnubash/configure | clang make yacc $sysroot/lib/libc.so $sysroot/lib/libcurses.so
   description = Configuring $gnubash
-  prefix = sed -i s/argz.h// configure; YACC=$yacc CC=clang CFLAGS="--sysroot=$sysroot $cflags" LDFLAGS="-rtlib=compiler-rt --static"
+  prefix = sed -i s/argz.h// configure; $
+    YACC=$yacc CC=$cc $
+    CFLAGS="--sysroot=$sysroot $cflags" $
+    CFLAGS_FOR_BUILD="--sysroot=$sysroot $cflags -static" $
+    LDFLAGS="-static"
   opts = --prefix='/opt/gnu' --host=none --without-bash-malloc
 
 build $sysroot/opt/gnu/bin/bash: make $gnubash/Makefile

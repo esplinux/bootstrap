@@ -1,0 +1,18 @@
+build $vim/configure: git
+  url = --branch v$$(printf %s $vim | sed s/vim-//) https://github.com/vim/vim
+  destination = $vim
+
+build $vim/Makefile: configure $vim/configure | make clang $sysroot/lib/libc.so $sysroot/lib/libcurses.so
+  description = Configuring $vim
+  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags" LDFLAGS="--sysroot=$sysroot -ltermcap -static"
+  opts = --prefix='' --host=none --with-tlib=ncurses vim_cv_toupper_broken=no vim_cv_terminfo=yes
+
+build $vim/src/vim: make $vim/Makefile
+  description = Building $vim
+
+build $sysroot/bin/vim: make $vim/Makefile | $vim/src/vim
+  description = Installing $vim
+  prefix = DESTDIR=$sysroot
+  target = install
+
+build vim: phony $sysroot/bin/vim

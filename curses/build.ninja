@@ -2,8 +2,8 @@ build $curses/GNUmakefile: git
   url = https://github.com/sabotage-linux/netbsd-curses
   destination = $curses
 
-build $sysroot/lib/libcurses.so: make $curses/GNUmakefile | make $sysroot/lib/libc.so
+build $sysroot/lib/libcurses.so: make $curses/GNUmakefile | clang make $sysroot/lib/libc.so
   description = Building $curses
-  target = CC=clang CFLAGS="--sysroot=$sysroot $cflags" PREFIX='' DESTDIR=$sysroot install
+  target = HOSTCC=clang CC="$cc --sysroot=$sysroot $cflags" PREFIX='' DESTDIR=$sysroot install
 
 build curses: phony $sysroot/lib/libcurses.so
