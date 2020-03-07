@@ -1,0 +1,14 @@
+build $git/configure: download
+  url = https://mirrors.kernel.org/pub/software/scm/git/$git.tar.gz
+
+build $git/Makefile: configure $git/configure | clang make $sysroot/lib/libc.so $sysroot/lib/libcurl.la
+  description = Configuring $git
+  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags" LDFLAGS="-lz -lbearssl -lcurl --static"
+  opts = --prefix=''
+
+build $sysroot/bin/git: make $git/Makefile
+  description = Building $git
+  prefix = DESTDIR=$sysroot
+  target = MSGFMT=$sysroot/bin/msgfmt install
+
+build git: phony $sysroot/bin/git
