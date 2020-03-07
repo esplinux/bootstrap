@@ -6,7 +6,7 @@ build $git/config.mak.autogen: configure $git/configure | clang make $sysroot/li
   prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags" LDFLAGS="-lz -lbearssl -lcurl --static"
   opts = --prefix='' ac_cv_c_regex_with_reg_startend=no
 
-build $sysroot/bin/git: make $git/Makefile | $git/config.mak.autogen
+build $sysroot/bin/git: make $git/Makefile | $git/config.mak.autogen $sysroot/bin/msgfmt
   description = Building $git
   prefix = DESTDIR=$sysroot
   target = MSGFMT=$sysroot/bin/msgfmt install
