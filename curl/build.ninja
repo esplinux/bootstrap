@@ -4,7 +4,7 @@ build $curl/configure: download
 build $curl/Makefile: configure $curl/configure | clang $sysroot/lib/libc.so out-$bearssl/libbearssl.a
   description = Configuring $curl
   prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags -I$$PWD/../$bearssl/inc" LDFLAGS="-w -s -L$$PWD/../out-$bearssl --static"
-  opts = --prefix='' --with-bearssl --host=none
+  opts = --prefix='' --with-bearssl --disable-file --disable-rtsp --disable-telnet --disable-tftp --disable-pop3 --disable-imap --disable-gopher --disable-manual --host=none
 
 build $sysroot/bin/curl: make $curl/Makefile
   description = Building $curl

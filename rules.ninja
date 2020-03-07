@@ -16,7 +16,7 @@ rule curl
 
 rule download
   description = Downloading $url
-  command = curl --connect-timeout 3 --retry 3 --retry-delay 1 -s -S $url | tar $tarflags
+  command = curl --connect-timeout 3 --retry 3 --retry-delay 1 -L -s -S $url | tar $tarflags
 
 rule git
   description = Cloning $destination

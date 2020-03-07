@@ -1,0 +1,18 @@
+build $cmake: download
+  url = https://github.com/Kitware/CMake/releases/download/v$$(printf %s $cmake | sed s/cmake-//)/$cmake.tar.gz
+
+build build-$cmake/Makefile: cmake $cmake | clang make $sysroot/lib/libc.so out-$linux/include/linux/fs.h
+  description = Configuring $cmake
+  opts = -DCMAKE_C_COMPILER=$cc -DCMAKE_CXX_COMPILER=$cxx $
+    -DCMAKE_EXE_LINKER_FLAGS="-static -lunwind -lc++abi" $
+    -DCMAKE_C_FLAGS="--sysroot=$sysroot $cflags -I$$PWD/out-$linux/include" $
+    -DCMAKE_CXX_FLAGS="--sysroot=$sysroot $cxxflags -I$$PWD/out-$linux/include" $
+    -DCMAKE_INSTALL_PREFIX='' $
+    -DCMAKE_USE_OPENSSL=OFF
+
+build $sysroot/bin/cmake: make build-$cmake/Makefile
+  description = Building $cmake
+  prefix = DESTDIR=$sysroot
+  target = install
+
+build cmake: phony $sysroot/bin/cmake

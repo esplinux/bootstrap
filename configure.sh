@@ -1,17 +1,19 @@
 #!/bin/sh -e
 
 MUSL_version=musl-1.2.0
-LINUX_version=linux-5.4.23
+LINUX_version=linux-5.4.24
 LLVM_version=llvm-10
 TOYBOX_version=toybox-HEAD
+CMAKE_version=cmake-3.16.5
 AWK_version=awk-HEAD
 SBASE_version=sbase-HEAD
 DASH_version=dash-0.5.10
 VIM_version=vim-8.2.0347
 BEARSSL_version=bearssl-HEAD
-CURL_version=curl-7.68.0
+CURL_version=curl-7.69.0
 BYACC_version=byacc-20191125
 CURSES_version=netbsd-curses-HEAD
+ZLIB_version=zlib-1.2.11
 GNUMAKE_version=make-3.81
 GNUBASH_version=bash-3.2.57
 
@@ -60,6 +62,7 @@ if ! test -f "config.ninja"; then
   echo "linux=$LINUX_version" >> config.ninja
   echo "llvm=$LLVM_version" >> config.ninja
   echo "toybox=$TOYBOX_version" >> config.ninja
+  echo "cmake=$CMAKE_version" >> config.ninja
   echo "awk=$AWK_version" >> config.ninja
   echo "sbase=$SBASE_version" >> config.ninja
   echo "dash=$DASH_version" >> config.ninja
@@ -68,6 +71,7 @@ if ! test -f "config.ninja"; then
   echo "curl=$CURL_version" >> config.ninja
   echo "byacc=$BYACC_version" >> config.ninja
   echo "curses=$CURSES_version" >> config.ninja
+  echo "zlib=$ZLIB_version" >> config.ninja
   echo "gnumake=$GNUMAKE_version" >> config.ninja
   echo "gnubash=$GNUBASH_version" >> config.ninja
   echo "sysroot=$SYSROOT" >> config.ninja
