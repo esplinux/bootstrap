@@ -36,13 +36,12 @@ check python3
 
 check clang
 check clang++
-check llvm-ar
-check llvm-ranlib
+check ar
+check ranlib
 check lld
 
 check make
 check cmake
-check ninja
 check bash
 check nproc
 
