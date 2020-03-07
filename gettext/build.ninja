@@ -1,0 +1,10 @@
+build $gettext/Makefile: git
+  url = https://github.com/sabotage-linux/gettext-tiny
+  destination = $gettext
+
+build $sysroot/bin/msgfmt: make $gettext/Makefile | clang make $sysroot/lib/libc.so
+  description = Building $gettext
+  prefix = CC=$cc CFLAGS="--sysroot $cflags" DESTDIR=$sysroot
+  target = prefix='' install
+
+build gettext: phony $sysroot/bin/msgfmt
