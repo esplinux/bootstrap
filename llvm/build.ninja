@@ -25,7 +25,6 @@ build build-libcxx-$llvm/Makefile: cmake $llvm/llvm | make out-$linux/include/li
     -DCMAKE_CXX_FLAGS="$cflags -I$$PWD/out-$linux/include" $
     -DCMAKE_EXE_LINKER_FLAGS="-rtlib=compiler-rt" $
     -DCMAKE_SHARED_LINKER_FLAGS="-rtlib=compiler-rt" $
-    -DLLVM_CCACHE_BUILD=ON $
     -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-unknown-linux-musl $
     -DLLVM_TARGET_ARCH=X86 $
     -DLLVM_TARGETS_TO_BUILD=X86 $
@@ -72,7 +71,6 @@ build build-clang-$llvm/Makefile: cmake $llvm/llvm  | make out-$linux/include/li
     -DCMAKE_SHARED_LINKER_FLAGS="-rtlib=compiler-rt" $
     -DLLVM_TABLEGEN=$llvm-tblgen $
     -DLLVM_BUILD_STATIC=ON $
-    -DLLVM_CCACHE_BUILD=ON $
     -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-unknown-linux-musl $
     -DLLVM_TARGET_ARCH=X86 $
     -DLLVM_TARGETS_TO_BUILD=X86 $
