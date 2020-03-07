@@ -49,7 +49,7 @@ build distclean: rm
 build $sysroot/tmp: mkdir
 
 build sysroot.tgz: package | $sysroot/tmp musl make byacc curses clang cmake $
-  awk sbase toybox dash curl make cacert zlib vim bash samurai gettext
+  awk sbase toybox dash curl make cacert zlib vim bash samurai gettext bearssl
   builddir = $sysroot
 
 default sysroot.tgz
