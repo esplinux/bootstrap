@@ -4,7 +4,7 @@ build $git/configure $git/Makefile: download
 build $git/config.mak.autogen: configure $git/configure | clang make $sysroot/lib/libc.so $sysroot/lib/libcurl.la
   description = Configuring $git
   prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags" LDFLAGS="-lz -lbearssl -lcurl --static"
-  opts = --prefix=''
+  opts = --prefix='' ac_cv_c_regex_with_reg_startend=no
 
 build $sysroot/bin/git: make $git/Makefile | $git/config.mak.autogen
   description = Building $git
