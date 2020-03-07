@@ -14,6 +14,7 @@ CURL_version=curl-7.69.0
 BYACC_version=byacc-20191125
 CURSES_version=netbsd-curses-HEAD
 ZLIB_version=zlib-1.2.11
+SAMURAI_version=samurai-HEAD
 GNUMAKE_version=make-3.81
 GNUBASH_version=bash-3.2.57
 
@@ -72,6 +73,7 @@ if ! test -f "config.ninja"; then
   echo "byacc=$BYACC_version" >> config.ninja
   echo "curses=$CURSES_version" >> config.ninja
   echo "zlib=$ZLIB_version" >> config.ninja
+  echo "samurai=$SAMURAI_version" >> config.ninja
   echo "gnumake=$GNUMAKE_version" >> config.ninja
   echo "gnubash=$GNUBASH_version" >> config.ninja
   echo "sysroot=$SYSROOT" >> config.ninja
