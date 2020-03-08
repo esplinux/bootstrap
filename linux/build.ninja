@@ -1,9 +1,8 @@
 build $linux/Makefile: download
   url = https://cdn.kernel.org/pub/linux/kernel/v5.x/$linux.tar.gz
 
-build out-$linux/include/linux/version.h: make $linux/Makefile | make
+build $linux/usr/include/linux/version.h: make $linux/Makefile | make
   description = Building $linux headers
-  target = CC=clang HOSTCC=clang INSTALL_HDR_PATH=$$PWD/out-$linux headers_install
+  target = CC=clang HOSTCC=clang headers
 
-build $linux: phony $linux/Makefile
-build linux-headers: phony out-$linux/include/linux/version.h
+build linux-headers: phony $linux/usr/include/linux/version.h
