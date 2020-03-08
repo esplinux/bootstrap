@@ -32,7 +32,7 @@ subninja gettext/build.ninja
 subninja zsh/build.ninja
 subninja git/build.ninja
 subninja cacert/build.ninja
-subninja rsync/build.ninja
+#subninja rsync/build.ninja
 #subninja dash/build.ninja
 #subninja bash/build.ninja
 
@@ -44,7 +44,7 @@ build clean: rm
 build distclean: rm
   rm = src-* build-* out-* sysroot *.tgz *.log config.ninja $
     $musl $gnumake $linux $byacc $clang $llvm $cmake $awk $sbase $toybox $
-    $bearssl $curl $curses $zlib $vim $samurai $gettext $git $zsh $rsync
+    $bearssl $curl $curses $zlib $vim $samurai $gettext $git $zsh 
 
 
 # Default builds
@@ -52,7 +52,7 @@ build distclean: rm
 build $sysroot/tmp: mkdir
 
 build sysroot.tgz: package | $sysroot/tmp musl make byacc clang cmake awk $
-  sbase toybox curl make cacert zlib vim samurai gettext git zsh rsync
+  sbase toybox curl make cacert zlib vim samurai gettext git zsh 
   builddir = $sysroot
 
 default sysroot.tgz
