@@ -1,0 +1,21 @@
+rule zsh_ln
+  command = cd $$(dirname $out); ln -sf zsh $$(basename $out)
+
+build $zsh/configure: download
+  url = https://www.zsh.org/pub/$zsh.tar.xz
+  tarflags = Jx
+
+build $zsh/Makefile: configure $zsh/configure | clang make $sysroot/lib/libc.so
+  description = Configuring $zsh
+  prefix = CC='$cc' CFLAGS='--sysroot=$sysroot $cflags' LDFLAGS='--sysroot=$sysroot $ldflags'
+  opts = --prefix='' --host=none 
+
+build $sysroot/bin/zsh: make $zsh/Makefile
+  description = Building $zsh
+  prefix = DESTDIR=$sysroot
+  target = install
+
+build $sysroot/bin/sh: zsh_ln $sysroot/bin/zsh
+build $sysroot/bin/ksh: zsh_ln $sysroot/bin/zsh
+
+build zsh: phony $sysroot/bin/zsh $sysroot/bin/sh $sysroot/bin/ksh
