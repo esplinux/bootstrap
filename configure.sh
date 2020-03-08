@@ -46,6 +46,16 @@ check cmake
 check bash
 check nproc
 
+if ! type "ccache" > /dev/null; then
+  HOST_CC=clang
+  HOST_CXX=clang++
+  LLVM_CCACHE_BUILD=OFF
+else
+  HOST_CC='ccache clang'
+  HOST_CXX='ccache clang++'
+  LLVM_CCACHE_BUILD=ON
+fi
+
 SYSROOT=$PWD/sysroot
 HOSTROOT=$PWD/build-host-$LLVM_version
 MARCH=broadwell
@@ -83,6 +93,9 @@ if ! test -f "config.ninja"; then
   echo "march=$MARCH" >> config.ninja
   echo "nproc=$NPROC" >> config.ninja
   echo "make=$SYSROOT/opt/gnu/bin/make" >> config.ninja
+  echo "llvm_ccache_build=$LLVM_CCACHE_BUILD" >> config.ninja
+  echo "host_cc=$HOST_CC" >> config.ninja
+  echo "host_cxx=$HOST_CXX" >> config.ninja
   echo "cc=$SYSROOT/bin/clang" >> config.ninja
   echo "cxx=$SYSROOT/bin/clang++" >> config.ninja
   echo "yacc=$SYSROOT/bin/yacc" >> config.ninja

@@ -5,6 +5,6 @@ build $gettext/Makefile: git
 build $sysroot/bin/msgfmt: make $gettext/Makefile | clang make $sysroot/lib/libc.so
   description = Building $gettext
   prefix = CC=$cc CFLAGS="--sysroot $cflags" LDFLAGS=-static DESTDIR=$sysroot
-  target = prefix='' install
+  target = LIBINTL=NONE prefix='' install
 
 build gettext: phony $sysroot/bin/msgfmt

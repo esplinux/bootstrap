@@ -3,7 +3,7 @@ build $gnumake/configure: download
 
 build $gnumake/Makefile: configure $gnumake/configure | $sysroot/lib/libc.so
   description = Configuring $gnumake
-  prefix = CC=clang CFLAGS="--sysroot=$sysroot $cflags" LDFLAGS="-rtlib=compiler-rt --static"
+  prefix = CC="$host_cc" CFLAGS="--sysroot=$sysroot $cflags" LDFLAGS="-rtlib=compiler-rt --static"
   opts = --prefix='/opt/gnu' --host=none 
 
 build $sysroot/opt/gnu/bin/make: host-make $gnumake/Makefile
