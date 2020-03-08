@@ -7,7 +7,6 @@ TOYBOX_version=toybox-HEAD
 CMAKE_version=cmake-3.16.5
 AWK_version=awk-HEAD
 SBASE_version=sbase-HEAD
-#DASH_version=dash-0.5.10
 VIM_version=vim-8.2.0347
 BEARSSL_version=bearssl-HEAD
 CURL_version=curl-7.69.0
@@ -19,6 +18,8 @@ GETTEXT_version=gettext-tiny-HEAD
 ZSH_version=zsh-5.8
 GIT_version=git-2.25.1
 GNUMAKE_version=make-3.81
+RSYNC_version=rsync-2.6.9
+#DASH_version=dash-0.5.10
 #GNUBASH_version=bash-3.2.57
 
 check()
@@ -105,6 +106,7 @@ if ! test -f "config.ninja"; then
   echo "zlib-lib=$ZLIB_lib" >> config.ninja
   echo "gettext=$GETTEXT_version" >> config.ninja
   echo "zsh=$ZSH_version" >> config.ninja
+  echo "rsync=$RSYNC_version" >> config.ninja
   echo "git=$GIT_version" >> config.ninja
   echo "samurai=$SAMURAI_version" >> config.ninja
   echo "gnumake=$GNUMAKE_version" >> config.ninja
