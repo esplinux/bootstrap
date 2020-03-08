@@ -3,8 +3,7 @@ build $linux/Makefile: download
 
 build out-$linux/include/linux/version.h: make $linux/Makefile | make
   description = Building $linux headers
-  prefix = CC=clang
-  target = INSTALL_HDR_PATH=$$PWD/out-$linux headers_install
+  target = CC=clang HOSTCC=clang INSTALL_HDR_PATH=$$PWD/out-$linux headers_install
 
 build $linux: phony $linux/Makefile
 build linux-headers: phony out-$linux/include/linux/version.h
