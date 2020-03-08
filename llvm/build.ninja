@@ -2,9 +2,9 @@ build $llvm: git
   url = --branch release/10.x https://github.com/llvm/llvm-project
   destination = $llvm
 
-build $llvm/llvm: phony $llvm
+build $llvm/llvm/CMakeLists.txt: phony $llvm
 
-build build-host-$llvm/Makefile: cmake $llvm/llvm
+build build-host-$llvm/Makefile: cmake $llvm/llvm/CMakeLists.txt
   opts = -DCMAKE_C_COMPILER=clang $
     -DCMAKE_BUILD_TYPE=MinSizeRel $
     -DCMAKE_CXX_COMPILER=clang++ $
@@ -19,7 +19,7 @@ build build-host-$llvm/bin/clang-tblgen build-host-$llvm/bin/llvm-tblgen: make b
 build llvm-tblgen: phony build-host-$llvm/bin/llvm-tblgen
 build clang-tblgen: phony build-host-$llvm/bin/clang-tblgen
 
-build build-libcxx-$llvm/Makefile: cmake $llvm/llvm | make linux-headers $sysroot/lib/libc.so
+build build-libcxx-$llvm/Makefile: cmake $llvm/llvm/CMakeLists.txt | musl make linux-headers
   opts = -DCMAKE_INSTALL_PREFIX='' $
     -DCMAKE_BUILD_TYPE=MinSizeRel $
     -DCMAKE_C_COMPILER=clang $
@@ -63,8 +63,9 @@ build $sysroot/lib/libc++.so: make build-libcxx-$llvm/Makefile
   target = install-compiler-rt install-unwind install-libcxxabi install-libcxx
   pool = console
 
-#    -DLLVM_BUILD_STATIC=ON $
-build build-clang-$llvm/Makefile: cmake $llvm/llvm  | make linux-headers clang-tblgen llvm-tblgen $sysroot/lib/libc.so $sysroot/lib/libc++.so
+build libcxx: phony $sysroot/lib/libc++.so
+
+build build-clang-$llvm/Makefile: cmake $llvm/llvm/CMakeLists.txt | musl make linux-headers clang-tblgen llvm-tblgen libcxx
   opts = -DCMAKE_INSTALL_PREFIX='' $
     -DCMAKE_BUILD_TYPE=MinSizeRel $
     -DCMAKE_C_COMPILER=clang $
@@ -112,5 +113,4 @@ build $sysroot/bin/clang: make build-clang-$llvm/Makefile
     install-strings-stripped
   pool = console
 
-build libcxx: phony $sysroot/lib/libc++.so
 build clang: phony $sysroot/bin/clang

@@ -5,9 +5,9 @@ build $zsh/configure: download
   url = https://www.zsh.org/pub/$zsh.tar.xz
   tarflags = Jx
 
-build $zsh/Makefile: configure $zsh/configure | clang make $sysroot/lib/libc.so
+build $zsh/Makefile: configure $zsh/configure | musl clang make curses
   description = Configuring $zsh
-  prefix = CC='$cc' CFLAGS='--sysroot=$sysroot $cflags' LDFLAGS='--sysroot=$sysroot $ldflags'
+  prefix = CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$curses-headers' LDFLAGS='--sysroot=$sysroot $ldflags -L$curses-lib --static'
   opts = --prefix='' --host=none 
 
 build $sysroot/bin/zsh: make $zsh/Makefile

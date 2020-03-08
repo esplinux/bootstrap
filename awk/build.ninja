@@ -2,7 +2,7 @@ build $awk/makefile: git
   url = https://github.com/onetrueawk/awk
   destination = $awk
 
-build $awk/a.out: make $awk/makefile | clang yacc
+build $awk/a.out: make $awk/makefile | musl clang yacc
   description = Building $awk
   target = $
     HOSTCC=$cc $

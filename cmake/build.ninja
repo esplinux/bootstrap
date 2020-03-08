@@ -1,7 +1,7 @@
-build $cmake: download
+build $cmake/CMakeLists.txt: download
   url = https://github.com/Kitware/CMake/releases/download/v$$(printf %s $cmake | sed s/cmake-//)/$cmake.tar.gz
 
-build build-$cmake/Makefile: cmake $cmake | clang make linux-headers $sysroot/lib/libc.so
+build $cmake/Makefile: cmake $cmake/CMakeLists.txt | musl clang make linux-headers
   description = Configuring $cmake
   opts = -DCMAKE_C_COMPILER=$cc -DCMAKE_CXX_COMPILER=$cxx $
     -DCMAKE_BUILD_TYPE=MinSizeRel $
@@ -9,9 +9,10 @@ build build-$cmake/Makefile: cmake $cmake | clang make linux-headers $sysroot/li
     -DCMAKE_C_FLAGS='--sysroot=$sysroot $cflags -I$linux-headers' $
     -DCMAKE_CXX_FLAGS='--sysroot=$sysroot $cxxflags -I$linux-headers' $
     -DCMAKE_INSTALL_PREFIX='' $
+    -DCMAKE_DOC_DIR=/share/doc/$cmake $
     -DCMAKE_USE_OPENSSL=OFF
 
-build $sysroot/bin/cmake: make build-$cmake/Makefile
+build $sysroot/bin/cmake: make $cmake/Makefile
   description = Building $cmake
   prefix = DESTDIR=$sysroot
   target = install

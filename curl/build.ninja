@@ -1,14 +1,16 @@
 build $curl/configure: download
   url = https://curl.haxx.se/download/$curl.tar.gz
 
-build $curl/Makefile: configure $curl/configure | clang $sysroot/lib/libc.so out-$bearssl/libbearssl.a
+build $curl/Makefile: configure $curl/configure | musl clang bearssl
   description = Configuring $curl
-  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags -I$$PWD/../$bearssl/inc" LDFLAGS="$ldflags -L$$PWD/../out-$bearssl --static"
-  opts = --prefix='' --with-bearssl --disable-file --disable-rtsp --disable-telnet --disable-tftp --disable-pop3 --disable-imap --disable-gopher --disable-manual --host=none
+  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags -I$bearssl-headers" LDFLAGS="$ldflags -L$bearssl-lib --static"
+  opts = --prefix='' --disable-shared --with-bearssl --disable-file --disable-rtsp --disable-telnet --disable-tftp --disable-pop3 --disable-imap --disable-gopher --disable-manual --host=none
 
-build $sysroot/bin/curl $sysroot/lib/libcurl.la: make $curl/Makefile
+build out-$curl/bin/curl: make $curl/Makefile
   description = Building $curl
-  prefix = DESTDIR=$sysroot
-  target = install
+  prefix = DESTDIR=$$PWD/out-$curl
+  target = install-strip
+
+build $sysroot/bin/curl: cp out-$curl/bin/curl
 
 build curl: phony $sysroot/bin/curl

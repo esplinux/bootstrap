@@ -57,8 +57,14 @@ else
   LLVM_CCACHE_BUILD=ON
 fi
 
+CURL_headers=$PWD/out-$CURL_version/include
+CURL_lib=$PWD/out-$CURL_version/lib
+CURSES_headers=$PWD/out-$CURSES_version/include
+CURSES_lib=$PWD/out-$CURSES_version/lib
 BEARSSL_headers=$PWD/$BEARSSL_version/inc
-BEARSSL_lib=$PWD/out-$LINUX_version
+BEARSSL_lib=$PWD/out-$BEARSSL_version
+ZLIB_headers=$PWD/out-$ZLIB_version/include
+ZLIB_lib=$PWD/out-$ZLIB_version/lib
 LINUX_headers=$PWD/out-$LINUX_version/include
 SYSROOT=$PWD/sysroot
 HOSTROOT=$PWD/build-host-$LLVM_version
@@ -88,9 +94,15 @@ if ! test -f "config.ninja"; then
   echo "bearssl-headers=$BEARSSL_headers" >> config.ninja
   echo "bearssl-lib=$BEARSSL_lib" >> config.ninja
   echo "curl=$CURL_version" >> config.ninja
+  echo "curl-headers=$CURL_headers" >> config.ninja
+  echo "curl-lib=$CURL_lib" >> config.ninja
   echo "byacc=$BYACC_version" >> config.ninja
   echo "curses=$CURSES_version" >> config.ninja
+  echo "curses-headers=$CURSES_headers" >> config.ninja
+  echo "curses-lib=$CURSES_lib" >> config.ninja
   echo "zlib=$ZLIB_version" >> config.ninja
+  echo "zlib-headers=$ZLIB_headers" >> config.ninja
+  echo "zlib-lib=$ZLIB_lib" >> config.ninja
   echo "gettext=$GETTEXT_version" >> config.ninja
   echo "zsh=$ZSH_version" >> config.ninja
   echo "git=$GIT_version" >> config.ninja

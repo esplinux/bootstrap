@@ -1,14 +1,14 @@
 build $zlib/configure: download
   url = https://www.zlib.net/$zlib.tar.gz
 
-build $zlib/Makefile: configure $zlib/configure | clang make $sysroot/lib/libc.so
+build $zlib/Makefile: configure $zlib/configure | musl clang make
   description = Configuring $zlib
   prefix = CC=$cc CFLAGS='--sysroot=$sysroot $cflags' LDFLAGS='--sysroot=$sysroot $ldflags'
   opts = --prefix=''
 
-build $sysroot/lib/libz.so: make $zlib/Makefile
+build out-$zlib/lib/libz.so: make $zlib/Makefile
   description = Building $zlib
-  prefix = DESTDIR=$sysroot
+  prefix = DESTDIR=$$PWD/out-$zlib
   target = install
 
-build zlib: phony $sysroot/lib/libz.so
+build zlib: phony out-$zlib/lib/libz.so

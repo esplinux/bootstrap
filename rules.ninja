@@ -40,7 +40,7 @@ rule make
 
 rule cmake
   description = CMAKE $in
-  command = cmake -B$$(dirname $out) -S$in $opts
+  command = cmake -B$$(dirname $out) -S$$(dirname $in) $opts
 
 rule mkdir
   command = mkdir $out
