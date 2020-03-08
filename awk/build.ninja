@@ -7,7 +7,7 @@ build $awk/a.out: make $awk/makefile | clang yacc
   target = $
     HOSTCC=$cc $
     CC=$cc $
-    CFLAGS="--sysroot=$sysroot $cflags --static" YACC="$yacc -d"
+    CFLAGS='--sysroot=$sysroot $cflags $ldflags --static' YACC='$yacc -d'
 
 build $sysroot/bin/awk: cp $awk/a.out
 

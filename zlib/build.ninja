@@ -3,7 +3,7 @@ build $zlib/configure: download
 
 build $zlib/Makefile: configure $zlib/configure | clang make $sysroot/lib/libc.so
   description = Configuring $zlib
-  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags"
+  prefix = CC=$cc CFLAGS='--sysroot=$sysroot $cflags' LDFLAGS='--sysroot=$sysroot $ldflags'
   opts = --prefix=''
 
 build $sysroot/lib/libz.so: make $zlib/Makefile

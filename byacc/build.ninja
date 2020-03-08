@@ -3,7 +3,7 @@ build $byacc/configure: download
 
 build $byacc/makefile: configure $byacc/configure | make $sysroot/lib/libc.so
   description = Configuring $byacc
-  prefix = CC=clang CFLAGS="--sysroot=$sysroot $cflags" LDFLAGS='-rtlib=compiler-rt --static'
+  prefix = CC=clang CFLAGS='--sysroot=$sysroot $cflags' LDFLAGS='-rtlib=compiler-rt $ldflags --static'
   opts = --prefix='' --host=none
 
 build $sysroot/bin/yacc: make $byacc/makefile

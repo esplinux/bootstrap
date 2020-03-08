@@ -7,7 +7,7 @@ build $sbase/Makefile: git
 
 build $sbase/sbase-box: make $sbase/Makefile | clang
   description = Building $sbase
-  target = CC=$cc CFLAGS='--sysroot=$sysroot $cflags' sbase-box
+  target = CC=$cc CFLAGS='--sysroot=$sysroot $cflags' LDFLAGS='$ldflags' sbase-box
 
 build $sysroot/bin/sbase-box: cp $sbase/sbase-box
 build $sysroot/bin/cols: install $sysroot/bin/sbase-box

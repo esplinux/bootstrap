@@ -17,6 +17,6 @@ build out-$bearssl/libbearssl.a: make $bearssl/Makefile | make clang $bearssl/co
   description = Building $bearssl
   target = CONF=esp
 
-build $sysroot/lib/libbearssl.a: cp out-$bearssl/libbearssl.a
+#build $sysroot/lib/libbearssl.a: cp out-$bearssl/libbearssl.a
 
-build bearssl: phony $sysroot/lib/libbearssl.a
+build bearssl: phony out-$bearssl/libbearssl.a

@@ -2,9 +2,9 @@ build $toybox/Makefile: git
   url = https://github.com/landley/toybox
   destination = $toybox
 
-build $sysroot/bin/toybox: make $toybox/Makefile | make clang out-$linux/include/linux/version.h
+build $sysroot/bin/toybox: make $toybox/Makefile | make clang linux-headers $sysroot/lib/libc.so
   description = Building $toybox
-  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags -I$$PWD/out-$linux/include" PREFIX=$sysroot/bin
+  prefix = CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$linux-headers' PREFIX=$sysroot/bin
   nproc = 1
   target = defconfig toybox install_flat
 

@@ -4,7 +4,7 @@ build $samurai/Makefile: git
 
 build $sysroot/bin/samu: make $samurai/Makefile | clang make $sysroot/lib/libc.so
   description = Building $samuari
-  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags" DESTDIR=$sysroot
+  prefix = CC=$cc CFLAGS='--sysroot=$sysroot $cflags' LDFLAGS='$ldflags' DESTDIR=$sysroot
   target = PREFIX='' install
 
 build samurai: phony $sysroot/bin/samu

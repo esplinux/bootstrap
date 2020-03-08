@@ -7,3 +7,4 @@ build out-$linux/include/linux/version.h out-$linux/include/linux/fs.h out-$linu
   target = INSTALL_HDR_PATH=$$PWD/out-$linux headers_install
 
 build $linux: phony $linux/Makefile
+build linux-headers: phony out-$linux/include/linux/version.h out-$linux/include/linux/fs.h out-$linux/include/linux/rfkill.h
