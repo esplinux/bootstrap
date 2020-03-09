@@ -1,0 +1,14 @@
+build $python/configure: download
+  url = https://www.python.org/ftp/python/$$(printf %s $python | sed 's/Python-//')/$python.tgz
+
+build $python/Makefile: configure $python/configure | musl clang make
+  description = Configuring $python
+  prefix = CC='$cc' CFLAGS='--sysroot=$sysroot $cflags' LDFLAGS='$ldflags'
+  opts = --prefix=''
+
+build $sysroot/bin/python: make $python/Makefile
+  description = Building $python
+  prefix = DESTDIR=$sysroot
+  target = install
+
+build python: phony $python/bin/python

@@ -14,6 +14,7 @@ build $sysroot/bin/dash: make $dash/Makefile | make
   prefix = DESTDIR=$sysroot
   target = install
 
-build $sysroot/bin/sh: dash_ln | $sysroot/bin/dash
+#build $sysroot/bin/sh: dash_ln | $sysroot/bin/dash
 
-build dash: phony $sysroot/bin/sh
+#build dash: phony $sysroot/bin/sh
+build dash: phony $sysroot/bin/dash
