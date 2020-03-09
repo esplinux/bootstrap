@@ -1,5 +1,6 @@
 #!/bin/sh -e
 
+# Dependencies
 MUSL_version=musl-1.2.0
 LINUX_version=linux-5.4.24
 LLVM_version=llvm-10
@@ -18,6 +19,9 @@ GETTEXT_version=gettext-tiny-HEAD
 ZSH_version=zsh-5.8
 GIT_version=git-2.25.1
 DASH_version=dash-0.5.10
+PYTHON_version=Python-3.8.2
+
+# GPL Dependencies
 GNUMAKE_version=make-3.81
 GNUBASH_version=bash-3.2.57
 RSYNC_version=rsync-2.6.9
@@ -34,7 +38,6 @@ check curl
 check git
 check find
 check cmp
-check python3
 
 check clang
 check clang++
@@ -46,6 +49,11 @@ check make
 check cmake
 check bash
 check nproc
+
+projects='$sysroot/tmp musl make byacc clang cmake awk sbase toybox curl make cacert zlib vim samurai gettext git zsh'
+if ! type "python" > /dev/null; then
+  projects="$projects python"
+fi
 
 if ! type "ccache" > /dev/null; then
   HOST_CC=clang
@@ -107,6 +115,7 @@ if ! test -f "build.ninja"; then
   echo "git=$GIT_version" >> build.ninja
   echo "samurai=$SAMURAI_version" >> build.ninja
   echo "dash=$DASH_version" >> build.ninja
+  echo "python=$PYTHON_version" >> build.ninja
   echo "gnumake=$GNUMAKE_version" >> build.ninja
   echo "gnubash=$GNUBASH_version" >> build.ninja
   echo "rsync=$RSYNC_version" >> build.ninja
@@ -160,8 +169,7 @@ echo 'build $sysroot/tmp: mkdir' >> build.ninja
 
 echo '' >> build.ninja
 
-echo 'build sysroot.tgz: package | $sysroot/tmp musl make byacc clang cmake awk $' >> build.ninja
-echo '  sbase toybox curl make cacert zlib vim samurai gettext git zsh' >> build.ninja
+echo "build sysroot.tgz: package | $projects" >> build.ninja
 echo '  builddir = $sysroot' >> build.ninja
 
 echo '' >> build.ninja
