@@ -6,9 +6,9 @@ build $git/config.mak.autogen: configure $git/configure | host-make musl clang c
   prefix = CC=$cc CFLAGS='--sysroot=$sysroot $cflags -I$zlib-headers -I$curl-headers' LDFLAGS="$ldflags -lz -lbearssl -lcurl -L$zlib-lib -L$bearssl-lib -L$curl-lib --static"
   opts = --prefix='' ac_cv_c_regex_with_reg_startend=no
 
-build $sysroot/bin/git: make $git/Makefile | $git/config.mak.autogen $sysroot/bin/msgfmt
+build $sysroot/bin/git: make $git/Makefile | host-gettext $git/config.mak.autogen 
   description = Building $git
   prefix = DESTDIR=$sysroot
-  target = MSGFMT=$sysroot/bin/msgfmt NO_GETTEXT=1 NO_PERL=1 NO_TCLTK=1 install
+  target = MSGFMT=$host-msgfmt NO_GETTEXT=1 NO_PERL=1 NO_TCLTK=1 install
 
 build git: phony $sysroot/bin/git

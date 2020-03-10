@@ -108,6 +108,7 @@ if ! test -f "build.ninja"; then
   echo "zlib-headers=$ZLIB_headers" >> build.ninja
   echo "zlib-lib=$ZLIB_lib" >> build.ninja
   echo "gettext=$GETTEXT_version" >> build.ninja
+  echo "host-msgfmt=$PWD/host-$GETTEXT_version/bin/msgfmt" >> build.ninja
   echo "zsh=$ZSH_version" >> build.ninja
   echo "git=$GIT_version" >> build.ninja
   echo "samurai=$SAMURAI_version" >> build.ninja

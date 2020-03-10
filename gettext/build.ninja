@@ -2,9 +2,9 @@ build $gettext/Makefile: git
   url = https://github.com/sabotage-linux/gettext-tiny
   destination = $gettext
 
-build $sysroot/bin/msgfmt: make $gettext/Makefile | host-make musl clang
+build host-$gettext/bin/msgfmt: make $gettext/Makefile | host-make
   description = Building $gettext
-  prefix = CC=$cc CFLAGS='--sysroot=$sysroot $cflags' LDFLAGS='--sysroot=$sysroot $ldflags -static' DESTDIR=$sysroot
+  prefix = CC='clang' CFLAGS='$cflags' LDFLAGS='$ldflags' DESTDIR=$$PWD/host-$gettext
   target = LIBINTL=NONE prefix='' install
 
-build gettext: phony $sysroot/bin/msgfmt
+build host-gettext: phony host-$gettext/bin/msgfmt

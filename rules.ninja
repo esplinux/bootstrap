@@ -45,3 +45,6 @@ rule cp
 
 rule rm
   command = rm -rf $rm
+
+rule patch
+  command = patch -p1 -i $in
