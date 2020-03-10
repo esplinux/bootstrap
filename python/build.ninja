@@ -4,11 +4,11 @@ build $python/configure: download
 build $python/Makefile: configure $python/configure
   description = Configuring $python
   prefix = CC='clang' CFLAGS='$cflags' LDFLAGS='$ldflags'
-  opts = --prefix=''
+  opts = --prefix='' --without-ensurepip
 
-build $sysroot/bin/python: host-make $python/Makefile
+build host-$python/bin/python: host-make $python/Makefile
   description = Building $python
-  prefix = DESTDIR=$sysroot
+  prefix = DESTDIR=host-$python
   target = install
 
-build python: phony $sysroot/bin/python
+build python: phony host-$python/bin/python
