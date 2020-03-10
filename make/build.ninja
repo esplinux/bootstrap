@@ -1,14 +1,17 @@
+rule bootstrap
+  command = cd $gnumake; ./build.sh
+
 build $gnumake/configure: download
   url = https://ftp.gnu.org/gnu/make/$gnumake.tar.gz
 
-build $gnumake/Makefile: configure $gnumake/configure | musl
+build $gnumake/build.sh: configure $gnumake/configure 
   description = Configuring $gnumake
-  prefix = CC='$host_cc' CFLAGS='--sysroot=$sysroot $cflags' LD=lld LDFLAGS='-rtlib=compiler-rt $ldflags --static'
-  opts = --prefix='/opt/gnu' --host=none 
+  prefix = CC='clang' CFLAGS='$cflags' LD=lld LDFLAGS='$ldflags'
+  opts = --prefix='' --host=none 
 
-build $sysroot/opt/gnu/bin/make: host-make $gnumake/Makefile
+build $gnumake/make: bootstrap $gnumake/build.sh
   description = Building $gnumake
-  prefix = DESTDIR=$sysroot
-  target = install
 
-build make: phony $sysroot/opt/gnu/bin/make
+build host-$gnumake/bin/make: cp $gnumake/make
+
+build host-make: phony host-$gnumake/bin/make

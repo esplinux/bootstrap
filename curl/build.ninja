@@ -6,7 +6,7 @@ build $curl/Makefile: configure $curl/configure | musl clang bearssl
   prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags -I$bearssl-headers" LDFLAGS="$ldflags -L$bearssl-lib --static"
   opts = --prefix='' --disable-shared --with-bearssl --disable-file --disable-rtsp --disable-telnet --disable-tftp --disable-pop3 --disable-imap --disable-gopher --disable-manual --host=none
 
-build out-$curl/bin/curl: make $curl/Makefile
+build out-$curl/bin/curl: make $curl/Makefile | host-make
   description = Building $curl
   prefix = DESTDIR=$$PWD/out-$curl
   target = install-strip

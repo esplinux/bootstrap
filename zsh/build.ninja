@@ -5,7 +5,7 @@ build $zsh/configure: download
   url = https://www.zsh.org/pub/$zsh.tar.xz
   tarflags = Jx
 
-build $zsh/Makefile: configure $zsh/configure | musl clang make curses
+build $zsh/Makefile: configure $zsh/configure | host-make musl clang curses
   description = Configuring $zsh
   prefix = CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$curses-headers' LDFLAGS='--sysroot=$sysroot $ldflags -L$curses-lib --static'
   opts = --prefix='' --host=none --with-tcsetpgrp

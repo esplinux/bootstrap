@@ -2,7 +2,7 @@ build $samurai/Makefile: git
   url = https://github.com/michaelforney/samurai
   destination = $samurai
 
-build $sysroot/bin/samu: make $samurai/Makefile | musl clang make
+build $sysroot/bin/samu: make $samurai/Makefile | host-make musl clang
   description = Building $samuari
   prefix = CC=$cc CFLAGS='--sysroot=$sysroot $cflags' LDFLAGS='$ldflags' DESTDIR=$sysroot
   target = PREFIX='' install

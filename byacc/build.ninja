@@ -1,7 +1,7 @@
 build $byacc/configure: download
   url = https://invisible-mirror.net/archives/byacc/$byacc.tgz
 
-build $byacc/makefile: configure $byacc/configure | musl make
+build $byacc/makefile: configure $byacc/configure | host-make musl
   description = Configuring $byacc
   prefix = CC=clang CFLAGS='--sysroot=$sysroot $cflags' LDFLAGS='-rtlib=compiler-rt $ldflags --static'
   opts = --prefix='' --host=none

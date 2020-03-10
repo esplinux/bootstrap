@@ -13,7 +13,7 @@ build $bearssl/Makefile: git
 
 build $bearssl/conf/esp.mk: bearssl_configure | $bearssl/Makefile
 
-build out-$bearssl/libbearssl.a: make $bearssl/Makefile | musl make clang $bearssl/conf/esp.mk
+build out-$bearssl/libbearssl.a: make $bearssl/Makefile | host-make musl clang $bearssl/conf/esp.mk
   description = Building $bearssl
   target = CONF=esp
 

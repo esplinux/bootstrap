@@ -1,7 +1,7 @@
 build $zlib/configure: download
   url = https://www.zlib.net/$zlib.tar.gz
 
-build $zlib/Makefile: configure $zlib/configure | musl clang make
+build $zlib/Makefile: configure $zlib/configure | host-make musl clang
   description = Configuring $zlib
   prefix = CC=$cc CFLAGS='--sysroot=$sysroot $cflags' LDFLAGS='--sysroot=$sysroot $ldflags'
   opts = --prefix=''

@@ -5,7 +5,7 @@ build $sbase/Makefile: git
   url = https://git.suckless.org/sbase
   destination = $sbase
 
-build $sbase/sbase-box: make $sbase/Makefile | musl clang
+build $sbase/sbase-box: make $sbase/Makefile | host-make musl clang
   description = Building $sbase
   target = CC=$cc CFLAGS='--sysroot=$sysroot $cflags' LDFLAGS='$ldflags' sbase-box
 

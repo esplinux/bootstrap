@@ -6,9 +6,9 @@ build $python/Makefile: configure $python/configure
   prefix = CC='clang' CFLAGS='$cflags' LDFLAGS='$ldflags'
   opts = --prefix='' --without-ensurepip
 
-build host-$python/bin/python: host-make $python/Makefile
+build host-$python/bin/python: make $python/Makefile | host-make
   description = Building $python
-  prefix = DESTDIR=host-$python
+  prefix = DESTDIR=$$PWD/host-$python
   target = install
 
-build python: phony host-$python/bin/python
+build host-python: phony host-$python/bin/python

@@ -1,7 +1,7 @@
 build $rsync/configure: download
   url = https://download.samba.org/pub/rsync/src/$rsync.tar.gz
 
-build $rsync/Makefile: configure $rsync/configure | musl clang make
+build $rsync/Makefile: configure $rsync/configure | host-make musl clang
   description = Configuring $rsync
   prefix = CC='$cc' CFLAGS='--sysroot=$sysroot $cflags' LD=lld LDFLAGS='$ldflags --static'
   opts = --prefix='/opt/gnu' --host=none 

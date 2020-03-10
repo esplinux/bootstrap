@@ -22,7 +22,6 @@ rule git
   description = Cloning $destination
   command = git clone -q --depth=1 $url $destination
 
-#  command = find $builddir -printf "%P\n" -type f -o -type l -o -type d | sed -r '/^\s*$$/d' | tar -czf $out --no-recursion -C $builddir -T -
 rule package
   description = Packaging $out
   command = cd $builddir; tar -czf ../$out .; cd ..
@@ -30,13 +29,9 @@ rule package
 rule configure
   command = cd $$(dirname $in); $prefix ./configure $opts
 
-rule host-make
-  description = Building $out
-  command = $prefix make -j$nproc -C $$(dirname $in) $target
-
 rule make
   description = Building $out
-  command = $prefix $make -j$nproc -C $$(dirname $in) $target
+  command = $prefix $host-make -j$nproc -C $$(dirname $in) $target
 
 rule cmake
   description = CMAKE $in

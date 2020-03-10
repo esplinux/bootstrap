@@ -2,7 +2,7 @@ build $vim/configure $vim/Makefile: git
   url = --branch v$$(printf %s $vim | sed s/vim-//) https://github.com/vim/vim
   destination = $vim
 
-build $vim/src/auto/config.mk: configure $vim/configure | musl make clang curses
+build $vim/src/auto/config.mk: configure $vim/configure | host-make musl clang curses
   description = Configuring $vim
   prefix = CC=$cc CFLAGS='--sysroot=$sysroot $cflags -I$curses-headers' LDFLAGS='--sysroot=$sysroot $ldflags -ltermcap -L$curses-lib -static'
   opts = --prefix='' --host=none --with-features=tiny --with-tlib=ncurses vim_cv_toupper_broken=no vim_cv_terminfo=yes

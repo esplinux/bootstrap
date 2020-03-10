@@ -1,7 +1,7 @@
 build $cmake/CMakeLists.txt: download
   url = https://github.com/Kitware/CMake/releases/download/v$$(printf %s $cmake | sed s/cmake-//)/$cmake.tar.gz
 
-build $cmake/Makefile: cmake $cmake/CMakeLists.txt | musl clang make linux-headers
+build $cmake/Makefile: cmake $cmake/CMakeLists.txt | host-make musl clang linux-headers
   description = Configuring $cmake
   opts = -DCMAKE_C_COMPILER=$cc -DCMAKE_CXX_COMPILER=$cxx $
     -DCMAKE_BUILD_TYPE=MinSizeRel $

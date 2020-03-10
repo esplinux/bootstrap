@@ -50,10 +50,7 @@ check cmake
 check bash
 check nproc
 
-projects='$sysroot/tmp musl make byacc clang cmake awk sbase toybox curl make cacert zlib vim samurai gettext git zsh'
-if ! type "python" > /dev/null; then
-  projects="$projects python"
-fi
+projects='$sysroot/tmp musl byacc clang cmake awk sbase toybox curl make cacert zlib vim samurai gettext git zsh'
 
 if ! type "ccache" > /dev/null; then
   HOST_CC=clang
@@ -116,13 +113,14 @@ if ! test -f "build.ninja"; then
   echo "samurai=$SAMURAI_version" >> build.ninja
   echo "dash=$DASH_version" >> build.ninja
   echo "python=$PYTHON_version" >> build.ninja
+  echo "host-python=$PWD/host-$PYTHON_version/bin/python3" >> build.ninja
   echo "gnumake=$GNUMAKE_version" >> build.ninja
+  echo "host-make=$PWD/host-$GNUMAKE_version/bin/make" >> build.ninja
   echo "gnubash=$GNUBASH_version" >> build.ninja
   echo "rsync=$RSYNC_version" >> build.ninja
   echo "sysroot=$SYSROOT" >> build.ninja
   echo "march=$MARCH" >> build.ninja
   echo "nproc=$NPROC" >> build.ninja
-  echo "make=$SYSROOT/opt/gnu/bin/make" >> build.ninja
   echo "llvm_ccache_build=$LLVM_CCACHE_BUILD" >> build.ninja
   echo "host_cc=$HOST_CC" >> build.ninja
   echo "host_cxx=$HOST_CXX" >> build.ninja
@@ -152,14 +150,14 @@ echo '' >> build.ninja
 echo '# Default clean tasks' >> build.ninja
 echo '#####################' >> build.ninja
 echo 'build clean: rm' >> build.ninja
-echo '  rm = src-* build-* out-* sysroot *.tgz *.log' >> build.ninja
+echo '  rm = src-* build-* out-* host-* sysroot *.tgz *.log' >> build.ninja
 
 echo '' >> build.ninja
 
 echo 'build distclean: rm' >> build.ninja
-echo '  rm = src-* build-* out-* sysroot *.tgz *.log build.ninja $' >> build.ninja
+echo '  rm = src-* build-* out-* host-* sysroot *.tgz *.log build.ninja $' >> build.ninja
 echo '    $musl $gnumake $linux $byacc $clang $llvm $cmake $awk $sbase $toybox $' >> build.ninja
-echo '    $bearssl $curl $curses $zlib $vim $samurai $gettext $git $zsh' >> build.ninja
+echo '    $bearssl $curl $curses $zlib $vim $samurai $gettext $git $zsh $python' >> build.ninja
 
 echo '' >> build.ninja
 

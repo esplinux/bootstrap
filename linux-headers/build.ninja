@@ -1,7 +1,7 @@
 build $linux/Makefile: download
   url = https://cdn.kernel.org/pub/linux/kernel/v5.x/$linux.tar.gz
 
-build $linux/usr/include/linux/version.h: make $linux/Makefile | make
+build $linux/usr/include/linux/version.h: make $linux/Makefile | host-make
   description = Building $linux headers
   target = CC=clang HOSTCC=clang headers
 
