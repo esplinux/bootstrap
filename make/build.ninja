@@ -4,7 +4,7 @@ rule bootstrap
 build $gnumake/configure: download
   url = https://ftp.gnu.org/gnu/make/$gnumake.tar.gz
 
-build $gnumake/glob/glob.c: patch patches/make-alloca-fix.patch | $gnumake/configure
+build $gnumake/glob/glob.c: patch patches/make-3.81.patch | $gnumake/configure
 
 build $gnumake/build.sh: configure $gnumake/configure | $gnumake/glob/glob.c
   description = Configuring $gnumake
