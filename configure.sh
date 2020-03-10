@@ -45,7 +45,6 @@ check ar
 check ranlib
 check lld
 
-check make
 check cmake
 check bash
 check nproc
