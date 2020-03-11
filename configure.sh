@@ -45,7 +45,6 @@ check ar
 check ranlib
 check lld
 
-check cmake
 check bash
 check nproc
 
@@ -90,6 +89,7 @@ if ! test -f "build.ninja"; then
   echo "llvm=$LLVM_version" >> build.ninja
   echo "toybox=$TOYBOX_version" >> build.ninja
   echo "cmake=$CMAKE_version" >> build.ninja
+  echo "host-cmake=$PWD/$CMAKE_version/bin/cmake" >> build.ninja
   echo "awk=$AWK_version" >> build.ninja
   echo "sbase=$SBASE_version" >> build.ninja
   echo "vim=$VIM_version" >> build.ninja

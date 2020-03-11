@@ -1,20 +1,27 @@
+rule bootstrap
+  command = cd $cmake; CC=clang CXX=clang++ $
+    CFLAGS='$cflags -I$linux-headers' $
+    CXXFLAGS='$cflags -I$linux-headers' $
+    LDFLAGS='$ldflags' ./bootstrap --parallel=$nproc --init=$$PWD/../cmake/bootstrap.cmake
+
 build $cmake/CMakeLists.txt: download
   url = https://github.com/Kitware/CMake/releases/download/v$$(printf %s $cmake | sed s/cmake-//)/$cmake.tar.gz
 
-build $cmake/Makefile: cmake $cmake/CMakeLists.txt | host-make musl clang linux-headers
-  description = Configuring $cmake
-  opts = -DCMAKE_C_COMPILER=$cc -DCMAKE_CXX_COMPILER=$cxx $
-    -DCMAKE_BUILD_TYPE=MinSizeRel $
-    -DCMAKE_EXE_LINKER_FLAGS='-static $ldflags -lunwind -lc++abi' $
-    -DCMAKE_C_FLAGS='--sysroot=$sysroot $cflags -I$linux-headers' $
-    -DCMAKE_CXX_FLAGS='--sysroot=$sysroot $cxxflags -I$linux-headers' $
-    -DCMAKE_INSTALL_PREFIX='' $
-    -DCMAKE_DOC_DIR=/share/doc/$cmake $
-    -DCMAKE_USE_OPENSSL=OFF
+build $cmake/Makefile: bootstrap $cmake/CMakeLists.txt | host-make linux-headers
 
-build $sysroot/bin/cmake: make $cmake/Makefile
+#build $cmake/Makefile: cmake $cmake/CMakeLists.txt | host-make linux-headers
+#  description = Configuring $cmake
+#  opts = -DCMAKE_C_COMPILER='clang' -DCMAKE_CXX_COMPILER='clang++' $
+#    -DCMAKE_BUILD_TYPE=MinSizeRel $
+#    -DCMAKE_EXE_LINKER_FLAGS='$ldflags' $
+#    -DCMAKE_C_FLAGS='$cflags -I$linux-headers' $
+#    -DCMAKE_CXX_FLAGS='$cxxflags -I$linux-headers' $
+#    -DCMAKE_INSTALL_PREFIX='' $
+#    -DCMAKE_USE_OPENSSL=OFF
+
+build host-$cmake/bin/cmake: make $cmake/Makefile
   description = Building $cmake
-  prefix = DESTDIR=$sysroot
+  prefix = DESTDIR=$$PWD/host-$cmake
   target = install
 
-build cmake: phony $sysroot/bin/cmake
+build host-cmake: phony host-$cmake/bin/cmake
