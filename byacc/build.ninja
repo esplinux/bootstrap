@@ -1,14 +1,14 @@
 build $byacc/configure: download
   url = https://invisible-mirror.net/archives/byacc/$byacc.tgz
 
-build $byacc/makefile: configure $byacc/configure | host-make musl
+build $byacc/makefile: configure $byacc/configure | host-make
   description = Configuring $byacc
-  prefix = CC=clang CFLAGS='--sysroot=$sysroot $cflags' LDFLAGS='-rtlib=compiler-rt $ldflags --static'
-  opts = --prefix='' --host=none
+  prefix = CC=clang CFLAGS='$cflags' LDFLAGS='$ldflags'
+  opts = --prefix=''
 
-build $sysroot/bin/yacc: make $byacc/makefile
+build host-$byacc/bin/yacc: make $byacc/makefile
   description = Building $byacc
-  prefix = DESTDIR=$sysroot
+  prefix = DESTDIR=$$PWD/host-$byacc
   target = install
 
-build yacc: phony $sysroot/bin/yacc
+build host-yacc: phony host-$byacc/bin/yacc

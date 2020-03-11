@@ -48,7 +48,7 @@ check lld
 check bash
 check nproc
 
-projects='$sysroot/tmp musl byacc clang cmake awk sbase toybox curl make cacert zlib vim samurai gettext git zsh'
+projects='$sysroot/tmp musl clang awk sbase toybox curl cacert vim samurai git zsh'
 
 if ! type "ccache" > /dev/null; then
   HOST_CC=clang
@@ -100,6 +100,7 @@ if ! test -f "build.ninja"; then
   echo "curl-headers=$CURL_headers" >> build.ninja
   echo "curl-lib=$CURL_lib" >> build.ninja
   echo "byacc=$BYACC_version" >> build.ninja
+  echo "host-yacc=$PWD/host-$BYACC_version/bin/yacc" >> build.ninja
   echo "curses=$CURSES_version" >> build.ninja
   echo "curses-headers=$CURSES_headers" >> build.ninja
   echo "curses-lib=$CURSES_lib" >> build.ninja
@@ -126,50 +127,49 @@ if ! test -f "build.ninja"; then
   echo "host_cxx=$HOST_CXX" >> build.ninja
   echo "cc=$SYSROOT/bin/clang" >> build.ninja
   echo "cxx=$SYSROOT/bin/clang++" >> build.ninja
-  echo "yacc=$SYSROOT/bin/yacc" >> build.ninja
   echo "llvm-tblgen=$HOSTROOT/bin/llvm-tblgen" >> build.ninja
   echo "clang-tblgen=$HOSTROOT/bin/clang-tblgen" >> build.ninja
   echo "linux-headers=$LINUX_headers" >> build.ninja
   echo "cflags=$CFLAGS" >> build.ninja
   echo "cxxflags=$CXXFLAGS" >> build.ninja
   echo "ldflags=$LDFLAGS" >> build.ninja
+
+  echo '' >> build.ninja
+
+  echo '# Default build rules' >> build.ninja
+  echo '#####################' >> build.ninja
+  echo 'include rules.ninja' >> build.ninja
+
+  echo '' >> build.ninja
+
+  find -name build.ninja | sed '/^.\/build.ninja.*$/d' | cut -c3- | xargs -n1 echo subninja >> build.ninja
+
+  echo '' >> build.ninja
+
+  echo '# Default clean tasks' >> build.ninja
+  echo '#####################' >> build.ninja
+  echo 'build clean: rm' >> build.ninja
+  echo '  rm = src-* build-* out-* host-* sysroot *.tgz *.log' >> build.ninja
+
+  echo '' >> build.ninja
+
+  echo 'build distclean: rm' >> build.ninja
+  echo '  rm = src-* build-* out-* host-* sysroot *.tgz *.log build.ninja $' >> build.ninja
+  echo '    $musl $gnumake $linux $byacc $clang $llvm $cmake $awk $sbase $toybox $' >> build.ninja
+  echo '    $bearssl $curl $curses $zlib $vim $samurai $gettext $git $zsh $python' >> build.ninja
+
+  echo '' >> build.ninja
+
+  echo '# Default builds' >> build.ninja
+  echo '################' >> build.ninja
+  echo 'build $sysroot/tmp: mkdir' >> build.ninja
+
+  echo '' >> build.ninja
+
+  echo "build sysroot.tgz: package | $projects" >> build.ninja
+  echo '  builddir = $sysroot' >> build.ninja
+
+  echo '' >> build.ninja
+
+  echo 'default sysroot.tgz' >> build.ninja
 fi
-
-echo '' >> build.ninja
-
-echo '# Default build rules' >> build.ninja
-echo '#####################' >> build.ninja
-echo 'include rules.ninja' >> build.ninja
-
-echo '' >> build.ninja
-
-find -name build.ninja | sed '/^.\/build.ninja.*$/d' | cut -c3- | xargs -n1 echo subninja >> build.ninja
-
-echo '' >> build.ninja
-
-echo '# Default clean tasks' >> build.ninja
-echo '#####################' >> build.ninja
-echo 'build clean: rm' >> build.ninja
-echo '  rm = src-* build-* out-* host-* sysroot *.tgz *.log' >> build.ninja
-
-echo '' >> build.ninja
-
-echo 'build distclean: rm' >> build.ninja
-echo '  rm = src-* build-* out-* host-* sysroot *.tgz *.log build.ninja $' >> build.ninja
-echo '    $musl $gnumake $linux $byacc $clang $llvm $cmake $awk $sbase $toybox $' >> build.ninja
-echo '    $bearssl $curl $curses $zlib $vim $samurai $gettext $git $zsh $python' >> build.ninja
-
-echo '' >> build.ninja
-
-echo '# Default builds' >> build.ninja
-echo '################' >> build.ninja
-echo 'build $sysroot/tmp: mkdir' >> build.ninja
-
-echo '' >> build.ninja
-
-echo "build sysroot.tgz: package | $projects" >> build.ninja
-echo '  builddir = $sysroot' >> build.ninja
-
-echo '' >> build.ninja
-
-echo 'default sysroot.tgz' >> build.ninja
