@@ -5,7 +5,8 @@ build $llvm: git
 build $llvm/llvm/CMakeLists.txt: phony $llvm
 
 build build-host-$llvm/Makefile: cmake $llvm/llvm/CMakeLists.txt | host-make host-python host-cmake
-  opts = -DCMAKE_C_COMPILER=clang $
+  opts = -DCMAKE_ASM_COMPILER=clang $
+    -DCMAKE_C_COMPILER=clang $
     -DCMAKE_BUILD_TYPE=MinSizeRel $
     -DCMAKE_MAKE_PROGRAM=$host-make $
     -DCMAKE_CXX_COMPILER=clang++ $
@@ -25,6 +26,7 @@ build build-libcxx-$llvm/Makefile: cmake $llvm/llvm/CMakeLists.txt | host-make h
   opts = -DCMAKE_INSTALL_PREFIX='' $
     -DCMAKE_BUILD_TYPE=MinSizeRel $
     -DCMAKE_MAKE_PROGRAM=$host-make $
+    -DCMAKE_ASM_COMPILER=clang $
     -DCMAKE_C_COMPILER=clang $
     -DCMAKE_C_FLAGS='$cflags -I$linux-headers' $
     -DCMAKE_CXX_COMPILER=clang++ $
@@ -73,6 +75,7 @@ build build-clang-$llvm/Makefile: cmake $llvm/llvm/CMakeLists.txt | host-make ho
   opts = -DCMAKE_INSTALL_PREFIX='' $
     -DCMAKE_BUILD_TYPE=MinSizeRel $
     -DCMAKE_MAKE_PROGRAM=$host-make $
+    -DCMAKE_ASM_COMPILER=clang $
     -DCMAKE_C_COMPILER=clang $
     -DCMAKE_C_FLAGS='--sysroot=$sysroot $cflags -I$linux-headers' $
     -DCMAKE_CXX_COMPILER=clang++ $
