@@ -8,7 +8,7 @@ steps:
   image: ubuntu:19.04
   commands:
   - apt-get update
-  - apt-get install -y git llvm clang lld cmake make ninja-build curl python3 rsync
+  - apt-get install -y git llvm clang lld ninja-build curl
   - ./configure.sh
   - ninja
 

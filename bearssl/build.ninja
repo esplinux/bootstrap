@@ -2,7 +2,7 @@ cc = $cc --sysroot=$sysroot
 
 rule bearssl_configure
   command = printf "include conf/Unix.mk\n" > $bearssl/conf/esp.mk; $
-    printf "BUILD=$$PWD/out-$bearssl\n" >> $bearssl/conf/esp.mk; $
+    printf "BUILD=$$PWD/target-$bearssl\n" >> $bearssl/conf/esp.mk; $
     printf "CC=$cc\n" >> $bearssl/conf/esp.mk; $
     printf "LD=$cc\n" >> $bearssl/conf/esp.mk; $
     printf "LDDLL=$cc\n" >> $bearssl/conf/esp.mk
@@ -13,8 +13,8 @@ build $bearssl/Makefile: git
 
 build $bearssl/conf/esp.mk: bearssl_configure | $bearssl/Makefile
 
-build out-$bearssl/libbearssl.a: make $bearssl/Makefile | host-make musl clang $bearssl/conf/esp.mk
+build target-$bearssl/libbearssl.a: make $bearssl/Makefile | host-make musl clang $bearssl/conf/esp.mk
   description = Building $bearssl
   target = CONF=esp
 
-build bearssl: phony out-$bearssl/libbearssl.a
+build bearssl: phony target-$bearssl/libbearssl.a

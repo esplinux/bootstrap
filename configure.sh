@@ -60,14 +60,14 @@ else
   LLVM_CCACHE_BUILD=ON
 fi
 
-CURL_headers=$PWD/out-$CURL_version/include
-CURL_lib=$PWD/out-$CURL_version/lib
-CURSES_headers=$PWD/out-$CURSES_version/include
-CURSES_lib=$PWD/out-$CURSES_version/lib
+CURL_headers=$PWD/target-$CURL_version/include
+CURL_lib=$PWD/target-$CURL_version/lib
+CURSES_headers=$PWD/target-$CURSES_version/include
+CURSES_lib=$PWD/target-$CURSES_version/lib
 BEARSSL_headers=$PWD/$BEARSSL_version/inc
-BEARSSL_lib=$PWD/out-$BEARSSL_version
-ZLIB_headers=$PWD/out-$ZLIB_version/include
-ZLIB_lib=$PWD/out-$ZLIB_version/lib
+BEARSSL_lib=$PWD/target-$BEARSSL_version
+ZLIB_headers=$PWD/target-$ZLIB_version/include
+ZLIB_lib=$PWD/target-$ZLIB_version/lib
 LINUX_headers=$PWD/$LINUX_version/usr/include
 SYSROOT=$PWD/sysroot
 HOSTROOT=$PWD/build-host-$LLVM_version
@@ -150,14 +150,14 @@ if ! test -f "build.ninja"; then
   echo '# Default clean tasks' >> build.ninja
   echo '#####################' >> build.ninja
   echo 'build clean: rm' >> build.ninja
-  echo '  rm = src-* build-* out-* host-* sysroot *.tgz *.log' >> build.ninja
+  echo '  rm = src-* build-* target-* host-* sysroot *.tgz *.log' >> build.ninja
 
   echo '' >> build.ninja
 
   echo 'build distclean: rm' >> build.ninja
-  echo '  rm = src-* build-* out-* host-* sysroot *.tgz *.log build.ninja $' >> build.ninja
+  echo '  rm = src-* build-* target-* host-* sysroot *.tgz *.log build.ninja $' >> build.ninja
   echo '    $musl $gnumake $linux $byacc $clang $llvm $cmake $awk $sbase $toybox $' >> build.ninja
-  echo '    $bearssl $curl $curses $zlib $vim $samurai $gettext $git $zsh $python' >> build.ninja
+  echo '    $bearssl $curl $curses $zlib $vim $samurai $gettext $git $zsh $python $nvi' >> build.ninja
 
   echo '' >> build.ninja
 

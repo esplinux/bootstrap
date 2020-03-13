@@ -6,9 +6,9 @@ build $zlib/Makefile: configure $zlib/configure | host-make musl clang
   prefix = CC=$cc CFLAGS='--sysroot=$sysroot $cflags' LDFLAGS='--sysroot=$sysroot $ldflags'
   opts = --prefix=''
 
-build out-$zlib/lib/libz.so: make $zlib/Makefile
+build target-$zlib/lib/libz.so: make $zlib/Makefile
   description = Building $zlib
-  prefix = DESTDIR=$$PWD/out-$zlib
+  prefix = DESTDIR=$$PWD/target-$zlib
   target = install
 
-build zlib: phony out-$zlib/lib/libz.so
+build zlib: phony target-$zlib/lib/libz.so
