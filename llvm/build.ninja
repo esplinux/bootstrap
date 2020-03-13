@@ -5,6 +5,7 @@ build $llvm: git
 build $llvm/llvm/CMakeLists.txt: phony $llvm
 
 build build-host-$llvm/Makefile: cmake $llvm/llvm/CMakeLists.txt | host-make host-python host-cmake
+  prefix = MAKE=$host-make
   opts = -DCMAKE_C_COMPILER=clang $
     -DCMAKE_BUILD_TYPE=MinSizeRel $
     -DCMAKE_CXX_COMPILER=clang++ $
@@ -21,6 +22,7 @@ build llvm-tblgen: phony build-host-$llvm/bin/llvm-tblgen
 build clang-tblgen: phony build-host-$llvm/bin/clang-tblgen
 
 build build-libcxx-$llvm/Makefile: cmake $llvm/llvm/CMakeLists.txt | host-make host-python host-cmake musl linux-headers
+  prefix = MAKE=$host-make
   opts = -DCMAKE_INSTALL_PREFIX='' $
     -DCMAKE_BUILD_TYPE=MinSizeRel $
     -DCMAKE_C_COMPILER=clang $
@@ -68,6 +70,7 @@ build $sysroot/lib/libc++.so: make build-libcxx-$llvm/Makefile
 build libcxx: phony $sysroot/lib/libc++.so
 
 build build-clang-$llvm/Makefile: cmake $llvm/llvm/CMakeLists.txt | host-make host-python host-cmake musl linux-headers clang-tblgen llvm-tblgen libcxx
+  prefix = MAKE=$host-make
   opts = -DCMAKE_INSTALL_PREFIX='' $
     -DCMAKE_BUILD_TYPE=MinSizeRel $
     -DCMAKE_C_COMPILER=clang $
