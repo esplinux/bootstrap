@@ -5,7 +5,7 @@ rule bootstrap
     LDFLAGS='$ldflags' ./bootstrap --parallel=$nproc --init=$$PWD/../cmake/bootstrap.cmake --prefix=''
 
 build $cmake/CMakeLists.txt: download
-  prefix = $host-make
+  prefix = MAKE=$host-make
   url = https://github.com/Kitware/CMake/releases/download/v$$(printf %s $cmake | sed s/cmake-//)/$cmake.tar.gz
 
 build $cmake/Makefile: bootstrap $cmake/CMakeLists.txt | host-make linux-headers
