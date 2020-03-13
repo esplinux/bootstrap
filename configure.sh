@@ -20,6 +20,7 @@ ZSH_version=zsh-5.8
 GIT_version=git-2.25.1
 DASH_version=dash-0.5.10
 PYTHON_version=Python-3.8.2
+NVI_version=nvi-1.79
 
 # GPL Dependencies
 GNUMAKE_version=make-3.81
@@ -48,7 +49,7 @@ check lld
 check bash
 check nproc
 
-projects='$sysroot/tmp musl clang awk sbase toybox curl cacert vim samurai git zsh'
+projects='$sysroot/tmp musl clang awk sbase toybox curl cacert samurai git zsh nvi'
 
 if ! type "ccache" > /dev/null; then
   HOST_CC=clang
@@ -114,6 +115,7 @@ if ! test -f "build.ninja"; then
   echo "samurai=$SAMURAI_version" >> build.ninja
   echo "dash=$DASH_version" >> build.ninja
   echo "python=$PYTHON_version" >> build.ninja
+  echo "nvi=$NVI_version" >> build.ninja
   echo "host-python=$PWD/host-$PYTHON_version/bin/python3" >> build.ninja
   echo "gnumake=$GNUMAKE_version" >> build.ninja
   echo "host-make=$PWD/host-$GNUMAKE_version/bin/make" >> build.ninja
