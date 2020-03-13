@@ -46,7 +46,6 @@ check ar
 check ranlib
 check lld
 
-check bash
 check nproc
 
 projects='$sysroot/tmp musl clang awk sbase toybox curl cacert samurai git zsh nvi'

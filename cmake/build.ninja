@@ -2,7 +2,9 @@ rule bootstrap
   command = cd $cmake; CC=clang CXX=clang++ $
     CFLAGS='$cflags -I$linux-headers' $
     CXXFLAGS='$cflags -I$linux-headers' $
-    LDFLAGS='$ldflags' ./bootstrap --parallel=$nproc --init=$$PWD/../cmake/bootstrap.cmake --prefix=''
+    LDFLAGS='$ldflags' $
+    MAKE='$host-make' $
+    ./bootstrap --parallel=$nproc --init=$$PWD/../cmake/bootstrap.cmake --prefix=''
 
 build $cmake/CMakeLists.txt: download
   prefix = MAKE=$host-make
