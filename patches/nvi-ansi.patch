@@ -1,0 +1,14 @@
+--- a/nvi-1.79/cl/cl_main.c
++++ b/nvi-1.79/cl/cl_main.c
+@@ -120,8 +120,9 @@
+ 	 * We have to know what terminal it is from the start, since we may
+ 	 * have to use termcap/terminfo to find out how big the screen is.
+ 	 */
+-	if ((ttype = getenv("TERM")) == NULL)
+-		ttype = "unknown";
++	//if ((ttype = getenv("TERM")) == NULL)
++	//	ttype = "ansi";
++	ttype = "ansi";
+ 	term_init(gp->progname, ttype);
+ 
+ 	/* Add the terminal type to the global structure. */
