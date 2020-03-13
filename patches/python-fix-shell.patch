@@ -1,0 +1,11 @@
+--- a/Python-3.8.2/Makefile.pre.in
++++ b/Python-3.8.2/Makefile.pre.in
+@@ -1245,7 +1245,7 @@
+ 			$(INSTALL_SHARED) $(LDLIBRARY) $(DESTDIR)$(LIBDIR)/$(INSTSONAME); \
+ 			if test $(LDLIBRARY) != $(INSTSONAME); then \
+ 				(cd $(DESTDIR)$(LIBDIR); $(LN) -sf $(INSTSONAME) $(LDLIBRARY)) \
+-			fi \
++			fi; \
+ 		fi; \
+ 		if test -n "$(PY3LIBRARY)"; then \
+ 			$(INSTALL_SHARED) $(PY3LIBRARY) $(DESTDIR)$(LIBDIR)/$(PY3LIBRARY); \
