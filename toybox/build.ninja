@@ -8,4 +8,10 @@ build $sysroot/bin/toybox: make $toybox/Makefile | host-make musl clang linux-he
   nproc = 1
   target = defconfig toybox install_flat
 
-build toybox: phony $sysroot/bin/toybox
+build $sysroot/bin/xzcat: make $toybox/Makefile | $sysroot/bin/toybox
+  description = Building $toybox xzcat
+  prefix = CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$linux-headers' PREFIX=$sysroot/bin
+  nproc = 1
+  target = xzcat
+
+build toybox: phony $sysroot/bin/toybox $sysroot/bin/xzcat
