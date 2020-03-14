@@ -53,25 +53,6 @@ check lld
 
 check nproc
 
-# Test for LIBC++
-tmp_src=$(mktemp /tmp/test-XXXXXX)
-tmp_out=$(mktemp /tmp/test-XXXXXX)
-echo '#include <iostream>' >> $tmp_src
-echo 'int main(int argc, char* argv[]) {' >> $tmp_src
-echo '  #ifdef _LIBCPP_VERSION' >> $tmp_src
-echo '    std::cout << _LIBCPP_VERSION << std::endl;' >> $tmp_src
-echo '  #endif' >> $tmp_src
-echo '  return 0;' >> $tmp_src
-echo '}' >> $tmp_src
-
-clang++ -x c++ $tmp_src -o $tmp_out
-
-LIBCPP_VERSION=$($tmp_out)
-rm $tmp_src
-rm $tmp_out
-
-#echo LIBCPP_VERSION=$LIBCPP_VERSION
-
 projects='$sysroot/tmp musl clang awk sbase toybox curl cacert samurai git zsh nvi'
 
 if ! type "ccache" > /dev/null; then
@@ -102,6 +83,31 @@ CLANG_TBLGEN=$PWD/build-host-$llvm/bin/clang-tblgen
 CFLAGS="-Os -pipe -march=$MARCH -mtune=$MARCH"
 CXXFLAGS="-Os -pipe -march=$MARCH -mtune=$MARCH"
 LDFLAGS="-w -s"
+
+# Test for LIBC++
+tmp_src=$(mktemp /tmp/test-XXXXXX)
+tmp_out=$(mktemp /tmp/test-XXXXXX)
+echo '#include <iostream>' >> $tmp_src
+echo 'int main(int argc, char* argv[]) {' >> $tmp_src
+echo '  #ifdef _LIBCPP_VERSION' >> $tmp_src
+echo '    std::cout << _LIBCPP_VERSION << std::endl;' >> $tmp_src
+echo '  #endif' >> $tmp_src
+echo '  return 0;' >> $tmp_src
+echo '}' >> $tmp_src
+
+clang++ -x c++ $tmp_src -o $tmp_out
+
+LIBCPP_VERSION=$($tmp_out)
+rm $tmp_src
+rm $tmp_out
+
+#echo LIBCPP_VERSION=$LIBCPP_VERSION
+
+if [ -z "$LIBCPP_VERSION" ]; then
+  LLVM_SYSROOT=$SYSROOT
+else
+  LLVM_SYSROOT='/'
+fi
 
 echo "Creating build.ninja"
 touch build.ninja
@@ -144,6 +150,7 @@ echo "host-make=$PWD/host-$GNUMAKE_version/bin/make" >> build.ninja
 echo "gnubash=$GNUBASH_version" >> build.ninja
 echo "rsync=$RSYNC_version" >> build.ninja
 echo "sysroot=$SYSROOT" >> build.ninja
+echo "llvm-sysroot=$LLVM_SYSROOT" >> build.ninja
 echo "march=$MARCH" >> build.ninja
 echo "nproc=$NPROC" >> build.ninja
 echo "llvm_ccache_build=$LLVM_CCACHE_BUILD" >> build.ninja

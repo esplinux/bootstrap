@@ -58,15 +58,15 @@ build build-libcxx-$llvm/Makefile: cmake $llvm/llvm/CMakeLists.txt | host-make h
     -DCOMPILER_RT_BUILD_SANITIZERS=OFF $
     -DCOMPILER_RT_BUILD_XRAY=OFF $
     -DLIBUNWIND_USE_COMPILER_RT=ON $
-    -DLIBUNWIND_SYSROOT=$sysroot $
+    -DLIBUNWIND_SYSROOT=$llvm-sysroot $
     -DLIBUNWIND_TARGET_TRIPLE=x86_64-unknown-linux-musl $
     -DLIBCXXABI_USE_COMPILER_RT=ON $
     -DLIBCXXABI_USE_LLVM_UNWINDER=ON $
-    -DLIBCXXABI_SYSROOT=$sysroot $
+    -DLIBCXXABI_SYSROOT=$llvm-sysroot $
     -DLIBCXXABI_TARGET_TRIPLE=x86_64-unknown-linux-musl $
     -DLIBCXX_USE_COMPILER_RT=ON $
     -DLIBCXX_HAS_MUSL_LIBC=ON $
-    -DLIBCXX_SYSROOT=$sysroot $
+    -DLIBCXX_SYSROOT=$llvm-sysroot $
     -DLIBCXX_TARGET_TRIPLE=x86_64-unknown-linux-musl
 
 build $sysroot/lib/libc++.so: make build-libcxx-$llvm/Makefile
@@ -82,9 +82,9 @@ build build-clang-$llvm/Makefile: cmake $llvm/llvm/CMakeLists.txt | host-make ho
     -DCMAKE_MAKE_PROGRAM=$host-make $
     -DCMAKE_ASM_COMPILER=clang $
     -DCMAKE_C_COMPILER=clang $
-    -DCMAKE_C_FLAGS='--sysroot=$sysroot $cflags -I$linux-headers' $
+    -DCMAKE_C_FLAGS='--sysroot=$llvm-sysroot $cflags -I$linux-headers' $
     -DCMAKE_CXX_COMPILER=clang++ $
-    -DCMAKE_CXX_FLAGS='--sysroot=$sysroot -stdlib=libc++ $cflags -I$sysroot/include/c++/v1 -I$linux-headers' $
+    -DCMAKE_CXX_FLAGS='--sysroot=$llvm-sysroot -stdlib=libc++ $cflags -I$llvm-sysroot/include/c++/v1 -I$linux-headers' $
     -DCMAKE_EXE_LINKER_FLAGS='-rtlib=compiler-rt $ldflags -lunwind -lc++abi' $
     -DCMAKE_SHARED_LINKER_FLAGS='-rtlib=compiler-rt' $
     -DPYTHON_EXECUTABLE='$host-python' $

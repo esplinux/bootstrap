@@ -1,5 +1,5 @@
 rule zsh_ln
-  command = cd $$(dirname $out); ln -sf zsh $$(basename $out)
+  command = cd $$(dirname $out); ln -sf $$(basename $in) $$(basename $out)
 
 build $zsh/configure: download
   url = https://www.zsh.org/pub/$zsh.tar.xz
@@ -16,6 +16,7 @@ build $sysroot/bin/zsh: make $zsh/Makefile
   target = install
 
 build $sysroot/bin/sh: zsh_ln $sysroot/bin/zsh
+build $sysroot/bin/bash: zsh_ln $sysroot/bin/sh
 build $sysroot/bin/ksh: zsh_ln $sysroot/bin/zsh
 
 build zsh: phony $sysroot/bin/zsh $sysroot/bin/sh $sysroot/bin/ksh
