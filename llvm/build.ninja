@@ -1,3 +1,6 @@
+rule lld_ln
+  command = cd $$(dirname $out); ln -s ld.lld $$(basename $out)
+
 build $llvm: git
   url = --branch release/10.x https://github.com/llvm/llvm-project
   destination = $llvm
@@ -13,6 +16,7 @@ build build-host-$llvm/Makefile: cmake $llvm/llvm/CMakeLists.txt | host-make hos
     -DCMAKE_EXE_LINKER_FLAGS='$ldflags' $
     -DPYTHON_EXECUTABLE='$host-python' $
     -DLLVM_CCACHE_BUILD=$llvm_ccache_build $
+    -DLLVM_USE_LINKER=lld $
     -DLLVM_ENABLE_PROJECTS='clang'
 
 build build-host-$llvm/bin/clang-tblgen build-host-$llvm/bin/llvm-tblgen: make build-host-$llvm/Makefile
@@ -42,11 +46,12 @@ build build-libcxx-$llvm/Makefile: cmake $llvm/llvm/CMakeLists.txt | host-make h
     -DLLVM_ENABLE_EH=ON $
     -DLLVM_ENABLE_LIBEDIT=OFF $
     -DLLVM_ENABLE_LIBXML2=OFF $
-    -DLLVM_ENABLE_LLD=ON $
     -DLLVM_ENABLE_RTTI=ON $
     -DLLVM_ENABLE_ZLIB=OFF $
+    -DLLVM_HOST_TRIPLE=x86_64-unknown-linux-musl $
     -DLLVM_INSTALL_BINUTILS_SYMLINKS=ON $
     -DLLVM_INSTALL_CCTOOLS_SYMLINKS=ON $
+    -DLLVM_USE_LINKER=lld $
     -DLLVM_ENABLE_PROJECTS='libunwind;libcxxabi;libcxx;compiler-rt;clang' $
     -DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON $
     -DCOMPILER_RT_BUILD_LIBFUZZER=OFF $
@@ -93,17 +98,21 @@ build build-clang-$llvm/Makefile: cmake $llvm/llvm/CMakeLists.txt | host-make ho
     -DLLVM_ENABLE_EH=ON $
     -DLLVM_ENABLE_LIBEDIT=OFF $
     -DLLVM_ENABLE_LIBXML2=OFF $
-    -DLLVM_ENABLE_LLD=ON $
     -DLLVM_ENABLE_RTTI=ON $
     -DLLVM_ENABLE_ZLIB=OFF $
+    -DLLVM_HOST_TRIPLE=x86_64-unknown-linux-musl $
     -DLLVM_INCLUDE_TESTS=OFF $
     -DLLVM_INCLUDE_BENCHMARKS=OFF $
     -DLLVM_INSTALL_BINUTILS_SYMLINKS=ON $
     -DLLVM_INSTALL_CCTOOLS_SYMLINKS=ON $
+    -DLLVM_USE_LINKER=lld $
     -DLLVM_ENABLE_PROJECTS='clang;lld;llvm' $
     -DCLANG_TABLEGEN=$clang-tblgen $
+    -DCLANG_ENABLE_ARCMT=OFF $
+    -DCLANG_ENABLE_STATIC_ANALYZER=OFF $
     -DCLANG_DEFAULT_LINKER=lld $
     -DCLANG_DEFAULT_RTLIB=compiler-rt $
+    -DCLANG_DEFAULT_UNWINDLIB=libunwind $
     -DCLANG_DEFAULT_CXX_STDLIB=libc++
 
 build $sysroot/bin/clang: make build-clang-$llvm/Makefile
@@ -112,7 +121,6 @@ build $sysroot/bin/clang: make build-clang-$llvm/Makefile
     install-clang-stripped $
     install-ar-stripped $
     install-ranlib-stripped $
-    install-lld-stripped $
     install-nm-stripped $
     install-objcopy-stripped $
     install-strip-stripped $
@@ -122,4 +130,11 @@ build $sysroot/bin/clang: make build-clang-$llvm/Makefile
     install-strings-stripped
   pool = console
 
-build clang: phony $sysroot/bin/clang
+build $sysroot/bin/ld.lld: make build-clang-$llvm/Makefile
+  prefix = DESTDIR=$sysroot
+  target = install-lld-stripped
+  pool = console
+
+build $sysroot/bin/ld: lld_ln $sysroot/bin/ld.lld
+
+build clang: phony $sysroot/bin/clang $sysroot/bin/ld
