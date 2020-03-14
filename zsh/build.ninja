@@ -19,4 +19,4 @@ build $sysroot/bin/sh: zsh_ln $sysroot/bin/zsh
 build $sysroot/bin/bash: zsh_ln $sysroot/bin/sh
 build $sysroot/bin/ksh: zsh_ln $sysroot/bin/zsh
 
-build zsh: phony $sysroot/bin/zsh $sysroot/bin/sh $sysroot/bin/ksh
+build zsh: phony $sysroot/bin/zsh $sysroot/bin/sh $sysroot/bin/ksh $sysroto/bin/bash

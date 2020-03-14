@@ -2,7 +2,7 @@
 build $nvi/build/configure: download
   url = https://sites.google.com/a/bostic.com/keithbostic/files/$nvi.tar.gz
 
-build $nvi/cl/cl_main.c :patch patches/nvi.patch | $nvi/build/configure
+build $nvi/cl/cl_main.c :patch patches/nvi-1.79.patch | $nvi/build/configure
 
 build $nvi/build/Makefile: configure $nvi/build/configure | host-make musl clang curses $nvi/cl/cl_main.c
   description = Configuring $nvi

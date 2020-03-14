@@ -1,7 +1,7 @@
 build $python/configure: download
   url = https://www.python.org/ftp/python/$$(printf %s $python| sed 's/Python-//')/$python.tgz
 
-build $python/Makefile.pre.in:patch patches/python-fix-shell.patch | $python/configure
+build $python/Makefile.pre.in:patch patches/python-3.8.2.patch | $python/configure
 
 build $python/Makefile: configure $python/configure | $python/Makefile.pre.in
   description = Configuring $python

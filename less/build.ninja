@@ -1,7 +1,7 @@
 build $less/configure: download
   url = http://greenwoodsoftware.com/less/$less.tar.gz
 
-build $less/screen.c: patch patches/less.patch | $less/configure  
+build $less/screen.c: patch patches/less-551.patch | $less/configure  
 
 build $less/Makefile: configure $less/configure | host-make musl clang curses $less/screen.c
   description = Configuring $less
