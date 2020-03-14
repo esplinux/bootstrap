@@ -7,7 +7,7 @@ build $zsh/configure: download
 
 build $zsh/Makefile: configure $zsh/configure | host-make musl clang curses
   description = Configuring $zsh
-  prefix = CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$curses-headers' LDFLAGS='--sysroot=$sysroot $ldflags -L$curses-lib --static'
+  prefix = MAKE=$host-make GREP=grep CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$curses-headers' LDFLAGS='--sysroot=$sysroot $ldflags -L$curses-lib --static'
   opts = --prefix='' --host=none --with-tcsetpgrp
 
 build $sysroot/bin/zsh: make $zsh/Makefile

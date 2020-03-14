@@ -2,10 +2,9 @@
 build $nvi/build/configure: download
   url = https://sites.google.com/a/bostic.com/keithbostic/files/$nvi.tar.gz
 
-build $nvi/build/pathnames.h.in:patch patches/nvi-path.patch | $nvi/build/configure
-build $nvi/cl/cl_main.c :patch patches/nvi-ansi.patch | $nvi/build/configure
+build $nvi/cl/cl_main.c :patch patches/nvi.patch | $nvi/build/configure
 
-build $nvi/build/Makefile: configure $nvi/build/configure | host-make musl clang curses $nvi/cl/cl_main.c $nvi/build/pathnames.h.in
+build $nvi/build/Makefile: configure $nvi/build/configure | host-make musl clang curses $nvi/cl/cl_main.c
   description = Configuring $nvi
   prefix = CC=$cc CFLAGS='--sysroot=$sysroot $cflags -I$curses-headers' LDFLAGS='--sysroot=$sysroot $ldflags -L$curses-lib --static'
   opts = --prefix='' --disable-curses

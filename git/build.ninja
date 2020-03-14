@@ -3,7 +3,7 @@ build $git/configure $git/Makefile: download
 
 build $git/config.mak.autogen: configure $git/configure | host-make musl clang curl zlib
   description = Configuring $git
-  prefix = CC=$cc CFLAGS='--sysroot=$sysroot $cflags -I$zlib-headers -I$curl-headers' LDFLAGS="$ldflags -lz -lbearssl -lcurl -L$zlib-lib -L$bearssl-lib -L$curl-lib --static"
+  prefix = GREP=grep CC=$cc CFLAGS='--sysroot=$sysroot $cflags -I$zlib-headers -I$curl-headers' LDFLAGS="$ldflags -lz -lbearssl -lcurl -L$zlib-lib -L$bearssl-lib -L$curl-lib --static"
   opts = --prefix='' ac_cv_c_regex_with_reg_startend=no
 
 build $sysroot/bin/git: make $git/Makefile | host-gettext $git/config.mak.autogen 
