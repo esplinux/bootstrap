@@ -14,5 +14,10 @@ build $sysroot/bin/xzcat: make $toybox/Makefile | $sysroot/bin/toybox
   nproc = 1
   target = CC='clang' HOSTCC='clang' xzcat
 
+build $sysroot/bin/gzip: make $toybox/Makefile | $sysroot/bin/toybox
+  description = Building $toybox gzip
+  prefix = PATH=$$PATH:$$(dirname $host-make) LDFLAGS='--rtlib=compiler-rt -static' CFLAGS='--sysroot=$sysroot $cflags -I$linux-headers' PREFIX=$sysroot/bin
+  nproc = 1
+  target = CC='clang' HOSTCC='clang' gzip
 
-build toybox: phony $sysroot/bin/toybox $sysroot/bin/xzcat
+build toybox: phony $sysroot/bin/toybox $sysroot/bin/xzcat $sysroot/bin/gzip
