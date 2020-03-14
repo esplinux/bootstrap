@@ -8,7 +8,7 @@
 -		ttype = "unknown";
 +	//if ((ttype = getenv("TERM")) == NULL)
 +	//	ttype = "ansi";
-+	ttype = "ansi";
++	ttype = "linux";
  	term_init(gp->progname, ttype);
  
  	/* Add the terminal type to the global structure. */

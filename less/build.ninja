@@ -1,0 +1,15 @@
+build $less/configure: download
+  url = http://greenwoodsoftware.com/less/$less.tar.gz
+
+build $less/screen.c: patch patches/less-ansi.patch | $less/configure  
+
+build $less/Makefile: configure $less/configure | host-make musl clang curses $less/screen.c
+  description = Configuring $less
+  prefix = CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$curses-headers' LDFLAGS='$ldflags -L$curses-lib --static'
+  opts = --prefix=''
+
+build $sysroot/bin/less: make $less/Makefile
+  description = Building $less
+  target = DESTDIR=$sysroot install
+
+build less: phony $sysroot/bin/less

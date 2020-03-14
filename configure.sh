@@ -23,6 +23,7 @@ SAMURAI_version=samurai-HEAD
 GETTEXT_version=gettext-tiny-HEAD
 ZSH_version=zsh-5.8
 GIT_version=git-2.25.1
+LESS_version=less-551
 DASH_version=dash-0.5.10
 PYTHON_version=Python-3.8.2
 NVI_version=nvi-1.79
@@ -53,7 +54,7 @@ check lld
 
 check nproc
 
-projects='$sysroot/tmp musl clang awk sbase toybox curl cacert samurai git zsh nvi'
+projects='$sysroot/tmp musl clang awk sbase toybox curl cacert samurai git zsh less nvi'
 
 if ! type "ccache" > /dev/null; then
   HOST_CC=clang
@@ -140,6 +141,7 @@ echo "gettext=$GETTEXT_version" >> build.ninja
 echo "host-msgfmt=$PWD/host-$GETTEXT_version/bin/msgfmt" >> build.ninja
 echo "zsh=$ZSH_version" >> build.ninja
 echo "git=$GIT_version" >> build.ninja
+echo "less=$LESS_version" >> build.ninja
 echo "samurai=$SAMURAI_version" >> build.ninja
 echo "dash=$DASH_version" >> build.ninja
 echo "python=$PYTHON_version" >> build.ninja
@@ -186,7 +188,7 @@ echo '' >> build.ninja
 
 echo 'build distclean: rm' >> build.ninja
 echo '  rm = src-* build-* target-* host-* sysroot *.tgz *.log build.ninja $' >> build.ninja
-echo '    $musl $gnumake $linux $byacc $clang $llvm $cmake $awk $sbase $toybox $' >> build.ninja
+echo '    $musl $gnumake $linux $byacc $clang $llvm $cmake $awk $sbase $toybox $less $' >> build.ninja
 echo '    $bearssl $curl $curses $zlib $vim $samurai $gettext $git $zsh $python $nvi' >> build.ninja
 
 echo '' >> build.ninja
