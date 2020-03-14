@@ -3,7 +3,7 @@ build $curl/configure: download
 
 build $curl/Makefile: configure $curl/configure | musl clang bearssl
   description = Configuring $curl
-  prefix = CC=$cc CFLAGS="--sysroot=$sysroot $cflags -I$bearssl-headers" LDFLAGS="$ldflags -L$bearssl-lib --static"
+  prefix = MAKE=$host-make CC=$cc CFLAGS="--sysroot=$sysroot $cflags -I$bearssl-headers" LDFLAGS="$ldflags -L$bearssl-lib --static"
   opts = --prefix='' --disable-shared --with-bearssl --disable-file --disable-rtsp --disable-telnet --disable-tftp --disable-pop3 --disable-imap --disable-gopher --disable-manual --host=none
 
 build target-$curl/bin/curl: make $curl/Makefile | host-make
