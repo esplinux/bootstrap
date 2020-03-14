@@ -5,10 +5,10 @@ name: default
 
 steps:
 - name: Build
-  image: ubuntu:19.04
+  image: ubuntu:20.04
   commands:
   - apt-get update
-  - apt-get install -y git llvm clang lld ninja-build curl
+  - apt-get install -y git llvm clang lld ninja-build curl rsync
   - ./configure.sh
   - ninja
 
