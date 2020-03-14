@@ -5,7 +5,7 @@ build $less/screen.c: patch patches/less-ansi.patch | $less/configure
 
 build $less/Makefile: configure $less/configure | host-make musl clang curses $less/screen.c
   description = Configuring $less
-  prefix = GREP=grep CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$curses-headers' LDFLAGS='$ldflags -L$curses-lib --static'
+  prefix = GREP=grep CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$curses-headers' LDFLAGS='--sysroot=$sysroot $ldflags -L$curses-lib --static'
   opts = --prefix=''
 
 build $sysroot/bin/less: make $less/Makefile
