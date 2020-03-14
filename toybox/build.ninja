@@ -4,14 +4,21 @@ build $toybox/Makefile: git
 
 build $sysroot/bin/toybox: make $toybox/Makefile | host-make musl clang linux-headers
   description = Building $toybox
-  prefix = CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$linux-headers' PREFIX=$sysroot/bin
+  prefix = MAKE='$host-make' CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$linux-headers' PREFIX=$sysroot/bin
   nproc = 1
   target = defconfig toybox install_flat
 
 build $sysroot/bin/xzcat: make $toybox/Makefile | $sysroot/bin/toybox
   description = Building $toybox xzcat
-  prefix = CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$linux-headers' PREFIX=$sysroot/bin
+  prefix = MAKE='$host-make' CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$linux-headers' PREFIX=$sysroot/bin
   nproc = 1
   target = xzcat
 
-build toybox: phony $sysroot/bin/toybox $sysroot/bin/xzcat
+build $sysroot/bin/more: make $toybox/Makefile | $sysroot/bin/toybox
+  description = Building $toybox xzcat
+  prefix = MAKE='$host-make' CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$linux-headers' PREFIX=$sysroot/bin
+  nproc = 1
+  target = more
+
+
+build toybox: phony $sysroot/bin/toybox $sysroot/bin/xzcat $sysroot/bin/more
