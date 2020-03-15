@@ -97,8 +97,6 @@ EOF
 LIBCPP_VERSION=$($tmp_out)
 rm $tmp_out
 
-echo LIBCPP_VERSION=$LIBCPP_VERSION
-
 if [ -z "$LIBCPP_VERSION" ]; then
   LLVM_SYSROOT=$SYSROOT
 else
