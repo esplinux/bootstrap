@@ -73,8 +73,8 @@ CURL_headers=$PWD/target-$CURL_version/include
 CURL_lib=$PWD/target-$CURL_version/lib
 CURSES_headers=$PWD/target-$CURSES_version/include
 CURSES_lib=$PWD/target-$CURSES_version/lib
-BEARSSL_headers=$PWD/$BEARSSL_version/inc
-BEARSSL_lib=$PWD/target-$BEARSSL_version
+BEARSSL_headers=$PWD/target-$BEARSSL_version/include
+BEARSSL_lib=$PWD/target-$BEARSSL_version/lib
 ZLIB_headers=$PWD/target-$ZLIB_version/include
 ZLIB_lib=$PWD/target-$ZLIB_version/lib
 LINUX_headers=$PWD/$LINUX_version/usr/include
@@ -111,6 +111,7 @@ else
 fi
 
 cat << EOF >> build.ninja
+
 host-cmake=$PWD/host-$CMAKE_version/bin/cmake
 host-yacc=$PWD/host-$BYACC_version/bin/yacc
 host-msgfmt=$PWD/host-$GETTEXT_version/bin/msgfmt
@@ -159,8 +160,9 @@ build clean: rm
 
 build distclean: rm
   rm = src-* build-* target-* host-* sysroot *.tgz *.log build.ninja $
-    \$musl \$linux \$byacc \$clang \$llvm \$cmake \$awk \$sbase \$toybox \$less \$netbsd-curses $
-    \$bearssl \$curl \$zlib \$samurai \$gettext \$git \$zsh \$python \$nvi \$make
+    \$musl \$linux \$byacc \$clang \$llvm \$cmake \$awk \$sbase \$toybox $
+    \$bearssl \$curl \$zlib \$samurai \$gettext-tiny \$git \$zsh \$python i$
+    \$nvi \$less \$netbsd-curses \$make
 
 # Default builds
 ################
