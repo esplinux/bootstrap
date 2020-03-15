@@ -1,3 +1,6 @@
+NAME=llvm
+VERSION=10
+
 rule lld_ln
   command = cd $$(dirname $out); ln -s ld.lld $$(basename $out)
 

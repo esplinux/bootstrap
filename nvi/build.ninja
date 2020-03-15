@@ -1,3 +1,6 @@
+NAME=nvi
+VERSION=1.79
+
 rule nvi_ln
   command = cd $$(dirname $out); ln -sf nvi $$(basename $out)
 
@@ -6,9 +9,9 @@ build $nvi/build/configure: download
 
 build $nvi/cl/cl_main.c :patch patches/nvi-1.79.patch | $nvi/build/configure
 
-build $nvi/build/Makefile: configure $nvi/build/configure | host-make musl clang curses $nvi/cl/cl_main.c
+build $nvi/build/Makefile: configure $nvi/build/configure | host-make musl clang netbsd-curses $nvi/cl/cl_main.c
   description = Configuring $nvi
-  prefix = CC=$cc CFLAGS='--sysroot=$sysroot $cflags -I$curses-headers' LDFLAGS='--sysroot=$sysroot $ldflags -L$curses-lib --static'
+  prefix = CC=$cc CFLAGS='--sysroot=$sysroot $cflags -I$netbsd-curses-headers' LDFLAGS='--sysroot=$sysroot $ldflags -L$netbsd-curses-lib --static'
   opts = --prefix='' --disable-curses
 
 build $nvi/build/nvi: make $nvi/build/Makefile 

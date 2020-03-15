@@ -1,3 +1,6 @@
+NAME=bearssl
+VERSION=HEAD
+
 cc = $cc --sysroot=$sysroot
 
 rule bearssl_configure

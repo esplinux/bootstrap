@@ -1,3 +1,6 @@
+NAME=samurai
+VERSION=HEAD
+
 build $samurai/Makefile: git
   url = https://github.com/michaelforney/samurai
   destination = $samurai

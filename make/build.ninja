@@ -1,19 +1,22 @@
+NAME=make
+VERSION=3.81
+
 rule bootstrap
-  command = cd $gnumake; ./build.sh
+  command = cd $make; ./build.sh
 
-build $gnumake/configure: download
-  url = https://ftp.gnu.org/gnu/make/$gnumake.tar.gz
+build $make/configure: download
+  url = https://ftp.gnu.org/gnu/make/$make.tar.gz
 
-build $gnumake/glob/glob.c: patch patches/make-3.81.patch | $gnumake/configure
+build $make/glob/glob.c: patch patches/make-3.81.patch | $make/configure
 
-build $gnumake/build.sh: configure $gnumake/configure | $gnumake/glob/glob.c
-  description = Configuring $gnumake
+build $make/build.sh: configure $make/configure | $make/glob/glob.c
+  description = Configuring $make
   prefix = CC='clang' CFLAGS='$cflags' LD=lld LDFLAGS='$ldflags'
   opts = --prefix='' --host=none 
 
-build $gnumake/make: bootstrap $gnumake/build.sh
-  description = Building $gnumake
+build $make/make: bootstrap $make/build.sh
+  description = Building $make
 
-build host-$gnumake/bin/make: cp $gnumake/make
+build host-$make/bin/make: cp $make/make
 
-build host-make: phony host-$gnumake/bin/make
+build host-make: phony host-$make/bin/make

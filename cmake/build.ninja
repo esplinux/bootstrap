@@ -1,3 +1,6 @@
+NAME=cmake
+VERSION=3.16.5
+
 rule bootstrap
   command = cd $cmake; CC=clang CXX=clang++ $
     CFLAGS='$cflags -I$linux-headers' $

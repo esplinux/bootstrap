@@ -1,11 +1,14 @@
+NAME=less
+VERSION=551
+
 build $less/configure: download
   url = http://greenwoodsoftware.com/less/$less.tar.gz
 
 build $less/screen.c: patch patches/less-551.patch | $less/configure  
 
-build $less/Makefile: configure $less/configure | host-make musl clang curses $less/screen.c
+build $less/Makefile: configure $less/configure | host-make musl clang netbsd-curses $less/screen.c
   description = Configuring $less
-  prefix = GREP=grep CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$curses-headers' LDFLAGS='--sysroot=$sysroot $ldflags -L$curses-lib --static'
+  prefix = GREP=grep CC='$cc' CFLAGS='--sysroot=$sysroot $cflags -I$netbsd-curses-headers' LDFLAGS='--sysroot=$sysroot $ldflags -L$netbsd-curses-lib --static'
   opts = --prefix=''
 
 build $sysroot/bin/less: make $less/Makefile

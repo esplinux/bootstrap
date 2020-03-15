@@ -1,3 +1,6 @@
+NAME=toybox
+VERSION=HEAD
+
 build $toybox/Makefile: git
   url = https://github.com/landley/toybox
   destination = $toybox

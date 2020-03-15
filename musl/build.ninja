@@ -1,3 +1,6 @@
+NAME=musl
+VERSION=1.2.0
+
 build $musl/configure: download
   url = https://www.musl-libc.org/releases/$musl.tar.gz 
 

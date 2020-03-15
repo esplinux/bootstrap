@@ -1,3 +1,6 @@
+NAME=git
+VERSION=2.25.1
+
 build $git/configure $git/Makefile: download
   url = https://mirrors.kernel.org/pub/software/scm/git/$git.tar.gz
 
@@ -6,7 +9,7 @@ build $git/config.mak.autogen: configure $git/configure | host-make musl clang c
   prefix = GREP=grep CC=$cc CFLAGS='--sysroot=$sysroot $cflags -I$zlib-headers -I$curl-headers' LDFLAGS="$ldflags -lz -lbearssl -lcurl -L$zlib-lib -L$bearssl-lib -L$curl-lib --static"
   opts = --prefix='' ac_cv_c_regex_with_reg_startend=no
 
-build $sysroot/bin/git: make $git/Makefile | host-gettext $git/config.mak.autogen 
+build $sysroot/bin/git: make $git/Makefile | host-gettext-tiny $git/config.mak.autogen 
   description = Building $git
   prefix = DESTDIR=$sysroot
   target = MSGFMT=$host-msgfmt NO_GETTEXT=1 NO_PERL=1 NO_TCLTK=1 install

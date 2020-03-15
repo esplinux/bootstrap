@@ -1,3 +1,6 @@
+NAME=sbase
+VERSION=HEAD
+
 rule install
   command = cd $$(dirname $in); ln -sf $$(basename $in) $$(basename $out)
 

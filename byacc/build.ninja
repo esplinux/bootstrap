@@ -1,3 +1,6 @@
+NAME=byacc
+VERSION=20191125
+
 build $byacc/configure: download
   url = https://invisible-mirror.net/archives/byacc/$byacc.tgz
 

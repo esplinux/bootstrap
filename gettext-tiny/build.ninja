@@ -1,0 +1,13 @@
+NAME=gettext-tiny
+VERSION=HEAD
+
+build $gettext-tiny/Makefile: git
+  url = https://github.com/sabotage-linux/gettext-tiny
+  destination = $gettext-tiny
+
+build host-$gettext-tiny/bin/msgfmt: make $gettext-tiny/Makefile | host-make
+  description = Building $gettext-tiny
+  prefix = CC='clang' CFLAGS='$cflags' LDFLAGS='$ldflags' DESTDIR=$$PWD/host-$gettext-tiny
+  target = LIBINTL=NONE prefix='' install
+
+build host-gettext-tiny: phony host-$gettext-tiny/bin/msgfmt

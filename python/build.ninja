@@ -1,3 +1,6 @@
+NAME=Python
+VERSION=3.8.2
+
 build $python/configure: download
   url = https://www.python.org/ftp/python/$$(printf %s $python| sed 's/Python-//')/$python.tgz
 

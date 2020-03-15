@@ -1,0 +1,12 @@
+NAME=netbsd-curses
+VERSION=HEAD
+
+build $netbsd-curses/GNUmakefile: git
+  url = https://github.com/sabotage-linux/netbsd-curses
+  destination = $netbsd-curses
+
+build target-$netbsd-curses/lib/libcurses.so: make $netbsd-curses/GNUmakefile | host-make musl clang
+  description = Building $netbsd-curses
+  target = HOSTCC=clang CC='$cc --sysroot=$sysroot $cflags' PREFIX='' DESTDIR=$$PWD/target-$netbsd-curses install
+
+build netbsd-curses: phony target-$netbsd-curses/lib/libcurses.so

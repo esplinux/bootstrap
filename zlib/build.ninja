@@ -1,3 +1,6 @@
+NAME=zlib
+VERSION=1.2.11
+
 build $zlib/configure: download
   url = https://www.zlib.net/$zlib.tar.gz
 

@@ -1,3 +1,6 @@
+NAME=dash
+VERSION=0.5.10
+
 rule dash_ln
   command = cd $$(dirname $out); ln -sf dash sh
 
