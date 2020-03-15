@@ -1,5 +1,5 @@
 rule nvi_ln
-  command = cd $$(dirname $out); ln -sf nvi $$basename $out)
+  command = cd $$(dirname $out); ln -sf nvi $$(basename $out)
 
 build $nvi/build/configure: download
   url = https://sites.google.com/a/bostic.com/keithbostic/files/$nvi.tar.gz
