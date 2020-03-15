@@ -30,7 +30,6 @@ NVI_version=nvi-1.79
 
 # GPL Dependencies
 GNUMAKE_version=make-3.81
-RSYNC_version=rsync-2.6.9
 
 check()
 {
@@ -146,7 +145,6 @@ nvi=$NVI_version
 host-python=$PWD/host-$PYTHON_version/bin/python3
 gnumake=$GNUMAKE_version
 host-make=$PWD/host-$GNUMAKE_version/bin/make
-rsync=$RSYNC_version
 sysroot=$SYSROOT
 llvm-sysroot=$LLVM_SYSROOT
 march=$MARCH
