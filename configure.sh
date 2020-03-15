@@ -58,7 +58,7 @@ do
   printf '%s=%s\n' "$KEY" "$VALUE" >> build.ninja
 done
 
-projects="\$sysroot/tmp musl clang awk sbase toybox curl cacert samurai git zsh less nvi"
+projects="tmp musl clang awk sbase toybox curl cacert samurai git zsh less nvi"
 
 if ! type "ccache" > /dev/null; then
   HOST_CC=clang
@@ -148,7 +148,6 @@ include rules.ninja
 
 EOF
 
-#find . -name build.ninja | sed '/^.\/build.ninja.*$/d' | cut -c3- | xargs -n1 echo subninja >> build.ninja
 for PACKAGE in $PACKAGES;
 do
   printf "subninja %s\n" "$PACKAGE" >> build.ninja
@@ -164,12 +163,13 @@ build clean: rm
 build distclean: rm
   rm = src-* build-* target-* host-* sysroot *.tgz *.log build.ninja $
     \$musl \$linux \$byacc \$clang \$llvm \$cmake \$awk \$sbase \$toybox $
-    \$bearssl \$curl \$zlib \$samurai \$gettext-tiny \$git \$zsh \$python i$
+    \$bearssl \$curl \$zlib \$samurai \$gettext-tiny \$git \$zsh \$python $
     \$nvi \$less \$netbsd-curses \$make
 
 # Default builds
 ################
 build \$sysroot/tmp: mkdir
+build tmp: phony \$sysroot/tmp
 
 build sysroot.tgz: package | $projects
   builddir = \$sysroot
